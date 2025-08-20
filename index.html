@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roti Bank Bettiah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        /* Custom CSS for Roti Bank Bettiah website */
+        /* Base Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            scroll-behavior: smooth;
+        }
+
+        /* Reusable Components */
+        .section-container {
+            padding: 4rem 1rem;
+        }
+
+        .heading {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .icon {
+            font-size: 3rem;
+            color: #047857;
+        }
+
+        .card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .firebase-error {
+            color: red;
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        
+        /* Image Optimization */
+        .full-visible-image {
+            width: 100%;
+            height: auto;
+            max-height: 250px; /* Setting a max-height to avoid excessively large images */
+            object-fit: contain;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .gallery-item:hover .full-visible-image {
+            transform: scale(1.05);
+        }
+        
+        /* Navbar Scrolled State */
+        .navbar-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        /* Gallery Slideshow */
+        .slideshow-container {
+            position: relative;
+            max-width: 800px;
+            margin: auto;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .slideshow-img {
+            display: none;
+            width: 100%;
+            height: 400px;
+            object-fit: contain;
+        }
+        .slideshow-caption {
+            position: absolute;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.25rem;
+        }
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+        @keyframes fade {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+
+        .map-pin {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+    <!-- Navigation bar -->
+    <nav id="navbar" class="sticky top-0 z-50 bg-white shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-70 transition-all duration-300 ease-in-out">
+        <div class="container mx-auto px-4 py-4 text-center">
+            <img id="nav-logo" src="55.jpg" alt="Roti Bank Bettiah Logo" class="mx-auto h-12 mb-2 rounded-full shadow-lg transition-all duration-300 ease-in-out">
+            <a id="nav-title" href="#home" class="font-bold text-4xl text-emerald-700 block mb-2 transition-all duration-300 ease-in-out">Roti Bank Bettiah</a>
+            <div id="nav-links" class="space-x-4 flex justify-center flex-wrap transition-all duration-300 ease-in-out">
+                <a href="#about" class="text-gray-700 hover:text-emerald-600 transition-colors duration-300">About Us</a>
+                <a href="https://www.google.com/maps/place/Bettiah,+Bihar" target="_blank" class="text-gray-700 hover:text-emerald-600 transition-colors duration-300">Location</a>
+                <a href="#causes" class="text-gray-700 hover:text-emerald-600 transition-colors duration-300">Causes</a>
+                <a href="#activities" class="text-gray-700 hover:text-emerald-600 transition-colors duration-300">Activities</a>
+                <a href="#notice" class="text-gray-700 hover:text-emerald-600 transition-colors duration-300">Notice</a>
+                <a href="#news" class="text-gray-700 hover:text-emerald-600 transition-colors duration-300">News</a>
+                <a href="#gallery" class="text-gray-700 hover:text-emerald-600 transition-colors duration-300">Gallery</a>
+                <a href="#donation" class="text-gray-700 hover:text-emerald-600 transition-colors duration-300">Donate</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Header/Hero Section -->
+    <header id="home" class="bg-cover bg-center text-white py-24 text-center relative" style="background-image: url('https://placehold.co/1200x600/10B981/FFFFFF?text=Nourishing+Lives');">
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h1 class="text-5xl font-extrabold mb-4">Nourishing Lives, One Roti at a Time</h1>
+            <p class="text-xl font-light mb-8">Empowering our community through food and compassion.</p>
+            <a href="#donation" class="inline-block px-8 py-3 bg-white text-emerald-600 font-bold rounded-full shadow-lg hover:bg-gray-100 transition-transform duration-300 transform hover:scale-105">Donate Now</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Gallery Section -->
+        <section id="gallery" class="section-container bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="heading">Our Gallery</h2>
+                <div id="gallery-slideshow" class="slideshow-container">
+                    <p>Loading...</p>
+                </div>
+                <div id="slideshow-controls" class="text-center mt-4 space-x-4">
+                    <button id="prev-btn" class="px-4 py-2 bg-gray-300 rounded-full shadow-md hover:bg-gray-400">Previous</button>
+                    <button id="pause-btn" class="px-4 py-2 bg-gray-300 rounded-full shadow-md hover:bg-gray-400">Pause</button>
+                    <button id="next-btn" class="px-4 py-2 bg-gray-300 rounded-full shadow-md hover:bg-gray-400">Next</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="section-container bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="heading">About Us</h2>
+                <div class="max-w-3xl mx-auto text-center space-y-6" id="about-content-container">
+                    <!-- Content will be loaded from Supabase here -->
+                    <p class="text-lg text-gray-700">Loading...</p>
+                </div>
+                <div class="text-center mt-8">
+                    <a href="about.html" class="inline-block px-6 py-3 bg-emerald-500 text-white rounded-full shadow-md hover:bg-emerald-600 transition-colors duration-300">Know More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Location Section -->
+        <section class="section-container bg-gray-100">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="heading">Our Location</h2>
+                <div class="flex flex-col items-center justify-center">
+                    <svg class="map-pin w-16 h-16 text-red-500 mb-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M5.056 4.944A7.447 7.447 0 0110 2.5c4.142 0 7.5 3.358 7.5 7.5a7.447 7.447 0 01-2.444 5.056L10 20l-5.056-5.056A7.447 7.447 0 012.5 10c0-4.142 3.358-7.5 7.5-7.5zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                    </svg>
+                    <p class="text-lg text-gray-700 font-medium mb-4">Roti Bank Bettiah Trust - NGO - Free daily Food in Bettiah - Social work - Welfare Society</p>
+                    <a href="https://maps.app.goo.gl/iUDm3AZMNMM91PDN6?g_st=aw" target="_blank" class="inline-block px-6 py-3 bg-emerald-500 text-white rounded-full shadow-md hover:bg-emerald-600 transition-colors duration-300">Open in Google Maps</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Internship Section -->
+        <section id="internship" class="section-container bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="heading">Internship Corner</h2>
+                <div id="internship-content" class="text-center space-y-6">
+                    <p>Loading...</p>
+                </div>
+                <div class="text-center mt-8">
+                    <button id="apply-internship-btn" class="inline-block px-6 py-3 bg-emerald-500 text-white rounded-full shadow-md hover:bg-emerald-600 transition-colors duration-300">
+                        Apply for Internship
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activities Section -->
+        <section id="activities" class="section-container bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="heading">Daily Activities</h2>
+                <div class="max-w-3xl mx-auto space-y-6 text-lg text-gray-700" id="activities-list-container">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notice Board Section -->
+        <section id="notice" class="section-container bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="heading">Notice Board</h2>
+                <div class="max-w-3xl mx-auto space-y-6 text-lg text-gray-700" id="notices-list-container">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Causes Section -->
+        <section id="causes" class="section-container bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="heading">Featured Causes</h2>
+                <p id="firebase-error" class="firebase-error hidden"></p>
+                <div class="max-w-4xl mx-auto">
+                    <div id="causes-list" class="space-y-6">
+                        <p>Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- News Section -->
+        <section id="news" class="section-container bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="heading">Latest News</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div id="news-list" class="space-y-6">
+                        <p>Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Donation Section -->
+        <section id="donation" class="section-container bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="heading">Donate Us</h2>
+                <div class="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
+                    <div class="card flex-1 p-8 text-center">
+                        <img id="donation-qr" src="Screenshot 2025-08-17 203022.png" alt="QR Code" class="w-64 h-64 mx-auto mb-4 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Bank Account Details</h3>
+                        <p class="text-gray-700">Account Holder Name: <span id="account-holder-name" class="font-semibold">ROTI BANK BETTIAH</span></p>
+                        <p class="text-gray-700">Bank Name: <span id="bank-name" class="font-semibold">PUNJAB NATIONAL BANK</span></p>
+                        <p class="text-gray-700">Account Number: <span id="account-number" class="font-semibold">1919202100001486</span></p>
+                        <p class="text-gray-700">IFSC Code: <span id="ifsc-code" class="font-semibold">PUNB0191920</span></p>
+                    </div>
+                    
+                    <div class="card flex-1 p-8">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Generate Your Receipt</h3>
+                        <form id="receipt-form" class="space-y-4">
+                            <input type="text" id="donar-name" placeholder="Your Name" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200">
+                            <input type="number" id="amount" placeholder="Amount (in ₹)" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200">
+                            <input type="text" id="transaction-id" placeholder="Transaction ID" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors duration-200">
+                            <button type="submit" class="w-full px-4 py-2 bg-emerald-500 text-white rounded-lg shadow-sm font-bold hover:bg-emerald-600 transition-colors duration-200">
+                                Generate Receipt
+                            </button>
+                        </form>
+                        <div id="message-box" class="hidden text-center mt-4 p-3 rounded-lg bg-emerald-100 text-emerald-800 font-medium"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Media Section -->
+        <section id="social-media" class="section-container bg-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="heading">Connect With Us</h2>
+                <div class="flex justify-center space-x-6 text-emerald-500 text-4xl">
+                    <a href="https://www.facebook.com/" target="_blank" class="hover:text-emerald-700 transition-colors duration-300">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.twitter.com/" target="_blank" class="hover:text-emerald-700 transition-colors duration-300">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.instagram.com/" target="_blank" class="hover:text-emerald-700 transition-colors duration-300">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/" target="_blank" class="hover:text-emerald-700 transition-colors duration-300">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 text-center">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2024 Roti Bank Bettiah. All Rights Reserved.</p>
+        </div>
+    </footer>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        // IMPORTANT: Replace with your actual Supabase project URL and public API key
+        const SUPABASE_URL = 'https://rvkgeoqrxkxjmvdjiyli.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2a2dlb3FyeGt4am12ZGppeWxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0NDg4NzQsImV4cCI6MjA3MTAyNDg3NH0.9N2fioPJWAWIZYisDa5X_arw2YMpngxF5zw-GP1mP3I';
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > lastScrollY) {
+                // Scrolling down
+                navbar.classList.add('navbar-hidden');
+            } else {
+                // Scrolling up
+                navbar.classList.remove('navbar-hidden');
+            }
+            lastScrollY = window.scrollY;
+        });
+
+        // Function to fetch and display the "About Us" content
+        async function loadAboutContent() {
+            const { data, error } = await supabase
+                .from('about')
+                .select('content')
+                .single();
+
+            const aboutContentContainer = document.getElementById('about-content-container');
+            if (aboutContentContainer) {
+                if (error) {
+                    console.error("Error loading About Us content:", error);
+                    aboutContentContainer.innerHTML = `<p class="text-lg text-gray-700 mb-6">Error loading content. Please try again later.</p>`;
+                } else {
+                    // Truncate content for the main page
+                    const truncatedContent = data.content.substring(0, 250) + '...';
+                    aboutContentContainer.innerHTML = `<p class="text-lg text-gray-700 mb-6">${truncatedContent}</p>`;
+                }
+            }
+        }
+
+        // Function to fetch and display the hero banner image
+        async function loadBanner() {
+            const { data, error } = await supabase
+                .from('banners')
+                .select('imageUrl')
+                .single();
+            
+            const homeHeader = document.getElementById('home');
+            if (homeHeader && data) {
+                homeHeader.style.backgroundImage = `url('${data.imageUrl}')`;
+            }
+        }
+        
+        // Function to fetch and display internship content
+        async function loadInternshipContent() {
+            const { data, error } = await supabase
+                .from('internship_corner')
+                .select('*');
+
+            const internshipContentDiv = document.getElementById('internship-content');
+            if (internshipContentDiv) {
+                if (error) {
+                    console.error("Error loading internship content:", error);
+                    internshipContentDiv.innerHTML = '<p>Error loading content.</p>';
+                    return;
+                }
+
+                internshipContentDiv.innerHTML = data.map(item => {
+                    let html = '';
+                    if (item.type === 'youtube') {
+                        html = `<div class="aspect-w-16 aspect-h-9 max-w-2xl mx-auto">
+                                    <iframe class="w-full h-full rounded-xl shadow-lg" src="${item.url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>`;
+                    } else if (item.type === 'instagram') {
+                        html = `<div class="card p-6 max-w-2xl mx-auto">
+                                    <p class="text-lg text-gray-700 font-bold mb-2">Instagram Video</p>
+                                    <a href="${item.url}" target="_blank" class="text-blue-500 hover:underline break-words">${item.url}</a>
+                                </div>`;
+                    } else if (item.type === 'photo' || item.type === 'certificate') {
+                         html = `<div class="card p-6 max-w-2xl mx-auto">
+                                     <img src="${item.url}" alt="${item.type}" class="full-visible-image">
+                                     <p class="text-sm text-gray-500">${item.type === 'photo' ? 'Photo' : 'Certificate'}</p>
+                                 </div>`;
+                    } else if (item.type === 'text' || item.type === 'criteria') {
+                        html = `<div class="card p-6 max-w-2xl mx-auto">
+                                    <p class="text-lg text-gray-700">${item.content}</p>
+                                </div>`;
+                    }
+                    return html;
+                }).join('');
+            }
+        }
+        // Function to set the internship form button URL
+        async function setInternshipFormUrl() {
+            const { data, error } = await supabase
+                .from('internship_form')
+                .select('url')
+                .single();
+
+            const applyBtn = document.getElementById('apply-internship-btn');
+            if (applyBtn && data) {
+                applyBtn.onclick = () => window.open(data.url, '_blank');
+            }
+        }
+
+        // Function to fetch and display donation details
+        async function loadDonationDetails() {
+            const { data, error } = await supabase
+                .from('donations')
+                .select('*')
+                .single();
+
+            if (data) {
+                document.getElementById('account-holder-name').textContent = data.accountHolder || 'N/A';
+                document.getElementById('bank-name').textContent = data.bankName || 'N/A';
+                document.getElementById('account-number').textContent = data.accountNumber || 'N/A';
+                document.getElementById('ifsc-code').textContent = data.ifscCode || 'N/A';
+                const donationQR = document.getElementById('donation-qr');
+                if (donationQR) {
+                    donationQR.src = data.qrUrl || 'https://placehold.co/256x256/E5E7EB/9CA3AF?text=QR+Code';
+                }
+            }
+        }
+
+        // Function to fetch and display daily activities
+        async function loadActivities() {
+            const { data, error } = await supabase
+                .from('activities')
+                .select('*');
+
+            const activitiesListContainer = document.getElementById('activities-list-container');
+            if (activitiesListContainer) {
+                if (error) {
+                    console.error("Error loading activities:", error);
+                    activitiesListContainer.innerHTML = '<p>Error loading activities.</p>';
+                    return;
+                }
+
+                let listHtml = '<ul class="list-disc list-inside space-y-2">';
+                data.forEach(activity => {
+                    listHtml += `<li><strong>${activity.title}:</strong> ${activity.content}</li>`;
+                });
+                listHtml += '</ul>';
+                activitiesListContainer.innerHTML = listHtml;
+            }
+        }
+
+        // Function to fetch and display notices
+        async function loadNotices() {
+            const { data, error } = await supabase
+                .from('notices')
+                .select('*');
+            
+            const noticesListContainer = document.getElementById('notices-list-container');
+            if (noticesListContainer) {
+                if (error) {
+                    console.error("Error loading notices:", error);
+                    noticesListContainer.innerHTML = '<p>Error loading notices.</p>';
+                    return;
+                }
+                
+                let listHtml = '<ul class="list-disc list-inside space-y-2">';
+                data.forEach(notice => {
+                    listHtml += `<li><strong>${notice.title}:</strong> ${notice.content}</li>`;
+                });
+                listHtml += '</ul>';
+                noticesListContainer.innerHTML = listHtml;
+            }
+        }
+
+        // Function to fetch and display causes
+        async function loadCauses() {
+            const { data, error } = await supabase
+                .from('causes')
+                .select('*');
+
+            const causesList = document.getElementById('causes-list');
+            if (causesList) {
+                if (error) {
+                    console.error("Error loading causes:", error);
+                    causesList.innerHTML = '<p>Error loading causes.</p>';
+                    return;
+                }
+
+                causesList.innerHTML = '';
+                data.forEach(cause => {
+                    const progress = (cause.completed / cause.target) * 100;
+                    const causeElement = document.createElement('div');
+                    causeElement.className = 'bg-white p-6 rounded-xl shadow-md space-y-2';
+                    causeElement.innerHTML = `
+                        <h3 class="text-xl font-bold text-gray-800">${cause.name}</h3>
+                        <p class="text-gray-600">Progress: ${cause.completed} out of ${cause.target} tasks completed</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-emerald-500 h-2.5 rounded-full" style="width: ${Math.min(progress, 100)}%;"></div>
+                        </div>
+                    `;
+                    causesList.appendChild(causeElement);
+                });
+            }
+        }
+
+        // Function to fetch and display news
+        async function loadNews() {
+            const { data, error } = await supabase
+                .from('news')
+                .select('*');
+
+            const newsList = document.getElementById('news-list');
+            if (newsList) {
+                if (error) {
+                    console.error("Error loading news:", error);
+                    newsList.innerHTML = '<p>Error loading news.</p>';
+                    return;
+                }
+                
+                newsList.innerHTML = '';
+                data.forEach(newsItem => {
+                    const date = newsItem.created_at ? new Date(newsItem.created_at).toLocaleDateString() : 'N/A';
+                    const newsElement = document.createElement('div');
+                    newsElement.className = 'bg-white p-6 rounded-xl shadow-md space-y-2 relative';
+                    let imageHtml = '';
+                    if (newsItem.imageUrl) {
+                        imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="full-visible-image">`;
+                    }
+                    newsElement.innerHTML = `
+                        ${imageHtml}
+                        <h3 class="text-xl font-bold text-gray-800">${newsItem.title}</h3>
+                        <p class="text-gray-600">${newsItem.content}</p>
+                        <p class="text-sm text-gray-500">Published: ${date}</p>
+                    `;
+                    newsList.appendChild(newsElement);
+                });
+            }
+        }
+
+        // Function to fetch and display gallery images
+        let slideIndex = 0;
+        let slideshowInterval;
+        let isPaused = false;
+
+        async function loadGallery() {
+            const { data, error } = await supabase
+                .from('gallery')
+                .select('*');
+            
+            const slideshowContainer = document.getElementById('gallery-slideshow');
+            if (slideshowContainer) {
+                if (error || data.length === 0) {
+                    console.error("Error loading gallery:", error);
+                    slideshowContainer.innerHTML = '<p>Loading...</p>';
+                    return;
+                }
+
+                slideshowContainer.innerHTML = '';
+                data.forEach((galleryItem, index) => {
+                    const img = document.createElement('img');
+                    img.src = galleryItem.imageUrl;
+                    img.alt = galleryItem.caption;
+                    img.className = 'slideshow-img fade';
+                    slideshowContainer.appendChild(img);
+                });
+                
+                showSlides();
+                
+            }
+        }
+        
+        function showSlides() {
+            const slides = document.getElementsByClassName("slideshow-img");
+            if (slides.length === 0) return;
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) {
+                slideIndex = 1;
+            }
+            slides[slideIndex - 1].style.display = "block";
+            
+            clearInterval(slideshowInterval);
+            slideshowInterval = setInterval(showSlides, 3000); // Change image every 3 seconds
+        }
+
+        // Slideshow controls
+        function plusSlides(n) {
+            clearInterval(slideshowInterval);
+            slideIndex += n;
+            if (slideIndex > document.getElementsByClassName("slideshow-img").length) {
+                slideIndex = 1;
+            }
+            if (slideIndex < 1) {
+                slideIndex = document.getElementsByClassName("slideshow-img").length;
+            }
+            showSlides();
+        }
+
+        function togglePause() {
+            const pauseBtn = document.getElementById('pause-btn');
+            if (isPaused) {
+                slideshowInterval = setInterval(showSlides, 3000);
+                pauseBtn.textContent = 'Pause';
+            } else {
+                clearInterval(slideshowInterval);
+                pauseBtn.textContent = 'Play';
+            }
+            isPaused = !isPaused;
+        }
+
+        // Event handler for receipt generation
+        function handleReceiptGeneration(e) {
+            e.preventDefault();
+
+            const donarName = document.getElementById('donar-name').value;
+            const amount = document.getElementById('amount').value;
+            const transactionId = document.getElementById('transaction-id').value;
+            const date = new Date().toLocaleDateString();
+            const messageBox = document.getElementById('message-box');
+
+            if (!donarName || !amount || !transactionId) {
+                messageBox.textContent = "Please fill out all the fields to generate the receipt.";
+                messageBox.classList.remove('hidden');
+                setTimeout(() => messageBox.classList.add('hidden'), 5000);
+                return;
+            }
+
+            const receiptHtml = `
+                <div style="font-family: 'Inter', sans-serif; padding: 2rem; border: 2px solid #047857; border-radius: 1rem; max-width: 600px; margin: 2rem auto;">
+                    <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; color: #047857; margin-bottom: 1rem;">Donation Receipt</h2>
+                    <div style="border-top: 1px dashed #ccc; padding-top: 1rem; margin-top: 1rem;">
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Organization:</strong> Roti Bank Bettiah</p>
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Donar Name:</strong> ${donarName}</p>
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Amount:</strong> ₹${amount}</p>
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Transaction ID:</strong> ${transactionId}</p>
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Date of Donation:</strong> ${date}</p>
+                    </div>
+                    <p style="text-align: center; color: #6b7280; margin-top: 1rem;">Thank you for your generous contribution!</p>
+                </div>
+            `;
+
+            const receiptWindow = window.open('', '_blank');
+            if (receiptWindow) {
+                receiptWindow.document.write(receiptHtml);
+                receiptWindow.document.close();
+                setTimeout(() => {
+                    receiptWindow.print();
+                }, 500);
+                messageBox.textContent = "Receipt generated and opened in a new tab for printing.";
+                messageBox.classList.remove('hidden');
+                setTimeout(() => messageBox.classList.add('hidden'), 5000);
+            } else {
+                messageBox.textContent = "Please allow pop-ups to generate the receipt.";
+                messageBox.classList.remove('hidden');
+                setTimeout(() => messageBox.classList.add('hidden'), 5000);
+            }
+            document.getElementById('receipt-form').reset();
+        }
+
+        window.onload = () => {
+            // Load all content from Supabase
+            loadAboutContent();
+            loadBanner();
+            loadDonationDetails();
+            loadActivities();
+            loadNotices();
+            loadCauses();
+            loadNews();
+            loadGallery();
+            loadInternshipContent();
+            setInternshipFormUrl();
+
+            // Set up slideshow controls
+            document.getElementById('prev-btn').onclick = () => plusSlides(-1);
+            document.getElementById('next-btn').onclick = () => plusSlides(1);
+            document.getElementById('pause-btn').onclick = () => togglePause();
+
+            const receiptForm = document.getElementById('receipt-form');
+            if (receiptForm) {
+                receiptForm.addEventListener('submit', handleReceiptGeneration);
+            }
+        };
+    </script>
+</body>
+</html>
