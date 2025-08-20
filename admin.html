@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roti Bank Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .heading {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #10B981;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            transition: all 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #10B981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+        .btn-primary {
+            background-color: #10B981;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #059669;
+        }
+        .card {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .message-box {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+        .success {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+        .error {
+            background-color: #FEE2E2;
+            color: #991B1B;
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div id="app" class="container hidden">
+        <h1 class="heading">Roti Bank Admin Panel</h1>
+        
+        <!-- About Us Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Update About Us</h2>
+            <form id="about-form">
+                <div class="form-group">
+                    <label for="about-content" class="form-label">About Us Content</label>
+                    <textarea id="about-content" class="form-input" rows="8"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Save About Us</button>
+            </form>
+        </div>
+
+        <!-- Hero Banner Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Update Hero Banner Image</h2>
+            <form id="banner-form">
+                <div class="form-group">
+                    <label for="banner-file" class="form-label">Upload New Banner Image</label>
+                    <input type="file" id="banner-file" class="form-input">
+                </div>
+                <button type="submit" class="btn-primary">Update Banner</button>
+            </form>
+        </div>
+
+        <!-- Internship Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add Internship Content</h2>
+            <form id="internship-content-form">
+                <div class="form-group">
+                    <label for="internship-content-type" class="form-label">Content Type</label>
+                    <select id="internship-content-type" class="form-input">
+                        <option value="text">Text</option>
+                        <option value="youtube">YouTube Video</option>
+                        <option value="instagram">Instagram Video</option>
+                        <option value="photo">Photo</option>
+                        <option value="certificate">Certificate</option>
+                        <option value="criteria">Criteria</option>
+                    </select>
+                </div>
+                <div id="text-content-group" class="form-group">
+                    <label for="internship-text-content" class="form-label">Text Content</label>
+                    <textarea id="internship-text-content" class="form-input" rows="4"></textarea>
+                </div>
+                <div id="video-content-group" class="form-group hidden">
+                    <label for="internship-video-url" class="form-label">Video URL</label>
+                    <input type="url" id="internship-video-url" class="form-input" placeholder="e.g., https://www.youtube.com/embed/... or https://www.instagram.com/reel/...">
+                </div>
+                <div id="file-content-group" class="form-group hidden">
+                    <label for="internship-file-upload" class="form-label">Upload File</label>
+                    <input type="file" id="internship-file-upload" class="form-input">
+                </div>
+                <button type="submit" class="btn-primary">Add Content</button>
+            </form>
+            <div id="internship-content-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Set Internship Application Form</h2>
+            <form id="internship-form-url-form">
+                <div class="form-group">
+                    <label for="internship-form-url" class="form-label">Google Form URL</label>
+                    <input type="url" id="internship-form-url" class="form-input">
+                </div>
+                <button type="submit" class="btn-primary">Save Form URL</button>
+            </form>
+        </div>
+
+        <!-- Activities Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add Daily Activity</h2>
+            <form id="activities-form">
+                <div class="form-group">
+                    <label for="activity-title" class="form-label">Activity Title</label>
+                    <input type="text" id="activity-title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="activity-content" class="form-label">Activity Description</label>
+                    <textarea id="activity-content" class="form-input" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Add Activity</button>
+            </form>
+             <div id="activities-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <!-- Notice Board Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add New Notice</h2>
+            <form id="notices-form">
+                <div class="form-group">
+                    <label for="notice-title" class="form-label">Notice Title</label>
+                    <input type="text" id="notice-title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="notice-content" class="form-label">Notice Content</label>
+                    <textarea id="notice-content" class="form-input" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Add Notice</button>
+            </form>
+             <div id="notices-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <!-- Causes Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add or Update Cause</h2>
+            <form id="causes-form">
+                <div class="form-group">
+                    <label for="cause-name" class="form-label">Cause Name</label>
+                    <input type="text" id="cause-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="cause-completed" class="form-label">Completed Tasks</label>
+                    <input type="number" id="cause-completed" class="form-input" value="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="cause-target" class="form-label">Target Tasks</label>
+                    <input type="number" id="cause-target" class="form-input" required>
+                </div>
+                <button type="submit" class="btn-primary">Add/Update Cause</button>
+            </form>
+            <div id="causes-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <!-- News Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add Latest News</h2>
+            <form id="news-form">
+                <div class="form-group">
+                    <label for="news-title" class="form-label">News Title</label>
+                    <input type="text" id="news-title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="news-content" class="form-label">News Content</label>
+                    <textarea id="news-content" class="form-input" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="news-image-file" class="form-label">Upload Image</label>
+                    <input type="file" id="news-image-file" class="form-input">
+                </div>
+                <button type="submit" class="btn-primary">Add News</button>
+            </form>
+            <div id="news-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add Gallery Image</h2>
+            <form id="gallery-form">
+                <div class="form-group">
+                    <label for="gallery-image-file" class="form-label">Upload Image</label>
+                    <input type="file" id="gallery-image-file" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="gallery-caption" class="form-label">Caption</label>
+                    <input type="text" id="gallery-caption" class="form-input" required>
+                </div>
+                <button type="submit" class="btn-primary">Add Image</button>
+            </form>
+            <div id="gallery-list" class="mt-4 space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+    </div>
+
+    <!-- Login Section -->
+    <div id="login-form" class="container max-w-sm">
+        <h1 class="heading">Admin Login</h1>
+        <form id="admin-login-form" class="space-y-4">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" class="form-input" required>
+            </div>
+            <button type="submit" class="btn-primary w-full">Log In</button>
+        </form>
+        <div id="login-message" class="message-box hidden"></div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        // IMPORTANT: Replace with your actual Supabase project URL and public API key
+        const SUPABASE_URL = 'https://rvkgeoqrxkxjmvdjiyli.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2a2dlb3FyeGt4am12ZGppeWxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0NDg4NzQsImV4cCI6MjA3MTAyNDg3NH0.9N2fioPJWAWIZYisDa5X_arw2YMpngxF5zw-GP1mP3I';
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Global variables and constants
+        const mainApp = document.getElementById('app');
+        const loginForm = document.getElementById('login-form');
+        const loginMessage = document.getElementById('login-message');
+
+        const ADMIN_USERNAME = "admin";
+        const ADMIN_PASSWORD = "admin123";
+
+        // Function to show a message in the message box
+        function showMessage(element, message, type = 'success') {
+            if (!element) return;
+            element.textContent = message;
+            element.className = `message-box ${type}`;
+            element.classList.remove('hidden');
+            setTimeout(() => {
+                element.classList.add('hidden');
+            }, 5000);
+        }
+        
+        // Function to upload an image to Supabase Storage
+        async function uploadImage(file, path) {
+            if (!file) {
+                throw new Error("No file selected.");
+            }
+            
+            const filePath = `${path}/${file.name}`;
+            const { data, error } = await supabase.storage
+                .from('roti-bank-public-images')
+                .upload(filePath, file, {
+                    upsert: true
+                });
+
+            if (error) {
+                throw error;
+            }
+            
+            // Get the public URL for the uploaded file
+            const { data: publicUrlData } = supabase.storage
+                .from('roti-bank-public-images')
+                .getPublicUrl(filePath);
+
+            return publicUrlData.publicUrl;
+        }
+
+        // Handle login form submission
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                loginForm.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                showMessage(loginMessage, "Login successful!", "success");
+                loadAllData();
+            } else {
+                showMessage(loginMessage, "Invalid username or password.", "error");
+            }
+        });
+
+        // Load all existing data into the admin panel
+        async function loadAllData() {
+            await loadAboutContent();
+            await loadActivities();
+            await loadNotices();
+            await loadCauses();
+            await loadNews();
+            await loadGallery();
+            await loadInternshipContent();
+            await loadInternshipFormUrl();
+        }
+        
+        async function loadAboutContent() {
+             const { data, error } = await supabase.from('about').select('content').single();
+             if (data) {
+                 document.getElementById('about-content').value = data.content;
+             }
+        }
+
+        async function loadActivities() {
+            const { data, error } = await supabase.from('activities').select('*');
+            const list = document.getElementById('activities-list');
+            list.innerHTML = '';
+            if (data) {
+                data.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                    el.innerHTML = `
+                        <p>${item.title}</p>
+                        <div>
+                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="activities">Edit</button>
+                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="activities">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            }
+            list.addEventListener('click', handleDeleteAndEdit);
+        }
+
+        async function loadNotices() {
+            const { data, error } = await supabase.from('notices').select('*');
+            const list = document.getElementById('notices-list');
+            list.innerHTML = '';
+            if (data) {
+                data.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                    el.innerHTML = `
+                        <p>${item.title}</p>
+                        <div>
+                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="notices">Edit</button>
+                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="notices">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            }
+            list.addEventListener('click', handleDeleteAndEdit);
+        }
+
+        async function loadCauses() {
+            const { data, error } = await supabase.from('causes').select('*');
+            const list = document.getElementById('causes-list');
+            list.innerHTML = '';
+            if (data) {
+                data.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                    el.innerHTML = `
+                        <p>${item.name}</p>
+                        <div>
+                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="causes">Edit</button>
+                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="causes">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            }
+            list.addEventListener('click', handleDeleteAndEdit);
+        }
+
+        async function loadNews() {
+            const { data, error } = await supabase.from('news').select('*');
+            const list = document.getElementById('news-list');
+            list.innerHTML = '';
+            if (data) {
+                data.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                    el.innerHTML = `
+                        <p>${item.title}</p>
+                        <div>
+                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="news">Edit</button>
+                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="news">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            }
+            list.addEventListener('click', handleDeleteAndEdit);
+        }
+        
+        async function loadGallery() {
+            const { data, error } = await supabase.from('gallery').select('*');
+            const list = document.getElementById('gallery-list');
+            list.innerHTML = '';
+            if (data) {
+                data.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                    el.innerHTML = `
+                        <p>${item.caption}</p>
+                        <div>
+                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="gallery">Edit</button>
+                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="gallery">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            }
+            list.addEventListener('click', handleDeleteAndEdit);
+        }
+        
+        async function loadInternshipContent() {
+            const { data, error } = await supabase.from('internship_corner').select('*');
+            const list = document.getElementById('internship-content-list');
+            list.innerHTML = '';
+            if (data) {
+                data.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                    const contentDisplay = item.type === 'text' || item.type === 'criteria' ? item.content.substring(0, 50) + '...' : item.url;
+                    el.innerHTML = `
+                        <p>${item.type}: ${contentDisplay}</p>
+                        <div>
+                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="internship_corner">Edit</button>
+                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="internship_corner">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            }
+            list.addEventListener('click', handleDeleteAndEdit);
+        }
+        
+        async function loadInternshipFormUrl() {
+            const { data, error } = await supabase.from('internship_form').select('url').single();
+            if (data) {
+                document.getElementById('internship-form-url').value = data.url;
+            }
+        }
+
+        async function handleDeleteAndEdit(e) {
+            const btn = e.target;
+            const id = btn.dataset.id;
+            const table = btn.dataset.table;
+
+            if (btn.classList.contains('delete-btn')) {
+                if (confirm(`Are you sure you want to delete this item from ${table}?`)) {
+                    const { error } = await supabase.from(table).delete().eq('id', id);
+                    if (error) {
+                        showMessage(document.getElementById('login-message'), `Error deleting item from ${table}.`, "error");
+                        console.error(error);
+                    } else {
+                        showMessage(document.getElementById('login-message'), `Item deleted from ${table}.`, "success");
+                        loadAllData();
+                    }
+                }
+            } else if (btn.classList.contains('edit-btn')) {
+                // This is a simplified example. A full implementation would involve
+                // populating a modal or form with the existing data for editing.
+                alert(`Edit functionality for item ${id} in table ${table} is not yet fully implemented. This is where you would open a form to edit the data.`);
+            }
+        }
+        
+        // Form submission handlers
+
+        // About Us form
+        document.getElementById('about-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = document.getElementById('about-content').value;
+            const messageBox = document.getElementById('about-form').querySelector('.message-box') || document.createElement('div');
+            try {
+                const { data, error } = await supabase
+                    .from('about')
+                    .upsert({ id: 1, content: content }); // Use upsert for a single document
+
+                if (error) throw error;
+                showMessage(messageBox, "About Us content saved successfully!", "success");
+            } catch (e) {
+                console.error("Error saving About Us content: ", e);
+                showMessage(messageBox, "Error saving content.", "error");
+            }
+        });
+
+        // Banner form
+        document.getElementById('banner-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('banner-file').files[0];
+            const messageBox = document.getElementById('banner-form').querySelector('.message-box') || document.createElement('div');
+            if (!file) {
+                showMessage(messageBox, "Please select an image file.", "error");
+                return;
+            }
+            try {
+                const imageUrl = await uploadImage(file, `banners`);
+                const { data, error } = await supabase
+                    .from('banners')
+                    .upsert({ id: 1, imageUrl: imageUrl }); // Use upsert for a single banner
+
+                if (error) throw error;
+                showMessage(messageBox, "Banner updated successfully!", "success");
+                document.getElementById('banner-file').value = '';
+            } catch (e) {
+                console.error("Error updating banner: ", e);
+                showMessage(messageBox, "Error updating banner.", "error");
+            }
+        });
+        
+        // Internship Content form
+        const internshipContentForm = document.getElementById('internship-content-form');
+        const contentTypeSelect = document.getElementById('internship-content-type');
+        const textContentGroup = document.getElementById('text-content-group');
+        const videoContentGroup = document.getElementById('video-content-group');
+        const fileContentGroup = document.getElementById('file-content-group');
+
+        if (contentTypeSelect) {
+            contentTypeSelect.addEventListener('change', (e) => {
+                const type = e.target.value;
+                textContentGroup.classList.add('hidden');
+                videoContentGroup.classList.add('hidden');
+                fileContentGroup.classList.add('hidden');
+
+                if (type === 'text' || type === 'criteria') {
+                    textContentGroup.classList.remove('hidden');
+                } else if (type === 'youtube' || type === 'instagram') {
+                    videoContentGroup.classList.remove('hidden');
+                } else if (type === 'photo' || type === 'certificate') {
+                    fileContentGroup.classList.remove('hidden');
+                }
+            });
+        }
+        if (internshipContentForm) {
+            internshipContentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const contentType = contentTypeSelect.value;
+                let content = null;
+                let url = null;
+                const messageBox = internshipContentForm.querySelector('.message-box') || document.createElement('div');
+
+                if (contentType === 'text' || contentType === 'criteria') {
+                    content = document.getElementById('internship-text-content').value;
+                    if (!content) {
+                        showMessage(messageBox, "Text content is required.", "error");
+                        return;
+                    }
+                } else if (contentType === 'youtube' || contentType === 'instagram') {
+                    url = document.getElementById('internship-video-url').value;
+                    if (!url) {
+                        showMessage(messageBox, "Video URL is required.", "error");
+                        return;
+                    }
+                } else if (contentType === 'photo' || contentType === 'certificate') {
+                    const file = document.getElementById('internship-file-upload').files[0];
+                    if (!file) {
+                        showMessage(messageBox, "File is required.", "error");
+                        return;
+                    }
+                    try {
+                        url = await uploadImage(file, `internship_corner`);
+                    } catch (e) {
+                        console.error("Error uploading file:", e);
+                        showMessage(messageBox, "Error uploading file.", "error");
+                        return;
+                    }
+                }
+
+                try {
+                    const { data, error } = await supabase
+                        .from('internship_corner')
+                        .insert({ type: contentType, content, url });
+
+                    if (error) throw error;
+                    showMessage(messageBox, "Internship content added successfully!", "success");
+                    internshipContentForm.reset();
+                    loadAllData();
+                } catch (e) {
+                    console.error("Error adding internship content: ", e);
+                    showMessage(messageBox, "Error adding content.", "error");
+                }
+            });
+        }
+        
+        // Internship Form URL form
+        const internshipFormUrlForm = document.getElementById('internship-form-url-form');
+        if (internshipFormUrlForm) {
+            internshipFormUrlForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const url = document.getElementById('internship-form-url').value;
+                const messageBox = internshipFormUrlForm.querySelector('.message-box') || document.createElement('div');
+                try {
+                    const { data, error } = await supabase
+                        .from('internship_form')
+                        .upsert({ id: 1, url: url });
+                    
+                    if (error) throw error;
+                    showMessage(messageBox, "Internship form URL saved successfully!", "success");
+                } catch (e) {
+                    console.error("Error saving internship form URL: ", e);
+                    showMessage(messageBox, "Error saving URL.", "error");
+                }
+            });
+        }
+
+        // Activities form
+        document.getElementById('activities-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('activity-title').value;
+            const content = document.getElementById('activity-content').value;
+            const messageBox = document.getElementById('activities-form').querySelector('.message-box') || document.createElement('div');
+            try {
+                const { data, error } = await supabase
+                    .from('activities')
+                    .insert({ title, content });
+
+                if (error) throw error;
+                showMessage(messageBox, "Activity added successfully!", "success");
+                document.getElementById('activities-form').reset();
+                loadAllData();
+            } catch (e) {
+                console.error("Error adding activity: ", e);
+                showMessage(messageBox, "Error adding activity.", "error");
+            }
+        });
+
+        // Notices form
+        document.getElementById('notices-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('notice-title').value;
+            const content = document.getElementById('notice-content').value;
+            const messageBox = document.getElementById('notices-form').querySelector('.message-box') || document.createElement('div');
+            try {
+                const { data, error } = await supabase
+                    .from('notices')
+                    .insert({ title, content });
+                
+                if (error) throw error;
+                showMessage(messageBox, "Notice added successfully!", "success");
+                document.getElementById('notices-form').reset();
+                loadAllData();
+            } catch (e) {
+                console.error("Error adding notice: ", e);
+                showMessage(messageBox, "Error adding notice.", "error");
+            }
+        });
+
+        // Causes form
+        document.getElementById('causes-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('cause-name').value;
+            const completed = parseInt(document.getElementById('cause-completed').value);
+            const target = parseInt(document.getElementById('cause-target').value);
+            const messageBox = document.getElementById('causes-form').querySelector('.message-box') || document.createElement('div');
+            try {
+                const { data, error } = await supabase
+                    .from('causes')
+                    .upsert({ id: name, name, completed, target });
+
+                if (error) throw error;
+                showMessage(messageBox, "Cause updated successfully!", "success");
+                loadAllData();
+            } catch (e) {
+                console.error("Error updating cause: ", e);
+                showMessage(messageBox, "Error updating cause.", "error");
+            }
+        });
+
+        // News form
+        document.getElementById('news-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('news-title').value;
+            const content = document.getElementById('news-content').value;
+            const file = document.getElementById('news-image-file').files[0];
+            const messageBox = document.getElementById('news-form').querySelector('.message-box') || document.createElement('div');
+            
+            let imageUrl = '';
+            if (file) {
+                try {
+                    imageUrl = await uploadImage(file, `news`);
+                } catch (e) {
+                    console.error("Error uploading image for news: ", e);
+                    showMessage(messageBox, "Error uploading news image.", "error");
+                    return;
+                }
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('news')
+                    .insert({ title, content, imageUrl, created_at: new Date().toISOString() });
+                
+                if (error) throw error;
+                showMessage(messageBox, "News added successfully!", "success");
+                document.getElementById('news-form').reset();
+                loadAllData();
+            } catch (e) {
+                console.error("Error adding news: ", e);
+                showMessage(messageBox, "Error adding news.", "error");
+            }
+        });
+
+        // Gallery form
+        document.getElementById('gallery-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('gallery-image-file').files[0];
+            const caption = document.getElementById('gallery-caption').value;
+            const messageBox = document.getElementById('gallery-form').querySelector('.message-box') || document.createElement('div');
+            if (!file) {
+                showMessage(messageBox, "Please select an image file.", "error");
+                return;
+            }
+            try {
+                const imageUrl = await uploadImage(file, `gallery`);
+                const { data, error } = await supabase
+                    .from('gallery')
+                    .insert({ imageUrl, caption });
+                    
+                if (error) throw error;
+                showMessage(messageBox, "Gallery image added successfully!", "success");
+                document.getElementById('gallery-form').reset();
+                loadAllData();
+            } catch (e) {
+                console.error("Error adding gallery image: ", e);
+                showMessage(messageBox, "Error adding image.", "error");
+            }
+        });
+    </script>
+</body>
+</html>
