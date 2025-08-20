@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Custom CSS for Roti Bank Bettiah website */
         /* Base Styles */
         body {
             font-family: 'Inter', sans-serif;
@@ -52,7 +51,7 @@
         .full-visible-image {
             width: 100%;
             height: auto;
-            max-height: 250px; /* Setting a max-height to avoid excessively large images */
+            max-height: 250px;
             object-fit: contain;
             border-radius: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -260,7 +259,7 @@
                 <h2 class="heading">Donate Us</h2>
                 <div class="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
                     <div class="card flex-1 p-8 text-center">
-                        <img id="donation-qr" src="Screenshot 2025-08-17 203022.png" alt="QR Code" class="w-64 h-64 mx-auto mb-4 rounded-lg shadow-lg">
+                        <img id="donation-qr" src="Screenshot 2025-08-17 203022.png" alt="QR Code" class="w-64 h-64 mx-auto mb-4 rounded-lg shadow-lg" loading="lazy">
                         <h3 class="text-xl font-bold text-gray-800 mb-2">Bank Account Details</h3>
                         <p class="text-gray-700">Account Holder Name: <span id="account-holder-name" class="font-semibold">ROTI BANK BETTIAH</span></p>
                         <p class="text-gray-700">Bank Name: <span id="bank-name" class="font-semibold">PUNJAB NATIONAL BANK</span></p>
@@ -322,7 +321,7 @@
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
+        
         // IMPORTANT: Replace with your actual Supabase project URL and public API key
         const SUPABASE_URL = 'https://rvkgeoqrxkxjmvdjiyli.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2a2dlb3FyeGt4am12ZGppeWxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0NDg4NzQsImV4cCI6MjA3MTAyNDg3NH0.9N2fioPJWAWIZYisDa5X_arw2YMpngxF5zw-GP1mP3I';
@@ -343,6 +342,25 @@
             lastScrollY = window.scrollY;
         });
 
+        // Function to load content for a section when it becomes visible
+        function lazyLoadSection(sectionId, loadFunction) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        loadFunction();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                rootMargin: '0px 0px 100px 0px' // Load when 100px from viewport
+            });
+
+            observer.observe(section);
+        }
+
         // Function to fetch and display the "About Us" content
         async function loadAboutContent() {
             const { data, error } = await supabase
@@ -356,7 +374,6 @@
                     console.error("Error loading About Us content:", error);
                     aboutContentContainer.innerHTML = `<p class="text-lg text-gray-700 mb-6">Error loading content. Please try again later.</p>`;
                 } else {
-                    // Truncate content for the main page
                     const truncatedContent = data.content.substring(0, 250) + '...';
                     aboutContentContainer.innerHTML = `<p class="text-lg text-gray-700 mb-6">${truncatedContent}</p>`;
                 }
@@ -393,28 +410,19 @@
                 internshipContentDiv.innerHTML = data.map(item => {
                     let html = '';
                     if (item.type === 'youtube') {
-                        html = `<div class="aspect-w-16 aspect-h-9 max-w-2xl mx-auto">
-                                    <iframe class="w-full h-full rounded-xl shadow-lg" src="${item.url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>`;
+                        html = `<div class="aspect-w-16 aspect-h-9 max-w-2xl mx-auto"><br><iframe class="w-full h-full rounded-xl shadow-lg" src="${item.url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br></div>`;
                     } else if (item.type === 'instagram') {
-                        html = `<div class="card p-6 max-w-2xl mx-auto">
-                                    <p class="text-lg text-gray-700 font-bold mb-2">Instagram Video</p>
-                                    <a href="${item.url}" target="_blank" class="text-blue-500 hover:underline break-words">${item.url}</a>
-                                </div>`;
+                        html = `<div class="card p-6 max-w-2xl mx-auto"><br><p class="text-lg text-gray-700 font-bold mb-2">Instagram Video</p><br><a href="${item.url}" target="_blank" class="text-blue-500 hover:underline break-words">${item.url}</a><br></div>`;
                     } else if (item.type === 'photo' || item.type === 'certificate') {
-                         html = `<div class="card p-6 max-w-2xl mx-auto">
-                                     <img src="${item.url}" alt="${item.type}" class="full-visible-image">
-                                     <p class="text-sm text-gray-500">${item.type === 'photo' ? 'Photo' : 'Certificate'}</p>
-                                 </div>`;
+                         html = `<div class="card p-6 max-w-2xl mx-auto"><br><img src="${item.url}" alt="${item.type}" class="full-visible-image" loading="lazy"><br><p class="text-sm text-gray-500">${item.type === 'photo' ? 'Photo' : 'Certificate'}</p><br></div>`;
                     } else if (item.type === 'text' || item.type === 'criteria') {
-                        html = `<div class="card p-6 max-w-2xl mx-auto">
-                                    <p class="text-lg text-gray-700">${item.content}</p>
-                                </div>`;
+                        html = `<div class="card p-6 max-w-2xl mx-auto"><br><p class="text-lg text-gray-700">${item.content}</p><br></div>`;
                     }
                     return html;
                 }).join('');
             }
         }
+
         // Function to set the internship form button URL
         async function setInternshipFormUrl() {
             const { data, error } = await supabase
@@ -512,12 +520,12 @@
                     const progress = (cause.completed / cause.target) * 100;
                     const causeElement = document.createElement('div');
                     causeElement.className = 'bg-white p-6 rounded-xl shadow-md space-y-2';
-                    causeElement.innerHTML = `
-                        <h3 class="text-xl font-bold text-gray-800">${cause.name}</h3>
-                        <p class="text-gray-600">Progress: ${cause.completed} out of ${cause.target} tasks completed</p>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-emerald-500 h-2.5 rounded-full" style="width: ${Math.min(progress, 100)}%;"></div>
-                        </div>
+                    causeElement.innerHTML = `<br>
+                        <h3 class="text-xl font-bold text-gray-800">${cause.name}</h3><br>
+                        <p class="text-gray-600">Progress: ${cause.completed} out of ${cause.target} tasks completed</p><br>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5"><br>
+                            <div class="bg-emerald-500 h-2.5 rounded-full" style="width: ${Math.min(progress, 100)}%;"></div><br>
+                        </div><br>
                     `;
                     causesList.appendChild(causeElement);
                 });
@@ -545,13 +553,13 @@
                     newsElement.className = 'bg-white p-6 rounded-xl shadow-md space-y-2 relative';
                     let imageHtml = '';
                     if (newsItem.imageUrl) {
-                        imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="full-visible-image">`;
+                        imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="full-visible-image" loading="lazy">`;
                     }
-                    newsElement.innerHTML = `
-                        ${imageHtml}
-                        <h3 class="text-xl font-bold text-gray-800">${newsItem.title}</h3>
-                        <p class="text-gray-600">${newsItem.content}</p>
-                        <p class="text-sm text-gray-500">Published: ${date}</p>
+                    newsElement.innerHTML = `<br>
+                        ${imageHtml}<br>
+                        <h3 class="text-xl font-bold text-gray-800">${newsItem.title}</h3><br>
+                        <p class="text-gray-600">${newsItem.content}</p><br>
+                        <p class="text-sm text-gray-500">Published: ${date}</p><br>
                     `;
                     newsList.appendChild(newsElement);
                 });
@@ -562,68 +570,61 @@
         let slideIndex = 0;
         let slideshowInterval;
         let isPaused = false;
+        let galleryImages = [];
+        let hasLoadedGallery = false;
 
         async function loadGallery() {
+            if (hasLoadedGallery) return;
+            hasLoadedGallery = true;
+
             const { data, error } = await supabase
                 .from('gallery')
                 .select('*');
             
-            const slideshowContainer = document.getElementById('gallery-slideshow');
-            if (slideshowContainer) {
-                if (error || data.length === 0) {
-                    console.error("Error loading gallery:", error);
-                    slideshowContainer.innerHTML = '<p>Loading...</p>';
-                    return;
-                }
-
-                slideshowContainer.innerHTML = '';
-                data.forEach((galleryItem, index) => {
-                    const img = document.createElement('img');
-                    img.src = galleryItem.imageUrl;
-                    img.alt = galleryItem.caption;
-                    img.className = 'slideshow-img fade';
-                    slideshowContainer.appendChild(img);
-                });
-                
-                showSlides();
-                
+            if (error || !data || data.length === 0) {
+                console.error("Error loading gallery:", error);
+                return;
             }
+            
+            galleryImages = data;
+            showSlides();
+            slideshowInterval = setInterval(() => plusSlides(1), 3000); // Start slideshow
         }
-        
+
         function showSlides() {
+            const slideshowContainer = document.getElementById('gallery-slideshow');
+            if (!slideshowContainer || galleryImages.length === 0) return;
+
+            // Clear previous slide and add the new one
+            slideshowContainer.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = galleryImages[slideIndex].imageUrl;
+            img.alt = galleryImages[slideIndex].caption;
+            img.className = 'slideshow-img fade';
+            slideshowContainer.appendChild(img);
+            
+            // Increment slide index for next cycle
+            slideIndex = (slideIndex + 1) % galleryImages.length;
+            
+            // Show the image
             const slides = document.getElementsByClassName("slideshow-img");
-            if (slides.length === 0) return;
-            
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
+            if (slides.length > 0) {
+                slides[0].style.display = "block";
             }
-            slideIndex++;
-            if (slideIndex > slides.length) {
-                slideIndex = 1;
-            }
-            slides[slideIndex - 1].style.display = "block";
-            
-            clearInterval(slideshowInterval);
-            slideshowInterval = setInterval(showSlides, 3000); // Change image every 3 seconds
         }
 
         // Slideshow controls
         function plusSlides(n) {
             clearInterval(slideshowInterval);
-            slideIndex += n;
-            if (slideIndex > document.getElementsByClassName("slideshow-img").length) {
-                slideIndex = 1;
-            }
-            if (slideIndex < 1) {
-                slideIndex = document.getElementsByClassName("slideshow-img").length;
-            }
+            slideIndex = (slideIndex + n + galleryImages.length) % galleryImages.length;
             showSlides();
+            slideshowInterval = setInterval(() => plusSlides(1), 3000);
         }
 
         function togglePause() {
             const pauseBtn = document.getElementById('pause-btn');
             if (isPaused) {
-                slideshowInterval = setInterval(showSlides, 3000);
+                slideshowInterval = setInterval(() => plusSlides(1), 3000);
                 pauseBtn.textContent = 'Pause';
             } else {
                 clearInterval(slideshowInterval);
@@ -635,7 +636,6 @@
         // Event handler for receipt generation
         function handleReceiptGeneration(e) {
             e.preventDefault();
-
             const donarName = document.getElementById('donar-name').value;
             const amount = document.getElementById('amount').value;
             const transactionId = document.getElementById('transaction-id').value;
@@ -649,27 +649,13 @@
                 return;
             }
 
-            const receiptHtml = `
-                <div style="font-family: 'Inter', sans-serif; padding: 2rem; border: 2px solid #047857; border-radius: 1rem; max-width: 600px; margin: 2rem auto;">
-                    <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; color: #047857; margin-bottom: 1rem;">Donation Receipt</h2>
-                    <div style="border-top: 1px dashed #ccc; padding-top: 1rem; margin-top: 1rem;">
-                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Organization:</strong> Roti Bank Bettiah</p>
-                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Donar Name:</strong> ${donarName}</p>
-                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Amount:</strong> ₹${amount}</p>
-                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Transaction ID:</strong> ${transactionId}</p>
-                        <p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Date of Donation:</strong> ${date}</p>
-                    </div>
-                    <p style="text-align: center; color: #6b7280; margin-top: 1rem;">Thank you for your generous contribution!</p>
-                </div>
-            `;
+            const receiptHtml = `<div style="font-family: 'Inter', sans-serif; padding: 2rem; border: 2px solid #047857; border-radius: 1rem; max-width: 600px; margin: 2rem auto;"><h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; color: #047857; margin-bottom: 1rem;">Donation Receipt</h2><div style="border-top: 1px dashed #ccc; padding-top: 1rem; margin-top: 1rem;"><p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Organization:</strong> Roti Bank Bettiah</p><p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Donar Name:</strong> ${donarName}</p><p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Amount:</strong> ₹${amount}</p><p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Transaction ID:</strong> ${transactionId}</p><p style="margin-bottom: 0.5rem;"><strong style="color: #4b5563;">Date of Donation:</strong> ${date}</p></div><p style="text-align: center; color: #6b7280; margin-top: 1rem;">Thank you for your generous contribution!</p></div>`;
 
             const receiptWindow = window.open('', '_blank');
             if (receiptWindow) {
                 receiptWindow.document.write(receiptHtml);
                 receiptWindow.document.close();
-                setTimeout(() => {
-                    receiptWindow.print();
-                }, 500);
+                setTimeout(() => { receiptWindow.print(); }, 500);
                 messageBox.textContent = "Receipt generated and opened in a new tab for printing.";
                 messageBox.classList.remove('hidden');
                 setTimeout(() => messageBox.classList.add('hidden'), 5000);
@@ -681,29 +667,28 @@
             document.getElementById('receipt-form').reset();
         }
 
-        window.onload = () => {
-            // Load all content from Supabase
-            loadAboutContent();
-            loadBanner();
-            loadDonationDetails();
-            loadActivities();
-            loadNotices();
-            loadCauses();
-            loadNews();
-            loadGallery();
-            loadInternshipContent();
-            setInternshipFormUrl();
+        // Set up event listeners
+        document.getElementById('prev-btn').onclick = () => plusSlides(-1);
+        document.getElementById('next-btn').onclick = () => plusSlides(1);
+        document.getElementById('pause-btn').onclick = () => togglePause();
+        
+        const receiptForm = document.getElementById('receipt-form');
+        if (receiptForm) {
+            receiptForm.addEventListener('submit', handleReceiptGeneration);
+        }
 
-            // Set up slideshow controls
-            document.getElementById('prev-btn').onclick = () => plusSlides(-1);
-            document.getElementById('next-btn').onclick = () => plusSlides(1);
-            document.getElementById('pause-btn').onclick = () => togglePause();
+        // Initial loads and lazy loads
+        loadAboutContent();
+        loadBanner();
+        loadDonationDetails();
+        loadActivities();
+        loadNotices();
+        loadCauses();
+        setInternshipFormUrl();
 
-            const receiptForm = document.getElementById('receipt-form');
-            if (receiptForm) {
-                receiptForm.addEventListener('submit', handleReceiptGeneration);
-            }
-        };
+        lazyLoadSection('news', loadNews);
+        lazyLoadSection('gallery', loadGallery);
+        lazyLoadSection('internship', loadInternshipContent);
     </script>
 </body>
 </html>
