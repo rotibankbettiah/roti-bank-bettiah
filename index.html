@@ -709,8 +709,13 @@
         loadCauses();
         setInternshipFormUrl();
 
-        lazyLoadSection('news', loadNews);
-        lazyLoadSection('gallery', loadGallery);
+        lazyLoadSection('about', () => fetchAndDisplay('about', 'about-content-container', renderAboutContent));
+        lazyLoadSection('activities', () => fetchAndDisplay('activities', 'activities-list-container', renderActivities));
+        lazyLoadSection('notices', () => fetchAndDisplay('notices', 'notices-list-container', renderNotices));
+        lazyLoadSection('causes', () => fetchAndDisplay('causes', 'causes-list', renderCauses));
+        lazyLoadSection('news', () => fetchAndDisplay('news', 'news-list', renderNews));
+        lazyLoadSection('gallery', () => fetchAndDisplay('gallery', 'gallery-grid', renderGallery));
+        lazyLoadSection('achievements', () => fetchAndDisplay('achievements', 'achievements-list', renderAchievements));
         lazyLoadSection('internship', loadInternshipContent);
     </script>
 </body>
