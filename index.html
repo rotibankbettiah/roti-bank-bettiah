@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -384,29 +385,6 @@
             observer.observe(section);
         }
 
-        // Generic function to fetch and display content from Supabase
-        async function fetchAndDisplay(table, containerId, renderFunction) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            container.innerHTML = `<p class="text-center text-gray-500">Loading...</p>`;
-
-            const { data, error } = await supabase
-                .from(table)
-                .select('*');
-
-            if (error) {
-                console.error(`Error loading content for ${table}:`, error);
-                container.innerHTML = `<p class="text-center text-red-500">Error loading content. Please try again later.</p>`;
-                return;
-            }
-
-            if (data && data.length > 0) {
-                renderFunction(data, container);
-            } else {
-                container.innerHTML = `<p class="text-center text-gray-500">No content available.</p>`;
-            }
-        }
-
         // Function to fetch and display the "About Us" content
         async function loadAboutContent() {
             const { data, error } = await supabase
@@ -515,12 +493,26 @@
                     return;
                 }
 
-                let listHtml = '<ul class="list-disc list-inside space-y-2">';
+                activitiesListContainer.innerHTML = '';
                 data.forEach(activity => {
-                    listHtml += `<li><strong>${activity.title}:</strong> ${activity.content}</li>`;
+                    const activityElement = document.createElement('div');
+                    activityElement.className = 'bg-white p-6 rounded-xl shadow-md space-y-2 relative';
+                    let imageHtml = '';
+                    let captionHtml = '';
+                    if (activity.imageUrl) {
+                        imageHtml = `<img src="${activity.imageUrl}" alt="${activity.title}" class="full-visible-image" loading="lazy">`;
+                    }
+                    if (activity.caption) {
+                        captionHtml = `<p class="text-sm text-gray-500">${activity.caption}</p>`;
+                    }
+                    activityElement.innerHTML = `
+                        ${imageHtml}
+                        <h3 class="text-xl font-bold text-gray-800">${activity.title}</h3>
+                        <p class="text-gray-600">${activity.content}</p>
+                        ${captionHtml}
+                    `;
+                    activitiesListContainer.appendChild(activityElement);
                 });
-                listHtml += '</ul>';
-                activitiesListContainer.innerHTML = listHtml;
             }
         }
 
@@ -538,12 +530,59 @@
                     return;
                 }
                 
-                let listHtml = '<ul class="list-disc list-inside space-y-2">';
+                noticesListContainer.innerHTML = '';
                 data.forEach(notice => {
-                    listHtml += `<li><strong>${notice.title}:</strong> ${notice.content}</li>`;
+                    const noticeElement = document.createElement('div');
+                    noticeElement.className = 'bg-white p-6 rounded-xl shadow-md space-y-2 relative';
+                    let imageHtml = '';
+                    if (notice.imageUrl) {
+                        imageHtml = `<img src="${notice.imageUrl}" alt="${notice.title}" class="full-visible-image" loading="lazy">`;
+                    }
+                    noticeElement.innerHTML = `
+                        ${imageHtml}
+                        <h3 class="text-xl font-bold text-gray-800">${notice.title}</h3>
+                        <p class="text-gray-600">${notice.content}</p>
+                    `;
+                    noticesListContainer.appendChild(noticeElement);
                 });
-                listHtml += '</ul>';
-                noticesListContainer.innerHTML = listHtml;
+            }
+        }
+
+        // Function to fetch and display achievements
+        async function loadOurAchievements() {
+            const { data, error } = await supabase
+                .from('achievements')
+                .select('*');
+
+            const achievementsList = document.getElementById('achievements-list');
+            if (achievementsList) {
+                if (error) {
+                    console.error("Error loading achievements:", error);
+                    achievementsList.innerHTML = '<p>Error loading achievements.</p>';
+                    return;
+                }
+                
+                achievementsList.innerHTML = '';
+                data.forEach(achievement => {
+                    const achievementElement = document.createElement('div');
+                    achievementElement.className = 'card flex flex-col items-center text-center';
+                    
+                    let imageHtml = '';
+                    if (achievement.imageUrl) {
+                        imageHtml = `<img src="${achievement.imageUrl}" alt="${achievement.caption || ''}" class="full-visible-image mb-4">`;
+                    }
+
+                    achievementElement.innerHTML = `
+                        ${imageHtml}
+                        <div class="icon-container mb-4">
+                            <i class="fas ${achievement.icon} icon"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">${achievement.count}</h3>
+                        <p class="text-gray-600">${achievement.description}</p>
+                        ${achievement.caption ? `<p class="text-sm text-gray-500 mt-2">${achievement.caption}</p>` : ''}
+                    `;
+                    achievementsList.appendChild(achievementElement);
+                });
             }
         }
 
@@ -608,6 +647,33 @@
                         <p class="text-sm text-gray-500">Published: ${date}</p><br>
                     `;
                     newsList.appendChild(newsElement);
+                });
+            }
+        }
+        // Function to fetch and display the "Our Branches" content
+        async function loadBranches() {
+            const { data, error } = await supabase
+                .from('branches')
+                .select('*');
+
+            const branchesListContainer = document.getElementById('branches-list');
+            if (branchesListContainer) {
+                if (error) {
+                    console.error("Error loading branches:", error);
+                    branchesListContainer.innerHTML = '<p>Error loading branches.</p>';
+                    return;
+                }
+                
+                branchesListContainer.innerHTML = '';
+                data.forEach(branch => {
+                    const branchElement = document.createElement('div');
+                    branchElement.className = 'card flex-1 p-6 text-center space-y-2';
+                    branchElement.innerHTML = `
+                        <h3 class="text-xl font-bold text-gray-800">${branch.name}</h3>
+                        <p class="text-gray-700">${branch.location}</p>
+                        ${branch.imageUrl ? `<img src="${branch.imageUrl}" alt="Image of ${branch.name}" class="full-visible-image">` : ''}
+                    `;
+                    branchesListContainer.appendChild(branchElement);
                 });
             }
         }
@@ -731,15 +797,15 @@
         loadNotices();
         loadCauses();
         setInternshipFormUrl();
+        loadBranches();
 
-        lazyLoadSection('about', () => fetchAndDisplay('about', 'about-content-container', renderAboutContent));
-        lazyLoadSection('activities', () => fetchAndDisplay('activities', 'activities-list-container', renderActivities));
-        lazyLoadSection('notices', () => fetchAndDisplay('notices', 'notices-list-container', renderNotices));
-        lazyLoadSection('causes', () => fetchAndDisplay('causes', 'causes-list', renderCauses));
-        lazyLoadSection('news', () => fetchAndDisplay('news', 'news-list', renderNews));
-        lazyLoadSection('gallery', () => fetchAndDisplay('gallery', 'gallery-grid', renderGallery));
-        lazyLoadSection('achievements', () => fetchAndDisplay('achievements', 'achievements-list', renderAchievements));
+        lazyLoadSection('news', loadNews);
+        lazyLoadSection('gallery', loadGallery);
         lazyLoadSection('internship', loadInternshipContent);
+        lazyLoadSection('notices',loadNotices);
+        lazyLoadSection('activities',loadActivities);
+        lazyLoadSection('achievements',loadOurAchievements)
+
     </script>
 </body>
 </html>
