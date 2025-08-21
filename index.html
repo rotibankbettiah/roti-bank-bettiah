@@ -384,6 +384,29 @@
             observer.observe(section);
         }
 
+        // Generic function to fetch and display content from Supabase
+        async function fetchAndDisplay(table, containerId, renderFunction) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = `<p class="text-center text-gray-500">Loading...</p>`;
+
+            const { data, error } = await supabase
+                .from(table)
+                .select('*');
+
+            if (error) {
+                console.error(`Error loading content for ${table}:`, error);
+                container.innerHTML = `<p class="text-center text-red-500">Error loading content. Please try again later.</p>`;
+                return;
+            }
+
+            if (data && data.length > 0) {
+                renderFunction(data, container);
+            } else {
+                container.innerHTML = `<p class="text-center text-gray-500">No content available.</p>`;
+            }
+        }
+
         // Function to fetch and display the "About Us" content
         async function loadAboutContent() {
             const { data, error } = await supabase
