@@ -268,7 +268,7 @@
                 <h2 class="heading">Latest News</h2>
                 <div class="max-w-4xl mx-auto">
                     <div id="news-list" class="space-y-6">
-                        <p>Loading...</p>
+                        <p class="text-center text-gray-500">Loading news...</p>
                     </div>
                 </div>
             </div>
@@ -617,7 +617,7 @@
             }
         }
 
-        // Function to fetch and display news
+         // Function to fetch and display news
         async function loadNews() {
             const { data, error } = await supabase
                 .from('news')
@@ -640,11 +640,11 @@
                     if (newsItem.imageUrl) {
                         imageHtml = `<img src="${newsItem.imageUrl}" alt="${newsItem.title}" class="full-visible-image" loading="lazy">`;
                     }
-                    newsElement.innerHTML = `<br>
-                        ${imageHtml}<br>
-                        <h3 class="text-xl font-bold text-gray-800">${newsItem.title}</h3><br>
-                        <p class="text-gray-600">${newsItem.content}</p><br>
-                        <p class="text-sm text-gray-500">Published: ${date}</p><br>
+                    newsElement.innerHTML = `
+                        ${imageHtml}
+                        <h3 class="text-xl font-bold text-gray-800">${newsItem.title}</h3>
+                        <p class="text-gray-600">${newsItem.content}</p>
+                        <p class="text-sm text-gray-500">Published: ${date}</p>
                     `;
                     newsList.appendChild(newsElement);
                 });
