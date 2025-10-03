@@ -117,8 +117,166 @@
         .map-pin {
             animation: pulse 1.5s infinite;
         }
+
+        /* Base Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            scroll-behavior: smooth;
+        } 
+
+        /* Reusable Components */
+        .section-container {
+            padding: 4rem 1rem;
+        }
+
+        .heading {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        /* --- Chatbot Specific Styles --- */
+        #chatbot-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            box-shadow: #047857;
+            transition: transform 0.2s;
+        }
+
+        #chatbot-icon:hover {
+            transform: scale(1.05);
+        }
+
+        #chat-widget {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 100%;
+            max-width: 380px;
+            height: 500px;
+            z-index: 1000;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px #047857;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        @media (max-width: 600px) {
+            #chat-widget {
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                max-width: none;
+                height: 100%;
+                border-radius: 0;
+            }
+            #chatbot-icon {
+                display: none; /* Hide icon on full screen chat */
+            }
+        }
+
+        /* Chat bubble styles */
+        .message-bubble-user {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            border-radius: 15px 15px 4px 15px;
+        }
+        .message-bubble-ai {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #1f2937; /* gray-800 */
+            border-radius: 15px 15px 15px 4px;
+        }
+        
+        /* Ensure images and links inside the AI bubble are formatted correctly */
+        .message-bubble-ai img {
+            display: block;
+            margin: 0.5rem auto; /* Center image */
+        }
+        .message-bubble-ai a {
+            word-break: break-all;
+        }
+
+        /* Typing indicator dots */
+        .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin-right: 3px;
+            background-color: #4a4a4a;
+            border-radius: 50%;
+            animation: dot-flicker 1.4s infinite ease-in-out both;
+        }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        .dot:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes dot-flicker {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1.0);
+            }
+        }
     </style>
 </head>
+<!-- --- Chatbot Widget HTML --- -->
+    <button id="chatbot-icon" class="bg-green-600 text-white rounded-full flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+        </svg>
+    </button>
+
+    <div id="chat-widget" class="bg-white">
+        <!-- Chat Header -->
+        <header class="bg-green-700 text-white p-3 rounded-t-xl flex justify-between items-center shadow-md">
+            <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+                <h2 class="font-bold">Roti Bank Assistant</h2>
+            </div>
+            <button id="chat-close-btn" class="text-white hover:text-gray-200 p-1 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </header>
+
+        <!-- Chat Container -->
+        <main id="chat-container" class="flex-1 p-3 overflow-y-auto bg-gray-50">
+            <div class="message-group flex justify-start mb-3">
+                <div class="message-bubble-ai p-3 max-w-[80%] text-sm">
+                    <p>Hello! I am the Roti Bank assistant. I can help you with donations, volunteering, or general information about our mission.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Chat Input -->
+        <footer class="p-3 bg-white border-t border-gray-200">
+            <form id="chat-form" class="flex items-center space-x-2">
+                <input type="text" id="user-input" placeholder="Ask a question..." class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
+                <button type="submit" class="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                    </svg>
+                </button>
+            </form>
+        </footer>
+    </div>
+    <!-- --- End Chatbot Widget HTML --- -->
+
+    <!-- ========================================================================================================= -->
+    <!-- --- START OF ORIGINAL ROTI BANK BETTIAH CONTENT --- -->
+    <!-- ========================================================================================================= -->
+
 
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1969DFFK5H"></script>
@@ -201,7 +359,7 @@
             <div class="container mx-auto px-4 text-center">
                 <h2 class="heading">Our Location</h2>
                 <div class="flex flex-col items-center justify-center">
-                    <svg class="map-pin w-16 h-16 text-red-500 mb-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="map-pin w-16 h-16 text-green-500 mb-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M5.056 4.944A7.447 7.447 0 0110 2.5c4.142 0 7.5 3.358 7.5 7.5a7.447 7.447 0 01-2.444 5.056L10 20l-5.056-5.056A7.447 7.447 0 012.5 10c0-4.142 3.358-7.5 7.5-7.5zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
                     </svg>
                     <p class="text-lg text-gray-700 font-medium mb-4">Roti Bank Bettiah Trust - NGO - Free daily Food in Bettiah - Social work - Welfare Society</p>
@@ -823,6 +981,218 @@
         lazyLoadSection('activities',loadActivities);
         lazyLoadSection('achievements',loadOurAchievements)
 
+    </script>
+    <!-- ========================================================================================================= -->
+    <!-- --- END OF ORIGINAL ROTI BANK BETTIAH CONTENT --- -->
+    <!-- ========================================================================================================= -->
+
+
+    <script>
+        // --- 1. Chatbot Logic (Updated with Persona and Donation Link) ---
+        
+        // API Key updated with the latest key provided by the user
+        const API_KEY = "AIzaSyC2XHDzeNKxLp-ccI4SidgVZTbJLgA16oc"; 
+        
+        // --- UPDATED: Using the user-uploaded QR code image file name ---
+        const MOCK_QR_CODE_URL = "QR.png.jpg"; 
+        const MOCK_DONATION_LINK = "#donation"; // Links to the Donation section of this page
+
+        // System Instruction for Gemini Model
+        const SYSTEM_INSTRUCTION = "You are the helpful and compassionate Roti Bank Bettiah assistant. Your goal is to provide accurate, concise, and direct information about the organization's mission, volunteering, and operational details in Bettiah, Bihar. Always answer maintaining the organization's professional and empathetic voice. Only answer questions related to the Roti Bank Bettiah organization and its charity work (food distribution, volunteering, etc.). Do not answer off-topic questions.";
+
+        const chatWidget = document.getElementById('chat-widget');
+        const chatbotIcon = document.getElementById('chatbot-icon');
+        const chatCloseBtn = document.getElementById('chat-close-btn');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const chatContainer = document.getElementById('chat-container');
+
+        // Toggle chat widget visibility
+        chatbotIcon.addEventListener('click', () => {
+            chatWidget.style.display = 'flex';
+        });
+
+        chatCloseBtn.addEventListener('click', () => {
+            chatWidget.style.display = 'none';
+        });
+
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userMessage = userInput.value.trim();
+            if (!userMessage) return;
+
+            // Display user message
+            addMessage(userMessage, 'user');
+            userInput.value = '';
+
+            // Show typing indicator
+            const typingIndicator = addMessage(null, 'ai', true);
+
+            try {
+                if (!API_KEY) {
+                    throw new Error("API_KEY is missing.");
+                }
+
+                // Call the Gemini API or use the custom donation response
+                const modelResponse = await callGeminiAPI(userMessage);
+                
+                // Remove typing indicator
+                if (typingIndicator.parentNode) typingIndicator.remove();
+                
+                // Display AI response
+                addMessage(modelResponse, 'ai');
+
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                
+                // Remove typing indicator
+                if (typingIndicator.parentNode) typingIndicator.remove();
+                
+                // Display a clear error message to the user
+                const errorMessage = `**API Error:** ${error.message.includes("API key not valid") ? "The API key provided is invalid or inactive. Please check your Google AI Studio settings." : error.message}`;
+                addMessage(errorMessage, 'ai');
+            }
+        });
+
+        /**
+         * Adds a message bubble to the chat container, handling basic formatting and HTML for the donation response.
+         */
+        function addMessage(message, sender, isTyping = false) {
+            const messageGroup = document.createElement('div');
+            // Use 'flex-end' for user and 'flex-start' for AI to control horizontal alignment
+            messageGroup.className = `message-group flex mb-3 ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+
+            const messageBubble = document.createElement('div');
+            // Initial class setup
+            messageBubble.className = `p-3 max-w-[80%] text-sm ${sender === 'user' ? 'message-bubble-user' : 'message-bubble-ai'}`;
+            
+            if (isTyping) {
+                // Custom typing indicator with dots
+                messageBubble.innerHTML = `
+                    <p class="text-gray-700 flex items-center">
+                        Typing
+                        <span class="dot ml-1"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </p>`;
+                messageBubble.classList.remove('message-bubble-ai');
+                messageBubble.classList.add('bg-gray-200');
+
+            } else {
+                // Check if the message contains HTML (specifically <img> or <a> from the donation response)
+                if (sender === 'ai' && (message.includes('<img src=') || message.includes('<a href='))) {
+                    // For donation response, insert the raw HTML directly
+                    messageBubble.innerHTML = message;
+                    // Adjust alignment for content that should be centered (like the QR code/link)
+                    messageBubble.classList.add('flex', 'flex-col', 'items-center', 'text-center');
+                } else {
+                    // Simple formatting for **bold** and *italic* text for regular LLM responses
+                    let formattedMessage = message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    formattedMessage = formattedMessage.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                    
+                    messageBubble.innerHTML = `<p class="whitespace-pre-wrap">${formattedMessage}</p>`;
+                    messageBubble.classList.remove('flex', 'flex-col', 'items-center', 'text-center');
+                }
+            }
+            
+            messageGroup.appendChild(messageBubble);
+            chatContainer.appendChild(messageGroup);
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll
+            return messageGroup;
+        }
+
+        /**
+         * Calls the Google Gemini API with the given prompt, or returns a custom donation response.
+         */
+        async function callGeminiAPI(prompt) {
+            // 1. Check for donation keywords for a guaranteed, custom response
+            const lowerCasePrompt = prompt.toLowerCase();
+            const donationKeywords = ['donate', 'donation', 'contribute', 'fund', 'qr code', 'bank details', 'pay'];
+
+            if (donationKeywords.some(keyword => lowerCasePrompt.includes(keyword))) {
+                const donationResponse = `On behalf of Roti Bank Bettiah, thank you for your compassion! Every contribution helps us fight hunger in Bettiah.
+                
+To make a difference, you can use the QR code below for direct payment or visit our donation section for bank details:
+    
+<img src="${MOCK_QR_CODE_URL}" alt="Roti Bank Bettiah Donation QR Code" class="w-32 h-32 rounded-lg my-3 shadow-lg">
+    
+<a href="${MOCK_DONATION_LINK}" target="_self" class="text-green-600 hover:underline font-semibold block text-center mt-2 p-1 bg-green-100 rounded-lg">View Full Donation Details</a>
+    
+We are grateful for your support in feeding the needy.`;
+                return donationResponse;
+            }
+
+            // 2. Proceed with LLM call for other queries (Persona enforced via SYSTEM_INSTRUCTION)
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+            
+            const payload = {
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }],
+                systemInstruction: {
+                    parts: [{
+                        text: SYSTEM_INSTRUCTION
+                    }]
+                },
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorMessage = `HTTP error! status: ${response.status}`;
+                try {
+                    const errorData = JSON.parse(errorText);
+                    errorMessage = errorData.error?.message || errorMessage;
+                } catch(e) { /* silent fail */ }
+                throw new Error(errorMessage);
+            }
+
+            const data = await response.json();
+            const candidate = data.candidates?.[0];
+
+            if (candidate && candidate.content?.parts?.[0]?.text) {
+                return candidate.content.parts[0].text;
+            } else {
+                // If the response is empty, it's likely due to the safety filter blocking an off-topic question.
+                return "I'm sorry, as the Roti Bank Bettiah assistant, I can only provide information about our charity work, mission, and how to get involved. Please ask a question related to Roti Bank Bettiah.";
+            }
+        }
+
+
+        // --- 2. Original Roti Bank Website Scripts (Simplified/Mocked) ---
+
+        // Function to handle mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Mock function for receipt generation
+        const messageBox = document.getElementById('message-box');
+        document.getElementById('receipt-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const amount = document.getElementById('amount').value;
+            
+            messageBox.textContent = `Thank you, ${name}, for your donation of INR ${amount}. A mock receipt has been generated.`;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+            messageBox.classList.add('bg-green-100', 'text-green-700');
+            
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+                document.getElementById('receipt-modal').classList.add('hidden');
+            }, 3000);
+            document.getElementById('receipt-form').reset();
+        });
     </script>
 </body>
 </html>
