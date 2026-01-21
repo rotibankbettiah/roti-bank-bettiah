@@ -1,0 +1,8 @@
+{
+  "name": "Roti Bank Bettiah - Secure Portal",
+  "description": "A modern, secure, and AI-enhanced platform for Roti Bank Bettiah, featuring real-time impact tracking, secure donation processing, and an intelligent AI assistant.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
