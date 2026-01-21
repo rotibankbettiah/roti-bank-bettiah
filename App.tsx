@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Stats from './components/Stats';
-import Donation from './components/Donation';
-import Chatbot from './components/Chatbot';
-import { supabaseService, supabase } from './services/supabaseService';
-import { Activity, Achievement, Branch, NewsItem, Notice, InternshipContent, Cause } from './types';
+import Navbar from './components/Navbar.tsx';
+import Hero from './components/Hero.tsx';
+import Stats from './components/Stats.tsx';
+import Donation from './components/Donation.tsx';
+import Chatbot from './components/Chatbot.tsx';
+import { supabaseService, supabase } from './services/supabaseService.ts';
+import { Activity, Achievement, Branch, NewsItem, Notice, InternshipContent, Cause } from './types.ts';
 
 const App: React.FC = () => {
   const [data, setData] = useState<{
@@ -71,8 +71,6 @@ const App: React.FC = () => {
   useEffect(() => {
     fetchAllData();
 
-    // Enable Real-time updates from Supabase
-    // This channel listens for ALL changes across tables to ensure UI reflects database state immediately
     const channel = supabase
       .channel('supabase-realtime-global')
       .on(
@@ -215,7 +213,7 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        {/* Achievements Section */}
+        {/* Achievements Section - Substantially increased image size to 650px */}
         <section id="achievements" className="py-24 bg-slate-900 text-white relative scroll-mt-24">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
           <div className="container mx-auto px-6 relative z-10">
@@ -223,7 +221,15 @@ const App: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {data.achievements.map((ach) => (
                 <div key={ach.id} className="bg-white/5 backdrop-blur-md p-10 rounded-[3rem] border border-white/10 hover:bg-white/10 transition-all group">
-                  {ach.imageUrl && <img src={ach.imageUrl} className="w-full h-48 object-cover rounded-[2rem] mb-8 shadow-2xl group-hover:scale-[1.02] transition-transform" alt={ach.description} />}
+                  {ach.imageUrl && (
+                    <div className="w-full h-[650px] overflow-hidden rounded-[2.5rem] mb-8 shadow-2xl border-4 border-white/10">
+                      <img 
+                        src={ach.imageUrl} 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                        alt={ach.description} 
+                      />
+                    </div>
+                  )}
                   <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 mb-6 group-hover:rotate-12 transition-transform">
                     <i className={`fas ${ach.icon} text-2xl`}></i>
                   </div>
@@ -426,6 +432,7 @@ const App: React.FC = () => {
                 <a href="https://twitter.com/Rotibankbettiah" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-500 transition-all"><i className="fab fa-twitter"></i></a>
                 <a href="https://instagram.com/rotibankbettiah" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-500 transition-all"><i className="fab fa-instagram"></i></a>
                 <a href="https://wa.me/+919473228888" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-500 transition-all"><i className="fab fa-whatsapp"></i></a>
+                <a href="https://github.com/rotibankbettiah/roti-bank-bettiah" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-500 transition-all"><i className="fab fa-github"></i></a>
               </div>
             </div>
             
