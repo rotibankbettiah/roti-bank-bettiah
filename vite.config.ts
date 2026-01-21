@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-      // This line is essential for GitHub Pages to find your files
+      // THIS IS THE MOST IMPORTANT LINE:
       base: '/roti-bank-bettiah/', 
       server: {
         port: 3000,
