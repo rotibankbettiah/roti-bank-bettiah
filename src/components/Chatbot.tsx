@@ -83,15 +83,25 @@ const Chatbot: React.FC = () => {
               <i className="fas fa-shield-alt text-emerald-500"></i>
             </div>
 
-            <img
-              src={donationDetails?.qrUrl || 'QR.png.jpg'}
-              alt="Donation QR Code"
-              className="w-48 h-48 object-contain rounded-xl shadow-inner border border-slate-50 mb-3"
-            />
-
-            <p className="text-[10px] text-slate-400 font-bold uppercase text-center">
-              Scan with any UPI App
-            </p>
+            {donationDetails?.qrUrl ? (
+              <>
+                <img
+                  src={donationDetails.qrUrl}
+                  alt="Donation QR Code"
+                  className="w-48 h-48 object-contain rounded-xl shadow-inner border border-slate-50 mb-3"
+                />
+                <p className="text-[10px] text-slate-400 font-bold uppercase text-center">
+                  Scan with any UPI App
+                </p>
+              </>
+            ) : (
+              <div className="text-center p-4 bg-slate-50 rounded-xl w-full">
+                <i className="fas fa-university text-slate-300 text-2xl mb-2"></i>
+                <p className="text-[10px] text-slate-500 font-bold">
+                  UPI currently unavailable.<br/>Please use standard Bank Transfer.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -143,6 +153,17 @@ const Chatbot: React.FC = () => {
                 </div>
               </div>
             ))}
+            
+            {/* Loading / Typing Indicator */}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white border p-4 rounded-[2rem] flex items-center gap-2">
+                  <div className="w-2 h-2 bg-emerald-300 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Input */}
@@ -151,13 +172,14 @@ const Chatbot: React.FC = () => {
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
-                placeholder="How can I help you donate?"
-                className="w-full px-6 py-4 rounded-full border"
+                placeholder={isLoading ? "Please wait, thinking..." : "How can I help you donate?"}
+                disabled={isLoading}
+                className="w-full px-6 py-4 rounded-full border disabled:bg-slate-50 disabled:text-slate-400 transition-colors"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="absolute right-2 top-2 bg-emerald-600 text-white w-10 h-10 rounded-full"
+                className="absolute right-2 top-2 bg-emerald-600 text-white w-10 h-10 rounded-full disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
               >
                 <i className="fas fa-paper-plane"></i>
               </button>

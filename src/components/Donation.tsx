@@ -695,37 +695,61 @@ const Donation: React.FC = () => {
                 </button>
 
                 {showBankDetails && (
-                  <div className="mt-6 space-y-6">
-                    {/* QR Code */}
-                    <div className="text-center">
-                      <div className="bg-white p-4 rounded-2xl shadow-inner border border-slate-100 inline-block">
-                        <img
-                          src={details?.qrUrl || 'QR.png.jpg'}
-                          alt="UPI QR Code for Roti Bank Bettiah Donation"
-                          className="w-48 h-48 rounded-xl"
-                        />
-                      </div>
-                      <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-4">
-                        <i className="fas fa-mobile-screen mr-1"></i> Scan with any UPI App
-                      </p>
-                    </div>
-
-                    {/* Bank Details */}
-                    <div className="space-y-3">
-                      <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">
-                        <i className="fas fa-university mr-1"></i> Bank Details
-                      </h4>
-                      {[
-                        { label: 'Account Holder', value: details?.accountHolder || 'ROTI BANK BETTIAH' },
-                        { label: 'Bank', value: details?.bankName || 'Punjab National Bank' },
-                        { label: 'Account No.', value: details?.accountNumber || '1919202100001486' },
-                        { label: 'IFSC Code', value: details?.ifscCode || 'PUNB0191920' },
-                      ].map((item, i) => (
-                        <div key={i} className="flex justify-between items-center py-2.5 border-b border-slate-50">
-                          <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">{item.label}</span>
-                          <span className="text-sm font-bold text-slate-800 font-mono">{item.value}</span>
+                  <div className="mt-6 space-y-6 animate-fade-in">
+                    {/* QR Code (Only show if uploaded) */}
+                    {details?.qrUrl && (
+                      <div className="text-center">
+                        <div className="bg-white p-4 rounded-3xl shadow-lg border border-slate-100 inline-block relative group">
+                          <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 rounded-3xl transition-opacity"></div>
+                          <img
+                            src={details.qrUrl}
+                            alt="UPI QR Code for Roti Bank Bettiah Donation"
+                            className="w-48 h-48 rounded-2xl object-cover"
+                          />
                         </div>
-                      ))}
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-4 flex items-center justify-center gap-2">
+                          <i className="fas fa-mobile-screen text-emerald-500"></i> Scan with any UPI App
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Bank Details (Redesigned with Copy Button) */}
+                    <div className="bg-gradient-to-br from-slate-50 to-white p-6 rounded-3xl border border-slate-200/60 shadow-sm relative overflow-hidden">
+                      {/* Decorative background element */}
+                      <div className="absolute -right-10 -bottom-10 opacity-[0.03] pointer-events-none">
+                        <i className="fas fa-building-columns text-[120px]"></i>
+                      </div>
+                      
+                      <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-5 flex items-center gap-2 relative z-10">
+                        <i className="fas fa-university text-emerald-400"></i> Bank Account Information
+                      </h4>
+                      
+                      <div className="space-y-1 relative z-10">
+                        {[
+                          { label: 'Account Holder', value: details?.accountHolder || 'ROTI BANK BETTIAH' },
+                          { label: 'Bank', value: details?.bankName || 'Punjab National Bank' },
+                          { label: 'Account No.', value: details?.accountNumber || '1919202100001486', copyable: true },
+                          { label: 'IFSC Code', value: details?.ifscCode || 'PUNB0191920', copyable: true },
+                        ].map((item, i) => (
+                          <div key={i} className="flex justify-between items-center py-3 border-b border-slate-200/50 last:border-0 hover:bg-white/50 px-2 -mx-2 rounded-lg transition-colors">
+                            <span className="text-[11px] text-slate-500 font-bold uppercase tracking-wider">{item.label}</span>
+                            <div className="flex items-center gap-3">
+                              <span className={`font-black text-slate-800 ${item.copyable ? 'font-mono text-sm tracking-tight' : 'text-xs tracking-wide'}`}>
+                                {item.value}
+                              </span>
+                              {item.copyable && (
+                                <button 
+                                  onClick={() => navigator.clipboard.writeText(item.value)}
+                                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-400 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all flex items-center justify-center active:scale-95 shadow-sm"
+                                  title="Copy to clipboard"
+                                >
+                                  <i className="fas fa-copy text-[11px]"></i>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
