@@ -1,0 +1,49 @@
+{
+  "name": "roti-bank-bettiah---secure-portal",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "homepage": "https://rotibankbettiah.github.io/roti-bank-bettiah/",
+  "scripts": {
+    "dev": "vite",
+    "dev:all": "concurrently \"npm run dev\" \"cd server && npm run dev\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "typecheck": "tsc --noEmit",
+    "docker:build": "docker build -t roti-bank-bettiah .",
+    "docker:run": "docker run -p 8080:80 roti-bank-bettiah"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.48.1",
+    "@tailwindcss/vite": "^4.3.0",
+    "framer-motion": "^12.40.0",
+    "lucide-react": "^1.17.0",
+    "react": "^19.2.3",
+    "react-confetti": "^6.4.0",
+    "react-dom": "^19.2.3",
+    "recharts": "^3.6.0",
+    "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@testing-library/jest-dom": "^6.6.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.0",
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "@vitest/coverage-istanbul": "^3.2.0",
+    "concurrently": "^10.0.3",
+    "gh-pages": "^6.3.0",
+    "jsdom": "^26.1.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0",
+    "vitest": "^3.2.0"
+  }
+}

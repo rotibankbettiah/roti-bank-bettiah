@@ -1,0 +1,25 @@
+# Roti Bank Bettiah — Registered Non-Profit Organization
+# https://www.rotibankbettiah.org
+
+User-agent: *
+Allow: /
+Disallow: /admin.html
+
+# Sitemaps
+Sitemap: https://www.rotibankbettiah.org/sitemap.xml
+
+# Crawl rate
+Crawl-delay: 1
+
+# Social & Search Engine Specific
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
