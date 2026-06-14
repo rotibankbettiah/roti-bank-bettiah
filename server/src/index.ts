@@ -20,8 +20,8 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps or curl requests)
-    // and requests from allowed origins
-    if (!origin || allowedOrigins.includes(origin)) {
+    // and requests from allowed origins, or ANY .vercel.app domain
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
       // In development, you might want to log blocked origins
