@@ -11,7 +11,7 @@ test.describe('Navigation', () => {
   test('clicking "About" link scrolls to about section', async ({ page }) => {
     // Click the desktop nav link
     await page.locator('nav a:has-text("About")').first().click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const aboutSection = page.locator('#about');
     await expect(aboutSection).toBeInViewport();
@@ -19,7 +19,7 @@ test.describe('Navigation', () => {
 
   test('clicking "Gallery" link scrolls to gallery section', async ({ page }) => {
     await page.locator('nav a:has-text("Gallery")').first().click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const gallerySection = page.locator('#gallery');
     await expect(gallerySection).toBeInViewport();
@@ -27,7 +27,7 @@ test.describe('Navigation', () => {
 
   test('clicking "Achievements" link scrolls to achievements section', async ({ page }) => {
     await page.locator('nav a:has-text("Achievements")').first().click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const achievementsSection = page.locator('#achievements');
     await expect(achievementsSection).toBeInViewport();
@@ -36,7 +36,7 @@ test.describe('Navigation', () => {
   test('clicking "Donate Now" link scrolls to donation section', async ({ page }) => {
     const donateBtn = page.locator('#nav-donate-btn');
     await donateBtn.click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const donationSection = page.locator('#donation');
     await expect(donationSection).toBeInViewport();
