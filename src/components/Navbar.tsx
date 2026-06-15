@@ -88,11 +88,11 @@ const Navbar: React.FC = () => {
               />
               <div>
                 <h1 className={`font-extrabold tracking-tight text-emerald-800 transition-all duration-500 leading-tight ${isScrolled ? 'text-base' : 'text-lg md:text-2xl'}`}>
-                  Roti Bank Bettiah
+                  Roti Bank Bettiah Trust
                 </h1>
                 {!isScrolled && (
                   <span className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] block animate-fade-in">
-                    रोटी बैंक बेतिया • Reg. 5071/2023
+                    रोटी बैंक बेतिया ट्रस्ट • Reg. No. 5071/2023
                   </span>
                 )}
               </div>

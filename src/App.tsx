@@ -619,10 +619,10 @@ const App: React.FC = () => {
             <div>
               <div className="flex items-center gap-3 justify-center md:justify-start mb-8">
                 <img src="/logo.png" className="h-10 rounded-full" alt="Roti Bank Bettiah logo" />
-                <span className="font-black text-2xl tracking-tighter">Roti Bank Bettiah</span>
+                <span className="font-black text-2xl tracking-tighter">Roti Bank Bettiah Trust</span>
               </div>
               <p className="text-slate-400 leading-relaxed mb-8">
-                Eradicating hunger and providing hope to the underprivileged since 2023. Join our journey to make Bettiah hunger-free.
+                Roti Bank Bettiah Trust is a registered non-profit NGO and charitable trust. Eradicating hunger and providing hope to the underprivileged since 2023. Join our journey to make Bettiah hunger-free.
               </p>
               <div className="flex justify-center md:justify-start gap-4 text-xl">
                 {[
@@ -711,8 +711,8 @@ const App: React.FC = () => {
           </div>
           
           <div className="text-center">
-            <p className="text-slate-500 text-[10px] uppercase tracking-[0.4em] font-black mb-2">© 2025 Roti Bank Bettiah | Serving with Compassion</p>
-            <p className="text-slate-600 text-[9px] uppercase font-bold">Registration Number: 5071/2023 | ISO Certified NGO</p>
+            <p className="text-slate-500 text-[10px] uppercase tracking-[0.4em] font-black mb-2">© 2025 Roti Bank Bettiah Trust | Serving with Compassion</p>
+            <p className="text-slate-600 text-[9px] uppercase font-bold">Registration Number: 5071/2023 | Registered NGO & Charitable Trust</p>
           </div>
         </div>
       </footer>
