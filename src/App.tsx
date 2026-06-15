@@ -7,6 +7,7 @@ import Donation from './components/Donation';
 import Chatbot from './components/Chatbot';
 import Testimonials from './components/Testimonials';
 import FloatingDonateButton from './components/FloatingDonateButton';
+import MediaCenter from './components/MediaCenter';
 import { supabaseService, supabase } from './services/supabaseService';
 import {
   Activity,
@@ -15,7 +16,8 @@ import {
   NewsItem,
   Notice,
   InternshipContent,
-  Cause
+  Cause,
+  MediaItem
 } from './types';
 
 const App: React.FC = () => {
@@ -29,7 +31,8 @@ const App: React.FC = () => {
     internship: InternshipContent[],
     causes: Cause[],
     about: string,
-    banner: string
+    banner: string,
+    media: MediaItem[]
   }>({
     gallery: [],
     achievements: [],
@@ -40,7 +43,8 @@ const App: React.FC = () => {
     internship: [],
     causes: [],
     about: '',
-    banner: ''
+    banner: '',
+    media: []
   });
 
   const [activeSlide, setActiveSlide] = useState(0);
@@ -53,7 +57,7 @@ const App: React.FC = () => {
 
   const fetchAllData = useCallback(async () => {
     try {
-      const [g, ach, br, act, not, nws, int, cs, ab, bn] = await Promise.all([
+      const [g, ach, br, act, not, nws, int, cs, ab, bn, md] = await Promise.all([
         supabaseService.getGalleryImages(),
         supabaseService.getAchievements(),
         supabaseService.getBranches(),
@@ -63,7 +67,8 @@ const App: React.FC = () => {
         supabaseService.getInternshipContent(),
         supabaseService.getCauses(),
         supabaseService.getAboutContent(),
-        supabaseService.getBanner()
+        supabaseService.getBanner(),
+        supabaseService.getMediaItems()
       ]);
       setData({ 
         gallery: g, 
@@ -75,7 +80,8 @@ const App: React.FC = () => {
         internship: int, 
         causes: cs, 
         about: ab,
-        banner: bn
+        banner: bn,
+        media: md
       });
     } catch (err) {
       console.error("Data fetch failed", err);
@@ -261,6 +267,9 @@ const App: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Media Center Section */}
+        <MediaCenter items={data.media} />
 
         {/* About Us Section */}
         <section id="about" className="py-24 bg-slate-50 relative overflow-hidden scroll-mt-24 reveal">
