@@ -83,7 +83,8 @@
     </style>
 </head>
 <body class="p-4">
-    <div id="app" class="container hidden">
+    <div id="app" class="container hidden relative">
+        <button id="logout-btn" class="absolute top-6 right-6 bg-red-100 hover:bg-red-200 text-red-700 font-bold px-4 py-2 rounded-lg text-sm transition-all">Logout</button>
         <h1 class="heading">Roti Bank Admin Panel</h1>
         
         <!-- About Us Section -->
@@ -291,8 +292,8 @@
         <h1 class="heading">Admin Login</h1>
         <form id="admin-login-form" class="space-y-4">
             <div class="form-group">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" id="username" class="form-input" required>
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="form-input" required>
             </div>
             <div class="form-group">
                 <label for="password" class="form-label">Password</label>
@@ -312,13 +313,9 @@
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Global variables and constants
         const mainApp = document.getElementById('app');
         const loginForm = document.getElementById('login-form');
         const loginMessage = document.getElementById('login-message');
-
-        const ADMIN_USERNAME = "admin";
-        const ADMIN_PASSWORD = "admin123";
 
         // Function to show a message in the message box
         function showMessage(element, message, type = 'success') {
@@ -359,18 +356,63 @@
         // Handle login form submission
         document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Logging in...';
+            submitBtn.disabled = true;
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+
+            if (error) {
+                showMessage(loginMessage, error.message, "error");
+            } else {
                 loginForm.classList.add('hidden');
                 mainApp.classList.remove('hidden');
                 showMessage(loginMessage, "Login successful!", "success");
                 loadAllData();
-            } else {
-                showMessage(loginMessage, "Invalid username or password.", "error");
             }
         });
+
+        // Handle Logout
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            mainApp.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            document.getElementById('admin-login-form').reset();
+            showMessage(loginMessage, "Logged out successfully", "success");
+        });
+
+        // Check Session on Load
+        async function checkSession() {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (session) {
+                loginForm.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                loadAllData();
+            }
+        }
+        
+        // Listen to auth state changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN') {
+                loginForm.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+            } else if (event === 'SIGNED_OUT') {
+                mainApp.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+            }
+        });
+
+        checkSession();
 
         // Load all existing data into the admin panel
         async function loadAllData() {
