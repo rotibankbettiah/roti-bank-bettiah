@@ -85,7 +85,7 @@ export const supabaseService = {
       bankName: 'Punjab National Bank',
       accountNumber: '1919202100001486',
       ifscCode: 'PUNB0191920',
-      qrUrl: null 
+      qrUrl: '/QR.png.jpg' 
     };
   },
 
