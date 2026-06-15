@@ -99,3 +99,11 @@ export interface RazorpayOptions {
   };
   notes?: Record<string, string>;
 }
+
+export interface MediaItem {
+  id: string;
+  type: 'youtube' | 'instagram';
+  title: string;
+  url: string;
+  created_at?: string;
+}

@@ -32,6 +32,7 @@ const Navbar: React.FC = () => {
 
   const navLinks = [
     { name: 'Gallery', href: '#gallery', icon: 'fa-images' },
+    { name: 'Media', href: '#media', icon: 'fa-play' },
     { name: 'About', href: '#about', icon: 'fa-heart' },
     { name: 'Location', href: 'https://maps.app.goo.gl/iUDm3AZMNMM91PDN6?g_st=aw', icon: 'fa-map-marker-alt' },
     { name: 'Achievements', href: '#achievements', icon: 'fa-trophy' },

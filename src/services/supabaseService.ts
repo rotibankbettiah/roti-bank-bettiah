@@ -1,6 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
-import { Activity, Achievement, Branch, NewsItem, Notice, InternshipContent, Cause, DonationDetails } from '../types';
+import { Activity, Achievement, Branch, NewsItem, Notice, InternshipContent, Cause, DonationDetails, MediaItem } from '../types';
 
 const SUPABASE_URL = 'https://rvkgeoqrxkxjmvdjiyli.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2a2dlb3FyeGt4am12ZGppeWxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0NDg4NzQsImV4cCI6MjA3MTAyNDg3NH0.9N2fioPJWAWIZYisDa5X_arw2YMpngxF5zw-GP1mP3I';
@@ -87,6 +87,20 @@ export const supabaseService = {
       ifscCode: 'PUNB0191920',
       qrUrl: '/QR.png.jpg' 
     };
+  },
+
+  async getMediaItems(): Promise<MediaItem[]> {
+    try {
+      const { data, error } = await supabase
+        .from('media')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.error('Failed to fetch media:', err);
+      return [];
+    }
   },
 
   async subscribeNewsletter(email: string): Promise<void> {

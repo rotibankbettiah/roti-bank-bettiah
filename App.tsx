@@ -5,8 +5,9 @@ import Hero from './components/Hero.tsx';
 import Stats from './components/Stats.tsx';
 import Donation from './components/Donation.tsx';
 import Chatbot from './components/Chatbot.tsx';
+import MediaCenter from './components/MediaCenter.tsx';
 import { supabaseService, supabase } from './services/supabaseService.ts';
-import { Activity, Achievement, Branch, NewsItem, Notice, InternshipContent, Cause } from './types.ts';
+import { Activity, Achievement, Branch, NewsItem, Notice, InternshipContent, Cause, MediaItem } from './types.ts';
 
 const App: React.FC = () => {
   const [data, setData] = useState<{
@@ -19,7 +20,8 @@ const App: React.FC = () => {
     internship: InternshipContent[],
     causes: Cause[],
     about: string,
-    banner: string
+    banner: string,
+    media: MediaItem[]
   }>({
     gallery: [],
     achievements: [],
@@ -30,7 +32,8 @@ const App: React.FC = () => {
     internship: [],
     causes: [],
     about: '',
-    banner: ''
+    banner: '',
+    media: []
   });
 
   const [activeSlide, setActiveSlide] = useState(0);
@@ -39,7 +42,7 @@ const App: React.FC = () => {
 
   const fetchAllData = useCallback(async () => {
     try {
-      const [g, ach, br, act, not, nws, int, cs, ab, bn] = await Promise.all([
+      const [g, ach, br, act, not, nws, int, cs, ab, bn, med] = await Promise.all([
         supabaseService.getGalleryImages(),
         supabaseService.getAchievements(),
         supabaseService.getBranches(),
@@ -49,7 +52,8 @@ const App: React.FC = () => {
         supabaseService.getInternshipContent(),
         supabaseService.getCauses(),
         supabaseService.getAboutContent(),
-        supabaseService.getBanner()
+        supabaseService.getBanner(),
+        supabaseService.getMediaItems()
       ]);
       setData({ 
         gallery: g, 
@@ -61,7 +65,8 @@ const App: React.FC = () => {
         internship: int, 
         causes: cs, 
         about: ab,
-        banner: bn
+        banner: bn,
+        media: med
       });
     } catch (err) {
       console.error("Data fetch failed", err);
@@ -413,6 +418,8 @@ const App: React.FC = () => {
           </div>
         </section>
 
+        <MediaCenter items={data.media} />
+ 
         <Donation />
       </main>
 

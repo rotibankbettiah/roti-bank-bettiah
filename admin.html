@@ -246,6 +246,30 @@
             <div id="gallery-list" class="mt-4 space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
+        <!-- Media Section (YouTube & Instagram) -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add YouTube Video / Instagram Reel</h2>
+            <form id="media-form">
+                <div class="form-group">
+                    <label for="media-type" class="form-label">Media Type</label>
+                    <select id="media-type" class="form-input" required>
+                        <option value="youtube">YouTube Video</option>
+                        <option value="instagram">Instagram Reel</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="media-title" class="form-label">Title / Caption</label>
+                    <input type="text" id="media-title" class="form-input" required placeholder="e.g., Feeding the needy at Bettiah center">
+                </div>
+                <div class="form-group">
+                    <label for="media-url" class="form-label">Video / Reel URL</label>
+                    <input type="url" id="media-url" class="form-input" required placeholder="e.g., https://www.youtube.com/watch?v=... or https://www.instagram.com/reel/...">
+                </div>
+                <button type="submit" class="btn-primary">Add Media</button>
+            </form>
+            <div id="media-list" class="mt-6 space-y-4"></div>
+        </div>
+
         <!-- Newsletter Subscribers Section -->
         <div class="card mb-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
@@ -358,6 +382,7 @@
             await loadGallery();
             await loadInternshipContent();
             await loadInternshipFormUrl();
+            await loadMediaItems();
             await loadSubscribers();
         }
         
@@ -784,6 +809,61 @@
             } catch (e) {
                 console.error("Error adding gallery image: ", e);
                 showMessage(messageBox, "Error adding image.", "error");
+            }
+        });
+
+        // Load media items
+        async function loadMediaItems() {
+            const { data, error } = await supabase.from('media').select('*').order('created_at', { ascending: false });
+            const list = document.getElementById('media-list');
+            if (!list) return;
+            list.innerHTML = '';
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'flex justify-between items-center bg-gray-100 p-3 rounded-lg border border-gray-200';
+                    el.innerHTML = `
+                        <div>
+                            <p class="font-bold text-gray-800">${item.title}</p>
+                            <p class="text-xs text-gray-400 mt-1 uppercase">${item.type} | ${item.url}</p>
+                        </div>
+                        <div>
+                            <button class="delete-btn text-red-500 hover:text-red-700 font-medium text-sm transition-all" data-id="${item.id}" data-table="media">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            } else {
+                list.innerHTML = `<p class="text-gray-400 text-center py-4">No media feeds added yet.</p>`;
+            }
+            list.addEventListener('click', handleDeleteAndEdit);
+        }
+
+        // Media Form Submission
+        document.getElementById('media-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const type = document.getElementById('media-type').value;
+            const title = document.getElementById('media-title').value;
+            const url = document.getElementById('media-url').value;
+            
+            let messageBox = document.getElementById('media-form').querySelector('.message-box');
+            if (!messageBox) {
+                messageBox = document.createElement('div');
+                document.getElementById('media-form').appendChild(messageBox);
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .insert({ type, title, url, created_at: new Date().toISOString() });
+                
+                if (error) throw error;
+                showMessage(messageBox, "Media added successfully!", "success");
+                document.getElementById('media-form').reset();
+                loadAllData();
+            } catch (err) {
+                console.error("Error adding media: ", err);
+                showMessage(messageBox, "Error adding media.", "error");
             }
         });
 
