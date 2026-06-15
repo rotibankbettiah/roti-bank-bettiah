@@ -64,3 +64,11 @@ export interface DonationDetails {
   ifscCode: string;
   qrUrl: string;
 }
+
+export interface MediaItem {
+  id: string;
+  type: 'youtube' | 'instagram';
+  title: string;
+  url: string;
+  created_at?: string;
+}
