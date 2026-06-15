@@ -4,6 +4,18 @@ test.describe('Navigation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('#root', { state: 'attached' });
+    // Disable smooth scrolling for testing to avoid animation flakiness
+    await page.addStyleTag({ content: '* { scroll-behavior: auto !important; }' });
+    await page.evaluate(() => {
+      const originalScrollTo = window.scrollTo;
+      window.scrollTo = (options?: ScrollToOptions | number, y?: number) => {
+        if (typeof options === 'object') {
+          originalScrollTo({ ...options, behavior: 'auto' });
+        } else {
+          originalScrollTo(options, y);
+        }
+      };
+    });
     // Give time for data to load and page to settle
     await page.waitForTimeout(1000);
   });
