@@ -462,13 +462,13 @@ const App: React.FC = () => {
                     </div>
                   ))}
                 </div>
-                <div className="flex gap-4">
-                  <button className="px-10 py-4 bg-white text-emerald-900 rounded-full font-black uppercase tracking-widest text-sm hover:bg-emerald-50 transition-all active:scale-95 shadow-xl">
+                <div className="flex flex-wrap gap-4">
+                  <a href="https://docs.google.com/forms/d/e/1FAIpQLScXUtdd9WqgGERF8iDaZrDslw10lidmvpyhyY8EtFQwIvdgBQ/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" className="px-10 py-4 bg-white text-emerald-900 rounded-full font-black uppercase tracking-widest text-sm hover:bg-emerald-50 transition-all active:scale-95 shadow-xl text-center">
                     Apply as Intern
-                  </button>
-                  <button className="px-10 py-4 bg-emerald-800 text-white border-2 border-emerald-700 rounded-full font-black uppercase tracking-widest text-sm hover:bg-emerald-700 transition-all active:scale-95">
+                  </a>
+                  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfzN4WcusmcUmAKrpnpf4J8128O37tf7MpuJ_P96uKmX-sKsg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" className="px-10 py-4 bg-emerald-800 text-white border-2 border-emerald-700 rounded-full font-black uppercase tracking-widest text-sm hover:bg-emerald-700 transition-all active:scale-95 text-center">
                     Volunteer
-                  </button>
+                  </a>
                 </div>
               </div>
               <div className="relative">
