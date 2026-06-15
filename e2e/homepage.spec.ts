@@ -8,7 +8,7 @@ test.describe('Homepage', () => {
   });
 
   test('page loads successfully with correct title', async ({ page }) => {
-    await expect(page).toHaveTitle(/Roti Bank Bettiah/);
+    await expect(page).toHaveTitle(/Roti Bank Bettiah Trust/);
   });
 
   test('navbar is visible', async ({ page }) => {
@@ -17,7 +17,7 @@ test.describe('Homepage', () => {
   });
 
   test('navbar contains brand name', async ({ page }) => {
-    await expect(page.locator('#navbar')).toContainText('Roti Bank Bettiah');
+    await expect(page.locator('#navbar')).toContainText('Roti Bank Bettiah Trust');
   });
 
   test('navbar contains navigation links', async ({ page }) => {
@@ -68,7 +68,7 @@ test.describe('Homepage', () => {
 
   test('footer contains copyright info', async ({ page }) => {
     const footer = page.locator('footer');
-    await expect(footer).toContainText('Roti Bank Bettiah');
+    await expect(footer).toContainText('Roti Bank Bettiah Trust');
     await expect(footer).toContainText('5071/2023');
   });
 

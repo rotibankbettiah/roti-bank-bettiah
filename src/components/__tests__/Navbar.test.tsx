@@ -5,7 +5,7 @@ import Navbar from '../Navbar';
 describe('Navbar', () => {
   it('renders the brand name', () => {
     render(<Navbar />);
-    expect(screen.getByText('Roti Bank Bettiah')).toBeInTheDocument();
+    expect(screen.getByText('Roti Bank Bettiah Trust')).toBeInTheDocument();
   });
 
   it('renders the registration info', () => {
