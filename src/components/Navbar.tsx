@@ -91,7 +91,7 @@ const Navbar: React.FC = () => {
                   Roti Bank Bettiah Trust
                 </h1>
                 {!isScrolled && (
-                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] block animate-fade-in">
+                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em] block animate-fade-in">
                     रोटी बैंक बेतिया ट्रस्ट • Reg. No. 5071/2023
                   </span>
                 )}

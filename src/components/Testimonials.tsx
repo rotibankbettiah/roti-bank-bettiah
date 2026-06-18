@@ -101,7 +101,7 @@ const Testimonials: React.FC = () => {
                         {testimonial.avatar}
                       </div>
                       <div>
-                        <h4 className="font-bold text-slate-900 text-lg">{testimonial.name}</h4>
+                        <h3 className="font-bold text-slate-900 text-lg">{testimonial.name}</h3>
                         <p className="text-emerald-600 text-xs font-bold uppercase tracking-widest">{testimonial.role}</p>
                         <p className="text-slate-400 text-xs mt-0.5">
                           <i className="fas fa-map-marker-alt mr-1"></i>{testimonial.location}
@@ -125,13 +125,17 @@ const Testimonials: React.FC = () => {
               <button
                 key={idx}
                 onClick={() => setActiveIndex(idx)}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  idx === activeIndex
-                    ? 'w-10 bg-emerald-600'
-                    : 'w-2.5 bg-emerald-200 hover:bg-emerald-300'
-                }`}
+                className="p-2 -m-2 group"
                 aria-label={`View testimonial ${idx + 1}`}
-              />
+              >
+                <div
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    idx === activeIndex
+                      ? 'w-10 bg-emerald-600'
+                      : 'w-2.5 bg-emerald-200 group-hover:bg-emerald-300'
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>

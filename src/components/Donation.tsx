@@ -497,7 +497,7 @@ const Donation: React.FC = () => {
                 <h3 className="text-xl font-bold text-slate-900 mb-2">
                   <i className="fas fa-coins text-emerald-500 mr-2"></i>Choose Donation Amount
                 </h3>
-                <p className="text-slate-400 text-sm mb-8">Select a preset amount or enter your own</p>
+                <p className="text-slate-500 text-sm mb-8">Select a preset amount or enter your own</p>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                   {DONATION_TIERS.map((tier) => (
@@ -556,14 +556,14 @@ const Donation: React.FC = () => {
                     <i className="fas fa-seedling text-white text-lg"></i>
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-1">Your Impact</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-emerald-700 mb-1">Your Impact</p>
                     <p className="text-slate-700 font-bold">{currentImpact}</p>
                   </div>
                 </div>
 
                 {/* Donor Info (optional) */}
                 <div className="mt-6 space-y-3">
-                  <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">
                     <i className="fas fa-user mr-1"></i> Donor Information (optional)
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

@@ -190,6 +190,7 @@ const Chatbot: React.FC = () => {
         <button
           onClick={() => setIsOpen(true)}
           className="bg-emerald-600 text-white w-20 h-20 rounded-full shadow-xl"
+          aria-label="Open Chatbot"
         >
           <i className="fa-solid fa-comment-dots text-3xl"></i>
         </button>

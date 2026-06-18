@@ -229,13 +229,17 @@ const App: React.FC = () => {
                   
                   <img 
                     src={item.imageUrl} 
-                    alt={item.title} 
+                    alt={item.title || 'Gallery image'} 
                     className="relative z-10 w-full h-full object-contain"
                     loading="lazy"
                   />
                   
                   <div className="absolute inset-0 z-20 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent flex flex-col justify-end p-8 md:p-12 text-left">
-                    <h3 className="text-white text-2xl md:text-3xl font-black mb-2">{item.title}</h3>
+                    {item.title ? (
+                      <h3 className="text-white text-2xl md:text-3xl font-black mb-2">{item.title}</h3>
+                    ) : (
+                      <h3 className="sr-only">Gallery Image</h3>
+                    )}
                     <p className="text-emerald-400 font-bold uppercase tracking-[0.2em] text-sm">{item.caption || 'Field Operations'}</p>
                   </div>
                 </div>
@@ -253,9 +257,11 @@ const App: React.FC = () => {
                   <button 
                     key={idx}
                     onClick={() => setActiveSlide(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 ${idx === activeSlide ? 'w-8 bg-emerald-500' : 'w-2 bg-white/50 hover:bg-white'}`}
+                    className="p-2 -m-2 group"
                     aria-label={`View slide ${idx + 1}`}
-                  />
+                  >
+                    <div className={`h-2 rounded-full transition-all duration-300 ${idx === activeSlide ? 'w-8 bg-emerald-500' : 'w-2 bg-white/50 group-hover:bg-white'}`} />
+                  </button>
                 ))}
               </div>
 
@@ -388,7 +394,7 @@ const App: React.FC = () => {
                       <img 
                         src={ach.imageUrl} 
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                        alt={ach.description}
+                        alt={ach.description || 'Achievement image'}
                         loading="lazy"
                       />
                     </div>
@@ -396,7 +402,11 @@ const App: React.FC = () => {
                   <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 mb-6 group-hover:rotate-12 transition-transform">
                     <i className={`fas ${ach.icon} text-2xl`}></i>
                   </div>
-                  <h3 className="text-4xl font-black mb-2 tracking-tighter">{ach.count}</h3>
+                  {ach.count ? (
+                    <h3 className="text-4xl font-black mb-2 tracking-tighter">{ach.count}</h3>
+                  ) : (
+                    <h3 className="sr-only">Achievement Metric</h3>
+                  )}
                   <p className="text-emerald-400 font-bold uppercase tracking-widest text-xs mb-4">{ach.description}</p>
                   {ach.caption && <p className="text-slate-400 text-sm leading-relaxed">{ach.caption}</p>}
                 </article>
@@ -419,7 +429,7 @@ const App: React.FC = () => {
                 <article key={br.id} className="bg-slate-50 p-10 rounded-[3rem] border border-slate-100 card-hover w-full max-w-sm group">
                   <div className="mb-6 overflow-hidden rounded-[2rem]">
                     {br.imageUrl ? (
-                      <img src={br.imageUrl} className="w-full h-44 object-cover group-hover:scale-110 transition-transform duration-700" alt={br.name} loading="lazy" />
+                      <img src={br.imageUrl} className="w-full h-44 object-cover group-hover:scale-110 transition-transform duration-700" alt={br.name || 'Branch image'} loading="lazy" />
                     ) : (
                       <div className="w-full h-44 bg-slate-200 flex items-center justify-center text-slate-400">
                         <i className="fas fa-building text-4xl"></i>
@@ -499,7 +509,7 @@ const App: React.FC = () => {
               {data.activities.map((act) => (
                 <article key={act.id} className="bg-slate-50 rounded-[3rem] overflow-hidden border border-slate-100 group card-hover">
                   <div className="h-56 overflow-hidden">
-                    <img src={act.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={act.title} loading="lazy" />
+                    <img src={act.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={act.title || 'Activity image'} loading="lazy" />
                   </div>
                   <div className="p-8 md:p-10">
                     <div className="flex justify-between items-start mb-4">
@@ -559,7 +569,7 @@ const App: React.FC = () => {
                         <img 
                           src={item.imageUrl} 
                           className="max-w-full max-h-[500px] object-contain transition-transform duration-500" 
-                          alt={item.title}
+                          alt={item.title || 'News image'}
                           loading="lazy"
                         />
                       </div>
@@ -711,8 +721,8 @@ const App: React.FC = () => {
           </div>
           
           <div className="text-center">
-            <p className="text-slate-500 text-[10px] uppercase tracking-[0.4em] font-black mb-2">© 2025 Roti Bank Bettiah Trust | Serving with Compassion</p>
-            <p className="text-slate-600 text-[9px] uppercase font-bold">Registration Number: 5071/2023 | Registered NGO & Charitable Trust</p>
+            <p className="text-slate-400 text-[10px] uppercase tracking-[0.4em] font-black mb-2">© 2025 Roti Bank Bettiah Trust | Serving with Compassion</p>
+            <p className="text-slate-400 text-[9px] uppercase font-bold">Registration Number: 5071/2023 | Registered NGO & Charitable Trust</p>
           </div>
         </div>
       </footer>
