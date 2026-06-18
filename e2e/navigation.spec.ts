@@ -4,8 +4,11 @@ test.describe('Navigation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('#root', { state: 'attached' });
-    // Disable smooth scrolling for testing to avoid animation flakiness
-    await page.addStyleTag({ content: '* { scroll-behavior: auto !important; }' });
+    // Disable smooth scrolling for testing to avoid animation flakiness without violating CSP
+    await page.evaluate(() => {
+      document.documentElement.style.setProperty('scroll-behavior', 'auto', 'important');
+      document.body.style.setProperty('scroll-behavior', 'auto', 'important');
+    });
     await page.evaluate(() => {
       const originalScrollTo = window.scrollTo;
       window.scrollTo = (options?: ScrollToOptions | number, y?: number) => {
