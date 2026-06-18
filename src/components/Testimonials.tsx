@@ -75,12 +75,10 @@ const Testimonials: React.FC = () => {
             {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
-                className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                className={`absolute inset-0 transition duration-700 ease-in-out ${
                   index === activeIndex
-                    ? 'opacity-100 translate-y-0 z-10'
-                    : index === (activeIndex + 1) % testimonials.length
-                    ? 'opacity-0 translate-y-8 z-0'
-                    : 'opacity-0 -translate-y-8 z-0'
+                    ? 'opacity-100 translate-x-0 z-10'
+                    : 'opacity-0 translate-x-12 z-0 pointer-events-none'
                 }`}
               >
                 <div className="bg-white p-10 md:p-12 rounded-[2.5rem] shadow-xl shadow-emerald-100/50 border border-emerald-100/50 h-full">
@@ -91,7 +89,7 @@ const Testimonials: React.FC = () => {
                     </div>
                   </div>
 
-                  <p className="text-slate-600 text-lg leading-relaxed mb-8 italic">
+                  <p className="text-slate-800 italic leading-relaxed text-sm lg:text-base mb-8">
                     "{testimonial.text}"
                   </p>
 
@@ -102,7 +100,7 @@ const Testimonials: React.FC = () => {
                       </div>
                       <div>
                         <h3 className="font-bold text-slate-900 text-lg">{testimonial.name}</h3>
-                        <p className="text-emerald-600 text-xs font-bold uppercase tracking-widest">{testimonial.role}</p>
+                        <p className="text-emerald-800 text-xs font-bold uppercase tracking-widest">{testimonial.role}</p>
                         <p className="text-slate-400 text-xs mt-0.5">
                           <i className="fas fa-map-marker-alt mr-1"></i>{testimonial.location}
                         </p>
@@ -125,7 +123,7 @@ const Testimonials: React.FC = () => {
               <button
                 key={idx}
                 onClick={() => setActiveIndex(idx)}
-                className="p-2 -m-2 group"
+                className="p-5 -m-5 group"
                 aria-label={`View testimonial ${idx + 1}`}
               >
                 <div

@@ -72,7 +72,7 @@ const MediaCenter: React.FC<MediaCenterProps> = ({ items }) => {
               onClick={() => setActiveFilter(filter)}
               className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
                 activeFilter === filter
-                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
+                  ? 'bg-emerald-800 text-white shadow-lg shadow-emerald-800/20'
                   : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
               }`}
             >
@@ -123,7 +123,7 @@ const MediaCenter: React.FC<MediaCenterProps> = ({ items }) => {
 
                   {/* Badge */}
                   <span className={`absolute top-4 left-4 text-[9px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full text-white shadow-sm flex items-center gap-1.5 ${
-                    item.type === 'youtube' ? 'bg-red-600' : 'bg-gradient-to-r from-purple-600 to-pink-500'
+                    item.type === 'youtube' ? 'bg-red-700' : 'bg-gradient-to-r from-purple-600 to-pink-500'
                   }`}>
                     <i className={item.type === 'youtube' ? 'fab fa-youtube' : 'fab fa-instagram'}></i>
                     {item.type}
@@ -137,7 +137,7 @@ const MediaCenter: React.FC<MediaCenterProps> = ({ items }) => {
                       {item.title}
                     </h3>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-slate-400 group-hover:text-emerald-500 transition-colors">
+                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-slate-600 group-hover:text-emerald-600 transition-colors">
                     <span className="text-xs font-bold uppercase tracking-wider">Play Video</span>
                     <i className="fas fa-chevron-right text-xs transform group-hover:translate-x-1 transition-transform"></i>
                   </div>
@@ -177,7 +177,7 @@ const MediaCenter: React.FC<MediaCenterProps> = ({ items }) => {
               <div className="px-8 py-5 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-white ${
-                    activeVideo.type === 'youtube' ? 'bg-red-600' : 'bg-gradient-to-r from-purple-600 to-pink-500'
+                    activeVideo.type === 'youtube' ? 'bg-red-700' : 'bg-gradient-to-r from-purple-600 to-pink-500'
                   }`}>
                     <i className={activeVideo.type === 'youtube' ? 'fab fa-youtube' : 'fab fa-instagram'}></i>
                   </span>

@@ -83,6 +83,8 @@ const Navbar: React.FC = () => {
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <img 
                 src="/logo.png" 
+                width={48}
+                height={48}
                 alt="Roti Bank Bettiah Logo" 
                 className={`rounded-full shadow-lg border-2 border-emerald-50 transition-all duration-500 ${isScrolled ? 'h-9' : 'h-12'}`}
               />

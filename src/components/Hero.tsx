@@ -59,7 +59,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
           src={bannerImage} 
           alt="Roti Bank Bettiah serving meals to the underprivileged in Bihar" 
           className="w-full h-full object-cover opacity-60 mix-blend-overlay"
-          loading="eager"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-emerald-900/40"></div>
       </motion.div>

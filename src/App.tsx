@@ -628,7 +628,7 @@ const App: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 text-center md:text-left border-b border-white/5 pb-16 mb-12">
             <div>
               <div className="flex items-center gap-3 justify-center md:justify-start mb-8">
-                <img src="/logo.png" className="h-10 rounded-full" alt="Roti Bank Bettiah logo" />
+                <img src="/logo.png" width={40} height={40} className="h-10 rounded-full" alt="Roti Bank Bettiah logo" />
                 <span className="font-black text-2xl tracking-tighter">Roti Bank Bettiah Trust</span>
               </div>
               <p className="text-slate-400 leading-relaxed mb-8">
@@ -695,7 +695,7 @@ const App: React.FC = () => {
                 <button 
                   type="submit" 
                   disabled={subStatus === 'loading'}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl px-4 py-3 font-bold text-sm transition-colors shadow-lg shadow-emerald-600/20 w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl px-4 py-3 font-bold text-sm transition-colors shadow-lg shadow-emerald-700/20 w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {subStatus === 'loading' ? (
                     <>

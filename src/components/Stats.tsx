@@ -67,7 +67,7 @@ const Stats: React.FC = () => {
     <section ref={sectionRef} id="stats" className="py-12 bg-white rounded-[3rem] shadow-xl shadow-emerald-100/30 border border-emerald-50/50 overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="text-center mb-10">
-          <span className="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4">
+          <span className="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-800 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4">
             <i className="fas fa-chart-line mr-1"></i> Live Statistics
           </span>
           <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2 uppercase tracking-tight">Our Growing Impact</h2>
