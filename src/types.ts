@@ -29,6 +29,7 @@ export interface NewsItem {
   content: string;
   imageUrl?: string;
   created_at: string;
+  link?: string;
 }
 
 export interface Notice {

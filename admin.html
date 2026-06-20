@@ -224,8 +224,12 @@
                     <textarea id="news-content" class="form-input" rows="4" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="news-image-file" class="form-label">Upload Image</label>
+                    <label for="news-image-file" class="form-label">Upload Image (Optional)</label>
                     <input type="file" id="news-image-file" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="news-link" class="form-label">External Link (Optional)</label>
+                    <input type="url" id="news-link" class="form-input" placeholder="e.g., https://timesofindia.indiatimes.com/...">
                 </div>
                 <button type="submit" class="btn-primary">Add News</button>
             </form>
@@ -801,6 +805,7 @@
             e.preventDefault();
             const title = document.getElementById('news-title').value;
             const content = document.getElementById('news-content').value;
+            const link = document.getElementById('news-link').value || null;
             const file = document.getElementById('news-image-file').files[0];
             const messageBox = document.getElementById('news-form').querySelector('.message-box') || document.createElement('div');
             
@@ -818,7 +823,7 @@
             try {
                 const { data, error } = await supabase
                     .from('news')
-                    .insert({ title, content, imageUrl, created_at: new Date().toISOString() });
+                    .insert({ title, content, link, imageUrl, created_at: new Date().toISOString() });
                 
                 if (error) throw error;
                 showMessage(messageBox, "News added successfully!", "success");

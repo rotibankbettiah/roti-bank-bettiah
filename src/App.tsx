@@ -193,7 +193,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 selection:bg-emerald-100 selection:text-emerald-900">
-      <Navbar />
+      <Navbar news={data.news} />
       
       <main className="pt-28 lg:pt-36">
         <Hero customBanner={data.banner} />
