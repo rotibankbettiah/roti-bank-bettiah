@@ -12,6 +12,8 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const headlines = news.filter(item => item.is_headline);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -152,7 +154,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
         </div>
 
         {/* News Ticker */}
-        {news.length > 0 && (
+        {headlines.length > 0 && (
           <div className="bg-emerald-700/95 text-white text-xs w-full overflow-hidden flex items-center h-8 border-t border-emerald-600/50 shadow-inner backdrop-blur-sm">
             <div className="bg-emerald-800 px-3 py-2 font-bold uppercase tracking-widest z-10 flex-shrink-0 flex items-center h-full shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
               <span className="flex items-center gap-2">
@@ -165,10 +167,9 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
             </div>
             <div className="flex-1 overflow-hidden relative h-full flex items-center">
               <div className="animate-marquee whitespace-nowrap flex items-center gap-8 pl-4">
-                {news.map((item, i) => (
+                {headlines.map((item, i) => (
                   <div key={item.id} className="inline-flex items-center gap-2 group cursor-default">
                     <span className="font-bold text-white group-hover:text-emerald-200 transition-colors">{item.title}</span>
-                    {item.content && <span className="text-emerald-100/80 font-medium">- {item.content}</span>}
                     {item.link && (
                       <a href={item.link} target="_blank" rel="noopener noreferrer" className="ml-2 text-amber-300 hover:text-amber-100 underline uppercase font-bold text-[10px] tracking-widest transition-colors inline-flex items-center gap-1 bg-amber-500/20 px-2 py-0.5 rounded-full">
                         Click Here <i className="fas fa-external-link-alt text-[8px]"></i>
@@ -178,10 +179,9 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
                   </div>
                 ))}
                 {/* Duplicate for infinite marquee effect */}
-                {news.map((item, i) => (
+                {headlines.map((item, i) => (
                   <div key={`${item.id}-dup`} className="inline-flex items-center gap-2 group cursor-default">
                     <span className="font-bold text-white group-hover:text-emerald-200 transition-colors">{item.title}</span>
-                    {item.content && <span className="text-emerald-100/80 font-medium">- {item.content}</span>}
                     {item.link && (
                       <a href={item.link} target="_blank" rel="noopener noreferrer" className="ml-2 text-amber-300 hover:text-amber-100 underline uppercase font-bold text-[10px] tracking-widest transition-colors inline-flex items-center gap-1 bg-amber-500/20 px-2 py-0.5 rounded-full">
                         Click Here <i className="fas fa-external-link-alt text-[8px]"></i>

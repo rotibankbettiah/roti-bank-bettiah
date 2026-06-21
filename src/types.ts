@@ -30,6 +30,7 @@ export interface NewsItem {
   imageUrl?: string;
   created_at: string;
   link?: string;
+  is_headline?: boolean;
 }
 
 export interface Notice {

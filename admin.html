@@ -6,15 +6,35 @@
     <title translate="no">Roti Bank Admin Panel</title>
     <link rel="icon" type="image/png" sizes="144x144" href="https://www.rotibankbettiah.org/favicon.png" />
     <link rel="shortcut icon" href="https://www.rotibankbettiah.org/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="./src/index.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
             color: #1f2937;
+            line-height: 1.5;
         }
-        
+
+        button, input, select, textarea {
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            color: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        /* ─── Layout ─── */
         .container {
             max-width: 900px;
             margin: 2rem auto;
@@ -23,6 +43,104 @@
             border-radius: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        .max-w-sm {
+            max-width: 24rem;
+        }
+
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+
+        /* ─── Spacing ─── */
+        .p-2 { padding: 0.5rem; }
+        .p-3 { padding: 0.75rem; }
+        .p-4 { padding: 1rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+        .pr-2 { padding-right: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+
+        /* ─── Positioning ─── */
+        .top-6 { top: 1.5rem; }
+        .right-6 { right: 1.5rem; }
+
+        /* ─── Flexbox & Grid ─── */
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-between { justify-content: space-between; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+
+        /* ─── Sizing ─── */
+        .w-full { width: 100%; }
+        .w-4 { width: 1rem; }
+        .h-4 { height: 1rem; }
+        .max-h-96 { max-height: 24rem; }
+
+        /* ─── Typography ─── */
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .font-bold { font-weight: 700; }
+        .font-medium { font-weight: 500; }
+        .uppercase { text-transform: uppercase; }
+        .text-center { text-align: center; }
+
+        /* ─── Colors ─── */
+        .text-red-500 { color: #ef4444; }
+        .text-red-700 { color: #b91c1c; }
+        .text-blue-500 { color: #3b82f6; }
+        .text-gray-400 { color: #9ca3af; }
+        .text-gray-500 { color: #6b7280; }
+        .text-gray-800 { color: #1f2937; }
+        .text-emerald-700 { color: #047857; }
+        .bg-red-100 { background-color: #fee2e2; }
+        .bg-gray-100 { background-color: #f3f4f6; }
+        .bg-emerald-100 { background-color: #d1fae5; }
+
+        /* ─── Borders ─── */
+        .rounded { border-radius: 0.25rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .border { border: 1px solid #e5e7eb; }
+        .border-gray-200 { border-color: #e5e7eb; }
+
+        /* ─── Overflow ─── */
+        .overflow-y-auto { overflow-y: auto; }
+
+        /* ─── Transitions ─── */
+        .transition-all { transition: all 0.2s ease; }
+
+        /* ─── Spacing for children ─── */
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+
+        /* ─── Hover states ─── */
+        .hover\:bg-red-200:hover { background-color: #fecaca; }
+        .hover\:bg-emerald-200:hover { background-color: #a7f3d0; }
+        .hover\:text-red-700:hover { color: #b91c1c; }
+
+        /* ─── Responsive ─── */
+        @media (min-width: 640px) {
+            .sm\:flex-row { flex-direction: row; }
+            .sm\:items-center { align-items: center; }
+        }
+        @media (min-width: 768px) {
+            .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        /* ─── Custom Component Styles ─── */
         .heading {
             font-size: 2.5rem;
             font-weight: 700;
@@ -30,26 +148,31 @@
             text-align: center;
             margin-bottom: 2rem;
         }
+
         .form-group {
             margin-bottom: 1.5rem;
         }
+
         .form-label {
             display: block;
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
+
         .form-input {
             width: 100%;
             padding: 0.75rem;
             border-radius: 0.5rem;
             border: 1px solid #d1d5db;
             transition: all 0.2s;
+            background-color: white;
         }
         .form-input:focus {
             outline: none;
             border-color: #10B981;
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
+
         .btn-primary {
             background-color: #10B981;
             color: white;
@@ -57,16 +180,20 @@
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
             transition: all 0.2s;
+            border: none;
+            cursor: pointer;
         }
         .btn-primary:hover {
             background-color: #059669;
         }
+
         .card {
             background-color: #f9fafb;
             padding: 1.5rem;
             border-radius: 0.75rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+
         .message-box {
             text-align: center;
             padding: 1rem;
@@ -74,16 +201,96 @@
             font-weight: 500;
             margin-top: 1rem;
         }
+
         .success {
             background-color: #D1FAE5;
             color: #065F46;
         }
+
         .error {
             background-color: #FEE2E2;
             color: #991B1B;
         }
+
         .hidden {
             display: none !important;
+        }
+
+        /* ─── Edit Modal ─── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 550px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #10B981;
+        }
+
+        .modal-close {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #6b7280;
+            transition: all 0.2s;
+            background: #f3f4f6;
+        }
+        .modal-close:hover {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
         }
     </style>
 </head>
@@ -214,9 +421,27 @@
             <div id="causes-list" class="mt-4 space-y-4"></div>
         </div>
 
-        <!-- News Section -->
+        <!-- Latest News Headlines Section (for Navbar ticker) -->
         <div class="card mb-6">
-            <h2 class="text-2xl font-bold mb-4">Add Latest News</h2>
+            <h2 class="text-2xl font-bold mb-4">Latest News Headlines</h2>
+            <p class="text-gray-500 text-sm mb-4">These headlines appear in the scrolling ticker at the top of the website.</p>
+            <form id="headlines-form">
+                <div class="form-group">
+                    <label for="headline-title" class="form-label">Headline Title</label>
+                    <input type="text" id="headline-title" class="form-input" required placeholder="e.g., रोटी बैंक बेतिया ने 500 लोगों को खाना बांटा">
+                </div>
+                <div class="form-group">
+                    <label for="headline-link" class="form-label">Link (Optional)</label>
+                    <input type="url" id="headline-link" class="form-input" placeholder="e.g., https://timesofindia.indiatimes.com/...">
+                </div>
+                <button type="submit" class="btn-primary">Add Headline</button>
+            </form>
+        </div>
+
+        <!-- News Section (Full articles) -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add News Article</h2>
+            <p class="text-gray-500 text-sm mb-4">Full news articles that appear in the News section of the website.</p>
             <form id="news-form">
                 <div class="form-group">
                     <label for="news-title" class="form-label">News Title</label>
@@ -234,9 +459,14 @@
                     <label for="news-link" class="form-label">External Link (Optional)</label>
                     <input type="url" id="news-link" class="form-input" placeholder="e.g., https://timesofindia.indiatimes.com/...">
                 </div>
-                <button type="submit" class="btn-primary">Add News</button>
+                <button type="submit" class="btn-primary">Add News Article</button>
             </form>
-            <div id="news-list" class="mt-4 space-y-4"></div>
+            
+            <!-- Combined List -->
+            <div class="mt-8 border-t pt-6">
+                <h3 class="text-xl font-bold mb-4">Manage News & Headlines</h3>
+                <div id="news-list" class="space-y-4"></div>
+            </div>
         </div>
 
         <!-- Gallery Section -->
@@ -311,6 +541,24 @@
             <button type="submit" class="btn-primary w-full">Log In</button>
         </form>
         <div id="login-message" class="message-box hidden"></div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Item</h2>
+                <button id="modal-close-btn" class="modal-close">&times;</button>
+            </div>
+            <form id="edit-modal-form">
+                <div id="edit-modal-fields"></div>
+                <div id="edit-modal-message" class="message-box hidden"></div>
+                <div class="modal-actions">
+                    <button type="button" id="modal-cancel-btn" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script type="module">
@@ -508,18 +756,21 @@
         }
 
         async function loadNews() {
-            const { data, error } = await supabase.from('news').select('*');
+            const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
             const list = document.getElementById('news-list');
             list.innerHTML = '';
             if (data) {
                 data.forEach(item => {
                     const el = document.createElement('div');
-                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                    el.className = 'flex justify-between items-center bg-gray-100 p-3 rounded shadow-sm border border-gray-200';
+                    const typeBadge = item.is_headline 
+                        ? '<span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded ml-2">HEADLINE</span>' 
+                        : '<span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded ml-2">ARTICLE</span>';
                     el.innerHTML = `
-                        <p>${item.title}</p>
-                        <div>
-                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="news">Edit</button>
-                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="news">Delete</button>
+                        <p class="font-medium">${item.title} ${typeBadge}</p>
+                        <div class="flex-shrink-0">
+                            <button class="edit-btn text-blue-500 mr-3 font-medium hover:underline" data-id="${item.id}" data-table="news">Edit</button>
+                            <button class="delete-btn text-red-500 font-medium hover:underline" data-id="${item.id}" data-table="news">Delete</button>
                         </div>
                     `;
                     list.appendChild(el);
@@ -595,12 +846,155 @@
                     }
                 }
             } else if (btn.classList.contains('edit-btn')) {
-                // This is a simplified example. A full implementation would involve
-                // populating a modal or form with the existing data for editing.
-                alert(`Edit functionality for item ${id} in table ${table} is not yet fully implemented. This is where you would open a form to edit the data.`);
+                await openEditModal(id, table);
             }
         }
-        
+
+        // ─── Edit Modal Logic ───
+        const editModal = document.getElementById('edit-modal');
+        const editModalForm = document.getElementById('edit-modal-form');
+        const editModalFields = document.getElementById('edit-modal-fields');
+        const editModalMessage = document.getElementById('edit-modal-message');
+
+        // Define editable fields per table
+        const tableFields = {
+            activities: [
+                { key: 'title', label: 'Activity Title', type: 'text' },
+                { key: 'content', label: 'Activity Description', type: 'textarea' }
+            ],
+            notices: [
+                { key: 'title', label: 'Notice Title', type: 'text' },
+                { key: 'content', label: 'Notice Content', type: 'textarea' }
+            ],
+            causes: [
+                { key: 'name', label: 'Cause Name', type: 'text' },
+                { key: 'completed', label: 'Completed Tasks', type: 'number' },
+                { key: 'target', label: 'Target Tasks', type: 'number' }
+            ],
+            news: [
+                { key: 'title', label: 'News Title', type: 'text' },
+                { key: 'content', label: 'News Content', type: 'textarea' },
+                { key: 'link', label: 'External Link', type: 'url' }
+            ],
+            gallery: [
+                { key: 'caption', label: 'Caption', type: 'text' }
+            ],
+            internship_corner: [
+                { key: 'content', label: 'Content', type: 'textarea' },
+                { key: 'url', label: 'URL', type: 'url' }
+            ],
+            media: [
+                { key: 'title', label: 'Title / Caption', type: 'text' },
+                { key: 'url', label: 'Video / Reel URL', type: 'url' }
+            ]
+        };
+
+        let currentEditId = null;
+        let currentEditTable = null;
+
+        function closeEditModal() {
+            editModal.classList.add('hidden');
+            editModalFields.innerHTML = '';
+            editModalMessage.classList.add('hidden');
+            currentEditId = null;
+            currentEditTable = null;
+        }
+
+        document.getElementById('modal-close-btn').addEventListener('click', closeEditModal);
+        document.getElementById('modal-cancel-btn').addEventListener('click', closeEditModal);
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) closeEditModal();
+        });
+
+        async function openEditModal(id, table) {
+            currentEditId = id;
+            currentEditTable = table;
+            const fields = tableFields[table];
+
+            if (!fields) {
+                alert(`Editing is not supported for table: ${table}`);
+                return;
+            }
+
+            // Fetch current data
+            const { data, error } = await supabase.from(table).select('*').eq('id', id).single();
+            if (error || !data) {
+                alert('Could not load item data. Please try again.');
+                console.error(error);
+                return;
+            }
+
+            // Build form fields
+            editModalFields.innerHTML = '';
+            fields.forEach(field => {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+
+                const label = document.createElement('label');
+                label.className = 'form-label';
+                label.textContent = field.label;
+                label.setAttribute('for', `edit-${field.key}`);
+                group.appendChild(label);
+
+                let input;
+                if (field.type === 'textarea') {
+                    input = document.createElement('textarea');
+                    input.rows = 4;
+                } else {
+                    input = document.createElement('input');
+                    input.type = field.type;
+                }
+                input.className = 'form-input';
+                input.id = `edit-${field.key}`;
+                input.name = field.key;
+                input.value = data[field.key] !== null && data[field.key] !== undefined ? data[field.key] : '';
+                group.appendChild(input);
+
+                editModalFields.appendChild(group);
+            });
+
+            // Show modal
+            document.querySelector('.modal-title').textContent = `Edit ${table.replace('_', ' ')}`;
+            editModal.classList.remove('hidden');
+        }
+
+        editModalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentEditId || !currentEditTable) return;
+
+            const fields = tableFields[currentEditTable];
+            const updateData = {};
+            fields.forEach(field => {
+                const input = document.getElementById(`edit-${field.key}`);
+                if (input) {
+                    let val = input.value;
+                    if (field.type === 'number') val = parseInt(val) || 0;
+                    updateData[field.key] = val || null;
+                }
+            });
+
+            const submitBtn = editModalForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Saving...';
+            submitBtn.disabled = true;
+
+            const { error } = await supabase.from(currentEditTable).update(updateData).eq('id', currentEditId);
+
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+
+            if (error) {
+                showMessage(editModalMessage, 'Error saving changes: ' + error.message, 'error');
+                console.error(error);
+            } else {
+                showMessage(editModalMessage, 'Updated successfully!', 'success');
+                setTimeout(() => {
+                    closeEditModal();
+                    loadAllData();
+                }, 800);
+            }
+        });
+
         // Form submission handlers
 
         // About Us form
@@ -803,7 +1197,34 @@
             }
         });
 
-        // News form
+        // Headlines form
+        document.getElementById('headlines-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('headline-title').value;
+            const link = document.getElementById('headline-link').value || null;
+            const messageBox = document.getElementById('headlines-form').querySelector('.message-box') || document.createElement('div');
+            try {
+                const { data, error } = await supabase
+                    .from('news')
+                    .insert({ 
+                        title, 
+                        link, 
+                        is_headline: true, 
+                        content: '', // required by schema but unused for headlines
+                        created_at: new Date().toISOString() 
+                    });
+                
+                if (error) throw error;
+                showMessage(messageBox, "Headline added successfully!", "success");
+                document.getElementById('headlines-form').reset();
+                loadAllData();
+            } catch (e) {
+                console.error("Error adding headline: ", e);
+                showMessage(messageBox, "Error adding headline.", "error");
+            }
+        });
+
+        // News Articles form
         document.getElementById('news-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const title = document.getElementById('news-title').value;
@@ -826,7 +1247,14 @@
             try {
                 const { data, error } = await supabase
                     .from('news')
-                    .insert({ title, content, link, imageUrl, created_at: new Date().toISOString() });
+                    .insert({ 
+                        title, 
+                        content, 
+                        link, 
+                        imageUrl,
+                        is_headline: false,
+                        created_at: new Date().toISOString() 
+                    });
                 
                 if (error) throw error;
                 showMessage(messageBox, "News added successfully!", "success");

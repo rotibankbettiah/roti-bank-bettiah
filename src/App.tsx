@@ -560,7 +560,7 @@ const App: React.FC = () => {
                 <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Latest News</h2>
               </div>
               <div className="space-y-8">
-                {data.news.map((item) => (
+                {data.news.filter(item => !item.is_headline).map((item) => (
                   <article key={item.id} className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-200/50 group overflow-hidden hover:shadow-xl transition-all duration-300">
                     <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mb-4 block">{new Date(item.created_at).toLocaleDateString('en-IN', { dateStyle: 'long' })}</span>
                     
