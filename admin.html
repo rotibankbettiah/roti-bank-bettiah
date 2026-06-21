@@ -436,6 +436,11 @@
                 </div>
                 <button type="submit" class="btn-primary">Add Headline</button>
             </form>
+            
+            <div class="mt-8 border-t pt-6">
+                <h3 class="text-xl font-bold mb-4">Manage Headlines</h3>
+                <div id="headlines-list" class="space-y-4"></div>
+            </div>
         </div>
 
         <!-- News Section (Full articles) -->
@@ -462,9 +467,8 @@
                 <button type="submit" class="btn-primary">Add News Article</button>
             </form>
             
-            <!-- Combined List -->
             <div class="mt-8 border-t pt-6">
-                <h3 class="text-xl font-bold mb-4">Manage News & Headlines</h3>
+                <h3 class="text-xl font-bold mb-4">Manage News Articles</h3>
                 <div id="news-list" class="space-y-4"></div>
             </div>
         </div>
@@ -757,26 +761,32 @@
 
         async function loadNews() {
             const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
-            const list = document.getElementById('news-list');
-            list.innerHTML = '';
+            const newsList = document.getElementById('news-list');
+            const headlinesList = document.getElementById('headlines-list');
+            if (newsList) newsList.innerHTML = '';
+            if (headlinesList) headlinesList.innerHTML = '';
+            
             if (data) {
                 data.forEach(item => {
                     const el = document.createElement('div');
                     el.className = 'flex justify-between items-center bg-gray-100 p-3 rounded shadow-sm border border-gray-200';
-                    const typeBadge = item.is_headline 
-                        ? '<span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded ml-2">HEADLINE</span>' 
-                        : '<span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded ml-2">ARTICLE</span>';
                     el.innerHTML = `
-                        <p class="font-medium">${item.title} ${typeBadge}</p>
+                        <p class="font-medium">${item.title}</p>
                         <div class="flex-shrink-0">
-                            <button class="edit-btn text-blue-500 mr-3 font-medium hover:underline" data-id="${item.id}" data-table="news">Edit</button>
+                            <button class="edit-btn text-blue-500 mr-3 font-medium hover:underline" data-id="${item.id}" data-table="news" data-is-headline="${item.is_headline}">Edit</button>
                             <button class="delete-btn text-red-500 font-medium hover:underline" data-id="${item.id}" data-table="news">Delete</button>
                         </div>
                     `;
-                    list.appendChild(el);
+                    
+                    if (item.is_headline && headlinesList) {
+                        headlinesList.appendChild(el);
+                    } else if (!item.is_headline && newsList) {
+                        newsList.appendChild(el);
+                    }
                 });
             }
-            list.addEventListener('click', handleDeleteAndEdit);
+            if (newsList) newsList.addEventListener('click', handleDeleteAndEdit);
+            if (headlinesList) headlinesList.addEventListener('click', handleDeleteAndEdit);
         }
         
         async function loadGallery() {
@@ -846,7 +856,8 @@
                     }
                 }
             } else if (btn.classList.contains('edit-btn')) {
-                await openEditModal(id, table);
+                const isHeadline = btn.dataset.isHeadline === 'true';
+                await openEditModal(id, table, isHeadline);
             }
         }
 
@@ -906,10 +917,19 @@
             if (e.target === editModal) closeEditModal();
         });
 
-        async function openEditModal(id, table) {
+        async function openEditModal(id, table, isHeadline = false) {
             currentEditId = id;
             currentEditTable = table;
-            const fields = tableFields[table];
+            
+            let fields;
+            if (table === 'news') {
+                fields = isHeadline ? [
+                    { key: 'title', label: 'Headline Title', type: 'text' },
+                    { key: 'link', label: 'Link (Optional)', type: 'url' }
+                ] : tableFields[table];
+            } else {
+                fields = tableFields[table];
+            }
 
             if (!fields) {
                 alert(`Editing is not supported for table: ${table}`);
@@ -962,7 +982,17 @@
             e.preventDefault();
             if (!currentEditId || !currentEditTable) return;
 
-            const fields = tableFields[currentEditTable];
+            const isHeadline = !!document.getElementById('edit-link') && !document.getElementById('edit-content');
+            let fields;
+            if (currentEditTable === 'news') {
+                fields = isHeadline ? [
+                    { key: 'title', label: 'Headline Title', type: 'text' },
+                    { key: 'link', label: 'Link (Optional)', type: 'url' }
+                ] : tableFields[currentEditTable];
+            } else {
+                fields = tableFields[currentEditTable];
+            }
+            
             const updateData = {};
             fields.forEach(field => {
                 const input = document.getElementById(`edit-${field.key}`);
