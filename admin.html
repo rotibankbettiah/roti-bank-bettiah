@@ -15,10 +15,12 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
-            line-height: 1.5;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            color: #102a43;
+            line-height: 1.6;
+            min-height: 100vh;
+            background-attachment: fixed;
         }
 
         button, input, select, textarea {
@@ -36,44 +38,54 @@
 
         /* ─── Layout ─── */
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 2rem auto;
-            background-color: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: fadeIn 0.6s ease-out;
         }
 
-        .max-w-sm {
-            max-width: 24rem;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
+        .max-w-sm { max-width: 28rem; }
         .relative { position: relative; }
         .absolute { position: absolute; }
 
-        /* ─── Spacing ─── */
+        /* ─── Typography & Utilities ─── */
+        .text-2xl { font-size: 1.75rem; line-height: 2.25rem; letter-spacing: -0.025em; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .font-bold { font-weight: 700; }
+        .font-medium { font-weight: 500; }
+        
         .p-2 { padding: 0.5rem; }
         .p-3 { padding: 0.75rem; }
         .p-4 { padding: 1rem; }
         .px-4 { padding-left: 1rem; padding-right: 1rem; }
         .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
-        .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
-        .pr-2 { padding-right: 0.5rem; }
         .mb-4 { margin-bottom: 1rem; }
         .mb-6 { margin-bottom: 1.5rem; }
-        .mt-1 { margin-top: 0.25rem; }
         .mt-4 { margin-top: 1rem; }
         .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+        .pt-6 { padding-top: 1.5rem; }
         .mr-2 { margin-right: 0.5rem; }
+        .mr-3 { margin-right: 0.75rem; }
         .gap-2 { gap: 0.5rem; }
         .gap-4 { gap: 1rem; }
 
-        /* ─── Positioning ─── */
         .top-6 { top: 1.5rem; }
         .right-6 { right: 1.5rem; }
 
-        /* ─── Flexbox & Grid ─── */
         .flex { display: flex; }
         .flex-col { flex-direction: column; }
         .items-center { align-items: center; }
@@ -81,57 +93,46 @@
         .justify-between { justify-content: space-between; }
         .grid { display: grid; }
         .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-
-        /* ─── Sizing ─── */
+        
         .w-full { width: 100%; }
         .w-4 { width: 1rem; }
         .h-4 { height: 1rem; }
         .max-h-96 { max-height: 24rem; }
+        .overflow-y-auto { overflow-y: auto; }
+        .flex-shrink-0 { flex-shrink: 0; }
 
-        /* ─── Typography ─── */
-        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
-        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-        .text-xs { font-size: 0.75rem; line-height: 1rem; }
-        .font-bold { font-weight: 700; }
-        .font-medium { font-weight: 500; }
-        .uppercase { text-transform: uppercase; }
-        .text-center { text-align: center; }
+        /* Scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.02); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 
-        /* ─── Colors ─── */
-        .text-red-500 { color: #ef4444; }
-        .text-red-700 { color: #b91c1c; }
+        /* ─── Colors (Enhanced) ─── */
+        .text-red-500 { color: #f43f5e; }
+        .text-red-700 { color: #be123c; }
         .text-blue-500 { color: #3b82f6; }
         .text-gray-400 { color: #9ca3af; }
-        .text-gray-500 { color: #6b7280; }
-        .text-gray-800 { color: #1f2937; }
+        .text-gray-500 { color: #64748b; }
+        .text-gray-800 { color: #1e293b; }
         .text-emerald-700 { color: #047857; }
-        .bg-red-100 { background-color: #fee2e2; }
-        .bg-gray-100 { background-color: #f3f4f6; }
+        .bg-red-100 { background-color: #ffe4e6; }
+        .bg-gray-100 { background-color: #f8fafc; }
         .bg-emerald-100 { background-color: #d1fae5; }
-
-        /* ─── Borders ─── */
-        .rounded { border-radius: 0.25rem; }
+        
+        .hover\:bg-red-200:hover { background-color: #fecdd3; }
+        .hover\:bg-emerald-200:hover { background-color: #a7f3d0; }
+        .hover\:underline:hover { text-decoration: underline; }
+        
+        .rounded { border-radius: 0.375rem; }
         .rounded-lg { border-radius: 0.5rem; }
         .rounded-xl { border-radius: 0.75rem; }
-        .border { border: 1px solid #e5e7eb; }
-        .border-gray-200 { border-color: #e5e7eb; }
+        .border-t { border-top: 1px solid #e2e8f0; }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* ─── Overflow ─── */
-        .overflow-y-auto { overflow-y: auto; }
-
-        /* ─── Transitions ─── */
-        .transition-all { transition: all 0.2s ease; }
-
-        /* ─── Spacing for children ─── */
         .space-y-3 > * + * { margin-top: 0.75rem; }
         .space-y-4 > * + * { margin-top: 1rem; }
 
-        /* ─── Hover states ─── */
-        .hover\:bg-red-200:hover { background-color: #fecaca; }
-        .hover\:bg-emerald-200:hover { background-color: #a7f3d0; }
-        .hover\:text-red-700:hover { color: #b91c1c; }
-
-        /* ─── Responsive ─── */
         @media (min-width: 640px) {
             .sm\:flex-row { flex-direction: row; }
             .sm\:items-center { align-items: center; }
@@ -142,11 +143,35 @@
 
         /* ─── Custom Component Styles ─── */
         .heading {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #10B981;
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.05em;
+            drop-shadow: 0 2px 4px rgba(16,185,129,0.1);
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        .card h2 {
+            color: #0f172a;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-group {
@@ -157,140 +182,214 @@
             display: block;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            color: #334155;
+            font-size: 0.95rem;
         }
 
         .form-input {
             width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: 1px solid #d1d5db;
-            transition: all 0.2s;
-            background-color: white;
+            padding: 0.875rem 1rem;
+            border-radius: 0.75rem;
+            border: 1.5px solid #cbd5e1;
+            transition: all 0.25s ease;
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-size: 1rem;
         }
         .form-input:focus {
             outline: none;
-            border-color: #10B981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        }
+        .form-input::placeholder {
+            color: #94a3b8;
         }
 
         .btn-primary {
-            background-color: #10B981;
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            transition: all 0.2s;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            font-size: 0.9rem;
         }
         .btn-primary:hover {
-            background-color: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px -1px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px -1px rgba(16, 185, 129, 0.3);
         }
 
-        .card {
-            background-color: #f9fafb;
-            padding: 1.5rem;
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            padding: 0.875rem 1.75rem;
             border-radius: 0.75rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
         }
 
         .message-box {
             text-align: center;
             padding: 1rem;
-            border-radius: 0.5rem;
+            border-radius: 0.75rem;
             font-weight: 500;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .success {
-            background-color: #D1FAE5;
-            color: #065F46;
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
         }
 
         .error {
-            background-color: #FEE2E2;
-            color: #991B1B;
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
         }
 
         .hidden {
             display: none !important;
         }
 
+        /* JS injected lists enhancements */
+        .flex.justify-between.items-center.bg-gray-100 {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+        .flex.justify-between.items-center.bg-gray-100:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transform: translateX(4px);
+        }
+        
+        .edit-btn, .delete-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .edit-btn { background: #eff6ff; color: #2563eb; }
+        .edit-btn:hover { background: #dbeafe; color: #1d4ed8; }
+        .delete-btn { background: #fef2f2; color: #e11d48; }
+        .delete-btn:hover { background: #ffe4e6; color: #be123c; }
+        
+        /* Logout Button */
+        #logout-btn {
+            background: #fff1f2;
+            color: #e11d48;
+            border: 1px solid #ffe4e6;
+            font-weight: 600;
+        }
+        #logout-btn:hover {
+            background: #ffe4e6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(225, 29, 72, 0.1);
+        }
+
         /* ─── Edit Modal ─── */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             padding: 1rem;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .modal-content {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
             width: 100%;
-            max-width: 550px;
-            max-height: 85vh;
+            max-width: 600px;
+            max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            animation: slideUp 0.3s ease-out;
+            animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 1rem;
         }
 
         .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #10B981;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0f172a;
         }
 
         .modal-close {
             width: 2.5rem;
             height: 2.5rem;
-            border-radius: 0.5rem;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.25rem;
-            color: #6b7280;
-            transition: all 0.2s;
-            background: #f3f4f6;
-        }
-        .modal-close:hover {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .btn-secondary {
-            background-color: #e5e7eb;
-            color: #374151;
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            transition: all 0.2s;
-            border: none;
+            color: #64748b;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             cursor: pointer;
         }
-        .btn-secondary:hover {
-            background-color: #d1d5db;
+        .modal-close:hover {
+            background: #fef2f2;
+            color: #e11d48;
+            border-color: #fecaca;
+            transform: rotate(90deg);
         }
 
         .modal-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f1f5f9;
         }
     </style>
 </head>
