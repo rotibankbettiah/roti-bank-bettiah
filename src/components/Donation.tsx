@@ -52,6 +52,7 @@ const Donation: React.FC = () => {
       dateStyle: 'long'
     });
     const receiptNo = `RBB-${Date.now().toString().slice(-6)}-${paymentIdVal.slice(-6).toUpperCase()}`;
+    const amtNum = typeof amountVal === 'string' ? parseInt(amountVal) || 0 : amountVal;
     // Cryptographic verification hash to prevent easy tampering
     const verificationCode = btoa(`${receiptNo}|${amtNum}|${safeName}`).slice(-12).toUpperCase();
 
@@ -85,7 +86,6 @@ const Donation: React.FC = () => {
       return words + ' Rupees Only';
     };
 
-    const amtNum = typeof amountVal === 'string' ? parseInt(amountVal) || 0 : amountVal;
     const wordsText = amountInWords(amtNum);
 
     const receiptHtml = `
