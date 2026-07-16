@@ -108,17 +108,17 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
           </motion.div>
           
           <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 leading-[1.05] tracking-tighter">
-            Nourishing <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200">Lives</span>, <br/>
-            Sharing <span className="relative inline-block">
-              Compassion
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200">Roti Bank Bettiah</span> — <br/>
+            Nourishing <span className="relative inline-block">
+              Lives
               <svg className="absolute w-full h-4 -bottom-1 left-0 text-emerald-500/50" viewBox="0 0 100 20" preserveAspectRatio="none">
                 <path d="M0 15 Q 25 5, 50 15 T 100 15" stroke="currentColor" strokeWidth="4" fill="none" />
               </svg>
-            </span>.
+            </span>, Sharing Compassion.
           </motion.h1>
           
           <motion.p variants={itemVariants} className="text-lg md:text-xl text-slate-300 mb-12 max-w-xl font-medium leading-relaxed">
-            Since 2023, we've served over half a million meals to the underprivileged in Bettiah. Join our mission to end hunger today.
+            Since 2023, our food bank NGO in West Champaran, Bihar has served over 500,000+ free meals to the hungry and underprivileged. Join our mission to end hunger today.
           </motion.p>
           
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-5">
