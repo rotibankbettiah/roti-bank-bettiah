@@ -96,9 +96,9 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
                 className={`rounded-full shadow-lg border-2 border-emerald-50 transition-all duration-500 ${isScrolled ? 'h-9' : 'h-12'}`}
               />
               <div>
-                <h1 className={`font-extrabold tracking-tight text-emerald-800 transition-all duration-500 leading-tight ${isScrolled ? 'text-base' : 'text-lg md:text-2xl'}`}>
+                <span className={`font-extrabold tracking-tight text-emerald-800 transition-all duration-500 leading-tight block ${isScrolled ? 'text-base' : 'text-lg md:text-2xl'}`}>
                   Roti Bank Bettiah Trust
-                </h1>
+                </span>
                 {!isScrolled && (
                   <span className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em] block animate-fade-in">
                     रोटी बैंक बेतिया ट्रस्ट • Reg. No. 5071/2023

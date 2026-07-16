@@ -12,9 +12,11 @@
   "dependencies": {
     "@google/genai": "^1.37.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
-    "helmet": "^8.1.0"
+    "helmet": "^8.1.0",
+    "razorpay": "^2.9.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

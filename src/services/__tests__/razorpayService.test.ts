@@ -55,6 +55,7 @@ describe('razorpayService', () => {
   describe('openCheckout', () => {
     beforeEach(() => {
       vi.resetModules();
+      vi.stubEnv('VITE_RAZORPAY_KEY', 'test_key');
     });
 
     it('resolves with error when Razorpay SDK is not loaded', async () => {
@@ -70,6 +71,99 @@ describe('razorpayService', () => {
 
       // Restore
       Object.defineProperty(window, 'Razorpay', { value: original, configurable: true, writable: true });
+    });
+
+    it('resolves with error when API order creation fails', async () => {
+      const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+        ok: false,
+        status: 500,
+        json: async () => ({ error: 'Database error' }),
+      } as Response);
+
+      const { razorpayService } = await import('../razorpayService');
+      const result = await razorpayService.openCheckout(100);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Database error');
+      expect(fetchSpy).toHaveBeenCalled();
+      fetchSpy.mockRestore();
+    });
+
+    it('opens Razorpay modal and resolves when signature verification succeeds', async () => {
+      // Mock order creation API response
+      const mockOrderResponse = {
+        success: true,
+        orderId: 'order_123',
+        amount: 10000,
+        currency: 'INR',
+      };
+
+      // Mock verify API response
+      const mockVerifyResponse = {
+        success: true,
+        paymentId: 'pay_999',
+      };
+
+      const fetchSpy = vi.spyOn(global, 'fetch').mockImplementation((url) => {
+        if (String(url).includes('/api/payments/order')) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => mockOrderResponse,
+          } as Response);
+        }
+        if (String(url).includes('/api/payments/verify')) {
+          return Promise.resolve({
+            ok: true,
+            json: async () => mockVerifyResponse,
+          } as Response);
+        }
+        return Promise.reject(new Error('Unexpected fetch call'));
+      });
+
+      // Mock Razorpay instance and constructor
+      const openMock = vi.fn();
+      let capturedOptions: any = null;
+      const mockRzpConstructor = vi.fn().mockImplementation((options) => {
+        capturedOptions = options;
+        return { open: openMock };
+      });
+
+      const originalRzp = window.Razorpay;
+      Object.defineProperty(window, 'Razorpay', {
+        value: mockRzpConstructor,
+        configurable: true,
+        writable: true
+      });
+
+      const { razorpayService } = await import('../razorpayService');
+      
+      // Start checkout
+      const checkoutPromise = razorpayService.openCheckout(100, 'John Doe', 'john@example.com', '1234567890');
+
+      // Wait a microtask for fetch to resolve and constructor to be called
+      await vi.waitFor(() => expect(mockRzpConstructor).toHaveBeenCalled());
+
+      expect(openMock).toHaveBeenCalled();
+      expect(capturedOptions.order_id).toBe('order_123');
+      expect(capturedOptions.prefill.name).toBe('John Doe');
+
+      // Trigger the success handler callback
+      capturedOptions.handler({
+        razorpay_payment_id: 'pay_999',
+        razorpay_order_id: 'order_123',
+        razorpay_signature: 'valid_sig',
+      });
+
+      const result = await checkoutPromise;
+      expect(result.success).toBe(true);
+      expect(result.paymentId).toBe('pay_999');
+
+      fetchSpy.mockRestore();
+      Object.defineProperty(window, 'Razorpay', {
+        value: originalRzp,
+        configurable: true,
+        writable: true
+      });
     });
   });
 });

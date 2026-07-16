@@ -30,59 +30,126 @@ export const razorpayService = {
    * Returns a promise that resolves with payment details on success,
    * or rejects on failure/dismissal.
    */
-  openCheckout(
+  async openCheckout(
     amountInRupees: number,
     donorName?: string,
     donorEmail?: string,
     donorPhone?: string
   ): Promise<PaymentResult> {
-    return new Promise((resolve) => {
-      if (typeof window.Razorpay === 'undefined') {
-        resolve({ success: false, error: 'Razorpay SDK not loaded. Please refresh and try again.' });
-        return;
+    if (typeof window.Razorpay === 'undefined') {
+      return { success: false, error: 'Razorpay SDK not loaded. Please refresh and try again.' };
+    }
+
+    if (RAZORPAY_KEY === 'RAZORPAY_KEY_PLACEHOLDER') {
+      return { success: false, error: 'Razorpay API Key is missing. Please configure VITE_RAZORPAY_KEY in your .env.local file.' };
+    }
+
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+
+    try {
+      // 1. Create order on the backend
+      const orderResponse = await fetch(`${apiUrl}/api/payments/order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: amountInRupees }),
+      });
+
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json().catch(() => ({}));
+        throw new Error(errorData.error || `Server order creation failed with status ${orderResponse.status}`);
       }
 
-      if (RAZORPAY_KEY === 'RAZORPAY_KEY_PLACEHOLDER') {
-        resolve({ success: false, error: 'Razorpay API Key is missing. Please configure VITE_RAZORPAY_KEY in your .env.local file.' });
-        return;
+      const orderData = await orderResponse.json();
+      if (!orderData.success || !orderData.orderId) {
+        throw new Error('Invalid order response structure from server.');
       }
 
-      const options: RazorpayOptions = {
-        key: RAZORPAY_KEY,
-        amount: amountInRupees * 100, // Razorpay expects paise
-        currency: 'INR',
-        name: 'Roti Bank Bettiah',
-        description: `Donation of ₹${amountInRupees.toLocaleString('en-IN')} — Nourishing Lives`,
-        image: '/logo.png',
-        handler: (response: RazorpayResponse) => {
-          resolve({
-            success: true,
-            paymentId: response.razorpay_payment_id,
-          });
-        },
-        prefill: {
-          name: donorName || '',
-          email: donorEmail || '',
-          contact: donorPhone || '',
-        },
-        theme: {
-          color: '#059669',
-        },
-        modal: {
-          ondismiss: () => {
-            resolve({ success: false, error: 'Payment cancelled by user.' });
+      // 2. Open the Razorpay checkout modal
+      return new Promise<PaymentResult>((resolve) => {
+        const options: RazorpayOptions = {
+          key: RAZORPAY_KEY,
+          amount: orderData.amount, // from backend order (already in paise)
+          currency: orderData.currency || 'INR',
+          order_id: orderData.orderId, // critical for backend verification!
+          name: 'Roti Bank Bettiah',
+          description: `Donation of ₹${amountInRupees.toLocaleString('en-IN')} — Nourishing Lives`,
+          image: '/logo.png',
+          handler: async (response: RazorpayResponse) => {
+            try {
+              // 3. Send payment details to backend for signature verification
+              const verifyResponse = await fetch(`${apiUrl}/api/payments/verify`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id || orderData.orderId,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                }),
+              });
+
+              if (!verifyResponse.ok) {
+                const verifyError = await verifyResponse.json().catch(() => ({}));
+                resolve({
+                  success: false,
+                  error: verifyError.error || 'Payment signature verification failed.',
+                });
+                return;
+              }
+
+              const verifyData = await verifyResponse.json();
+              if (verifyData.success) {
+                resolve({
+                  success: true,
+                  paymentId: verifyData.paymentId || response.razorpay_payment_id,
+                });
+              } else {
+                resolve({
+                  success: false,
+                  error: verifyData.error || 'Payment verification failed.',
+                });
+              }
+            } catch (err: any) {
+              console.error('Error during backend verification call:', err);
+              resolve({
+                success: false,
+                error: 'Error validating payment with the server. Please check your network connection.',
+              });
+            }
           },
-        },
-        notes: {
-          organization: 'Roti Bank Bettiah',
-          purpose: 'Food Donation',
-          registration: '5071/2023',
-        },
-      };
+          prefill: {
+            name: donorName || '',
+            email: donorEmail || '',
+            contact: donorPhone || '',
+          },
+          theme: {
+            color: '#059669',
+          },
+          modal: {
+            ondismiss: () => {
+              resolve({ success: false, error: 'Payment cancelled by user.' });
+            },
+          },
+          notes: {
+            organization: 'Roti Bank Bettiah',
+            purpose: 'Food Donation',
+            registration: '5071/2023',
+          },
+        };
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    });
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      });
+    } catch (error: any) {
+      console.error('Razorpay payment initialization failed:', error);
+      return {
+        success: false,
+        error: error.message || 'Failed to start payment process. Please try again.',
+      };
+    }
   },
 
   /**

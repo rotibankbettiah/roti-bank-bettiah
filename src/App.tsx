@@ -56,19 +56,30 @@ const App: React.FC = () => {
   const [subMessage, setSubMessage] = useState('');
 
   const fetchAllData = useCallback(async () => {
+    // Helper to safely execute promises and fallback to defaults on DB exceptions
+    const wrapSafe = async <T,>(promise: Promise<T>, fallback: T): Promise<T> => {
+      try {
+        return await promise;
+      } catch (err) {
+        console.warn('Silent data load error:', err);
+        return fallback;
+      }
+    };
+
     try {
+      // Parallel fetch for optimal load times
       const [g, ach, br, act, not, nws, int, cs, ab, bn, md] = await Promise.all([
-        supabaseService.getGalleryImages(),
-        supabaseService.getAchievements(),
-        supabaseService.getBranches(),
-        supabaseService.getActivities(),
-        supabaseService.getNotices(),
-        supabaseService.getNews(),
-        supabaseService.getInternshipContent(),
-        supabaseService.getCauses(),
-        supabaseService.getAboutContent(),
-        supabaseService.getBanner(),
-        supabaseService.getMediaItems()
+        wrapSafe(supabaseService.getGalleryImages(), []),
+        wrapSafe(supabaseService.getAchievements(), []),
+        wrapSafe(supabaseService.getBranches(), []),
+        wrapSafe(supabaseService.getActivities(), []),
+        wrapSafe(supabaseService.getNotices(), []),
+        wrapSafe(supabaseService.getNews(), []),
+        wrapSafe(supabaseService.getInternshipContent(), []),
+        wrapSafe(supabaseService.getCauses(), []),
+        wrapSafe(supabaseService.getAboutContent(), ''),
+        wrapSafe(supabaseService.getBanner(), ''),
+        wrapSafe(supabaseService.getMediaItems(), [])
       ]);
       setData({ 
         gallery: g, 

@@ -1,8 +1,10 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { geminiService } from './geminiService';
+import { createOrder, verifyPayment } from './controllers/paymentController';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,9 +21,9 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    // and requests from allowed origins, or ANY .vercel.app domain
-    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+    // Allow requests with no origin (like curl requests or mobile apps)
+    // and requests from allowed origins
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       // In development, you might want to log blocked origins
@@ -41,6 +43,15 @@ const chatLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 20, // limit each IP to 20 chat requests per windowMs
   message: { error: 'Too many requests from this IP, please try again after a minute' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// 5. Rate Limiting for Payments API (helps prevent automated spam attacks on payment gateway)
+const paymentLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // limit each IP to 10 payment operations per windowMs
+  message: { error: 'Too many payment attempts from this IP, please try again after 15 minutes' },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -77,6 +88,10 @@ app.post('/api/chat', chatLimiter, async (req, res) => {
   }
 });
 
+// ── Payment Routes ─────────────────────────────────────────────────
+app.post('/api/payments/order', paymentLimiter, createOrder);
+app.post('/api/payments/verify', paymentLimiter, verifyPayment);
+
 // ── Start Server ──────────────────────────────────────────────────
 
 // Only start the server if we're not in a test environment
@@ -84,6 +99,11 @@ if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
     console.log(`🚀 Roti Bank API Server running on port ${PORT}`);
     console.log(`CORS Allowed Origins: ${allowedOrigins.join(', ')}`);
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      console.warn(`⚠️  WARNING: Razorpay credentials (RAZORPAY_KEY_ID and/or RAZORPAY_KEY_SECRET) are not set. Payments will not function securely.`);
+    } else {
+      console.log(`💳 Razorpay Integration: ACTIVE`);
+    }
   });
 }
 

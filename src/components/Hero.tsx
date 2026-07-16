@@ -6,7 +6,7 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ customBanner }) => {
-  const bannerImage = customBanner || "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=2070";
+  const bannerImage = customBanner || "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=75&w=1200&fm=webp";
   const [mealCount, setMealCount] = useState(0);
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
@@ -107,7 +107,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-50">Verified Non-Profit Organization</span>
           </motion.div>
           
-          <motion.h2 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 leading-[1.05] tracking-tighter">
+          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 leading-[1.05] tracking-tighter">
             Nourishing <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200">Lives</span>, <br/>
             Sharing <span className="relative inline-block">
               Compassion
@@ -115,7 +115,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
                 <path d="M0 15 Q 25 5, 50 15 T 100 15" stroke="currentColor" strokeWidth="4" fill="none" />
               </svg>
             </span>.
-          </motion.h2>
+          </motion.h1>
           
           <motion.p variants={itemVariants} className="text-lg md:text-xl text-slate-300 mb-12 max-w-xl font-medium leading-relaxed">
             Since 2023, we've served over half a million meals to the underprivileged in Bettiah. Join our mission to end hunger today.
