@@ -49,7 +49,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
   };
 
   return (
-    <section id="home" className="relative h-[90vh] min-h-[650px] flex items-center overflow-hidden bg-slate-900">
+    <section id="home" className="relative h-[90vh] min-h-[650px] flex items-center overflow-hidden bg-slate-900 pt-28 md:pt-36 pb-12">
       {/* Parallax Background */}
       <motion.div 
         className="absolute inset-0 z-0"
@@ -92,7 +92,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
         ))}
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 text-white mt-10">
+      <div className="container mx-auto px-6 relative z-10 text-white mt-6">
         <motion.div 
           className="max-w-3xl"
           variants={containerVariants}

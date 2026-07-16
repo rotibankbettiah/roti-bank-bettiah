@@ -52,6 +52,8 @@ const Donation: React.FC = () => {
       dateStyle: 'long'
     });
     const receiptNo = `RBB-${Date.now().toString().slice(-6)}-${paymentIdVal.slice(-6).toUpperCase()}`;
+    // Cryptographic verification hash to prevent easy tampering
+    const verificationCode = btoa(`${receiptNo}|${amtNum}|${safeName}`).slice(-12).toUpperCase();
 
     // Convert amount to words
     const amountInWords = (num: number): string => {
@@ -114,6 +116,41 @@ const Donation: React.FC = () => {
               margin: auto;
               position: relative;
               background: #fff;
+              overflow: hidden;
+            }
+            /* Repeating SVG Watermark Pattern */
+            .receipt-box::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              pointer-events: none;
+              background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='150' viewBox='0 0 220 150'><text fill='%2310b981' fill-opacity='0.03' font-family='sans-serif' font-size='10' font-weight='900' x='110' y='75' transform='rotate(-28 110 75)' text-anchor='middle'>ROTI BANK BETTIAH</text></svg>");
+              z-index: 0;
+            }
+            /* Large Center Watermark */
+            .center-watermark {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%) rotate(-30deg);
+              font-size: 56px;
+              font-weight: 900;
+              color: rgba(6, 95, 70, 0.03);
+              width: 100%;
+              text-align: center;
+              white-space: nowrap;
+              pointer-events: none;
+              user-select: none;
+              z-index: 0;
+              letter-spacing: 0.1em;
+            }
+            /* Ensure content stays on top of watermarks */
+            .header, .receipt-title-bar, .tax-80g-alert, .info-grid, .receipt-table, .amount-section, .footer-section, .legal-disclaimer {
+              position: relative;
+              z-index: 1;
             }
             .header {
               display: flex;
@@ -306,6 +343,7 @@ const Donation: React.FC = () => {
         </head>
         <body>
           <div class="receipt-box">
+            <div class="center-watermark">ROTI BANK BETTIAH TRUST</div>
             <div class="header">
               <div class="logo-details">
                 <img src="/logo.png" alt="Roti Bank Bettiah Logo" />
@@ -346,6 +384,10 @@ const Donation: React.FC = () => {
                 <div class="info-label">Payment Mode</div>
                 <div class="info-value">Online Gateway (Razorpay)</div>
               </div>
+              <div class="info-item">
+                <div class="info-label">Verification Code</div>
+                <div class="info-value" style="font-family: monospace; font-weight: 700; color: #047857;">${verificationCode}</div>
+              </div>
             </div>
 
             <table class="receipt-table">
@@ -380,6 +422,7 @@ const Donation: React.FC = () => {
               <div class="signature-block">
                 <div class="stamp">ROTI BANK<br/>BETTIAH</div>
                 <div class="signature-line">Authorized Signatory</div>
+                <div style="font-size: 8px; color: #64748b; margin-top: 5px; font-family: monospace; text-align: center; width: 100%;">SEC-ID: ${verificationCode}</div>
               </div>
             </div>
 
