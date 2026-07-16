@@ -572,6 +572,32 @@
             </div>
         </div>
 
+        <!-- Blog Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add Blog Article</h2>
+            <p class="text-gray-500 text-sm mb-4">SEO optimized articles for the knowledge base.</p>
+            <form id="blog-form">
+                <div class="form-group">
+                    <label for="blog-title" class="form-label">Title</label>
+                    <input type="text" id="blog-title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="blog-content" class="form-label">Content</label>
+                    <textarea id="blog-content" class="form-input" rows="6" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="blog-keywords" class="form-label">Target Keywords</label>
+                    <input type="text" id="blog-keywords" class="form-input" placeholder="e.g., roti bank, food donation">
+                </div>
+                <button type="submit" class="btn-primary">Add Blog Article</button>
+            </form>
+            
+            <div class="mt-8 border-t pt-6">
+                <h3 class="text-xl font-bold mb-4">Manage Blog Articles</h3>
+                <div id="blogs-list" class="space-y-4"></div>
+            </div>
+        </div>
+
         <!-- Gallery Section -->
         <div class="card mb-6">
             <h2 class="text-2xl font-bold mb-4">Add Gallery Image</h2>
@@ -785,6 +811,7 @@
             await loadInternshipContent();
             await loadInternshipFormUrl();
             await loadMediaItems();
+            await loadBlogs();
             await loadSubscribers();
         }
         
@@ -886,6 +913,29 @@
             }
             if (newsList) newsList.addEventListener('click', handleDeleteAndEdit);
             if (headlinesList) headlinesList.addEventListener('click', handleDeleteAndEdit);
+        }
+
+        async function loadBlogs() {
+            const { data, error } = await supabase.from('blogs').select('*').order('created_at', { ascending: false });
+            const list = document.getElementById('blogs-list');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            if (data) {
+                data.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'flex justify-between items-center bg-gray-100 p-3 rounded shadow-sm border border-gray-200';
+                    el.innerHTML = `
+                        <p class="font-medium">${item.title}</p>
+                        <div class="flex-shrink-0">
+                            <button class="edit-btn text-blue-500 mr-3 font-medium hover:underline" data-id="${item.id}" data-table="blogs">Edit</button>
+                            <button class="delete-btn text-red-500 font-medium hover:underline" data-id="${item.id}" data-table="blogs">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            }
+            list.addEventListener('click', handleDeleteAndEdit);
         }
         
         async function loadGallery() {
@@ -996,6 +1046,11 @@
             media: [
                 { key: 'title', label: 'Title / Caption', type: 'text' },
                 { key: 'url', label: 'Video / Reel URL', type: 'url' }
+            ],
+            blogs: [
+                { key: 'title', label: 'Title', type: 'text' },
+                { key: 'content', label: 'Content', type: 'textarea' },
+                { key: 'target_keywords', label: 'Target Keywords', type: 'text' }
             ]
         };
 
@@ -1392,6 +1447,34 @@
             } catch (e) {
                 console.error("Error adding news: ", e);
                 showMessage(messageBox, "Error adding news.", "error");
+            }
+        });
+
+        // Blog Articles form
+        document.getElementById('blog-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('blog-title').value;
+            const content = document.getElementById('blog-content').value;
+            const target_keywords = document.getElementById('blog-keywords').value || null;
+            const messageBox = document.getElementById('blog-form').querySelector('.message-box') || document.createElement('div');
+            
+            try {
+                const { data, error } = await supabase
+                    .from('blogs')
+                    .insert({ 
+                        title, 
+                        content, 
+                        target_keywords,
+                        created_at: new Date().toISOString() 
+                    });
+                
+                if (error) throw error;
+                showMessage(messageBox, "Blog added successfully!", "success");
+                document.getElementById('blog-form').reset();
+                loadAllData();
+            } catch (e) {
+                console.error("Error adding blog: ", e);
+                showMessage(messageBox, "Error adding blog.", "error");
             }
         });
 

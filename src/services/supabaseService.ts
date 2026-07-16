@@ -103,6 +103,20 @@ export const supabaseService = {
     }
   },
 
+  async getBlogs() {
+    try {
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.error('Failed to fetch blogs:', err);
+      return [];
+    }
+  },
+
   async subscribeNewsletter(email: string): Promise<void> {
     const { error } = await supabase.from('subscribers').insert([{ email }]);
     if (error) throw error;

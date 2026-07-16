@@ -8,7 +8,7 @@ test.describe('Homepage', () => {
   });
 
   test('page loads successfully with correct title', async ({ page }) => {
-    await expect(page).toHaveTitle(/Roti Bank Trust/);
+    await expect(page).toHaveTitle(/Roti Bank Bettiah Trust/);
   });
 
   test('navbar is visible', async ({ page }) => {

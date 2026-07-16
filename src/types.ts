@@ -110,3 +110,10 @@ export interface MediaItem {
   url: string;
   created_at?: string;
 }
+
+export interface BlogItem {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+}

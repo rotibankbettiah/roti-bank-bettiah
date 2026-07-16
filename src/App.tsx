@@ -8,6 +8,7 @@ import Chatbot from './components/Chatbot';
 import Testimonials from './components/Testimonials';
 import FloatingDonateButton from './components/FloatingDonateButton';
 import MediaCenter from './components/MediaCenter';
+import Blog from './components/Blog';
 import { supabaseService, supabase } from './services/supabaseService';
 import {
   Activity,
@@ -17,7 +18,8 @@ import {
   Notice,
   InternshipContent,
   Cause,
-  MediaItem
+  MediaItem,
+  BlogItem
 } from './types';
 
 const App: React.FC = () => {
@@ -32,7 +34,8 @@ const App: React.FC = () => {
     causes: Cause[],
     about: string,
     banner: string,
-    media: MediaItem[]
+    media: MediaItem[],
+    blogs: BlogItem[]
   }>({
     gallery: [],
     achievements: [],
@@ -44,7 +47,8 @@ const App: React.FC = () => {
     causes: [],
     about: '',
     banner: '',
-    media: []
+    media: [],
+    blogs: []
   });
 
   const [activeSlide, setActiveSlide] = useState(0);
@@ -68,7 +72,7 @@ const App: React.FC = () => {
 
     try {
       // Parallel fetch for optimal load times
-      const [g, ach, br, act, not, nws, int, cs, ab, bn, md] = await Promise.all([
+      const [g, ach, br, act, not, nws, int, cs, ab, bn, md, bl] = await Promise.all([
         wrapSafe(supabaseService.getGalleryImages(), []),
         wrapSafe(supabaseService.getAchievements(), []),
         wrapSafe(supabaseService.getBranches(), []),
@@ -79,7 +83,8 @@ const App: React.FC = () => {
         wrapSafe(supabaseService.getCauses(), []),
         wrapSafe(supabaseService.getAboutContent(), ''),
         wrapSafe(supabaseService.getBanner(), ''),
-        wrapSafe(supabaseService.getMediaItems(), [])
+        wrapSafe(supabaseService.getMediaItems(), []),
+        wrapSafe(supabaseService.getBlogs(), [])
       ]);
       setData({ 
         gallery: g, 
@@ -92,7 +97,8 @@ const App: React.FC = () => {
         causes: cs, 
         about: ab,
         banner: bn,
-        media: md
+        media: md,
+        blogs: bl
       });
     } catch (err) {
       console.error("Data fetch failed", err);
@@ -594,6 +600,9 @@ const App: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Blog Section */}
+        <Blog blogs={data.blogs} />
 
         {/* Causes Section */}
         <section id="causes" className="py-24 bg-white scroll-mt-24 reveal">
