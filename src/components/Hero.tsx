@@ -118,7 +118,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
           </motion.h1>
           
           <motion.p variants={itemVariants} className="text-lg md:text-xl text-slate-300 mb-12 max-w-xl font-medium leading-relaxed">
-            Since 2023, our food bank NGO in West Champaran, Bihar has served over 500,000+ free meals to the hungry and underprivileged. Join our mission to end hunger today.
+            Since 2023, our registered charitable food trust in West Champaran, Bihar has provided free meals to people facing hunger. Donate, volunteer, or partner with us to strengthen hunger relief in India.
           </motion.p>
           
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-5">
