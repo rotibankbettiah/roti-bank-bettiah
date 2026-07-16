@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title translate="no">Roti Bank Admin Panel</title>
+    <link rel="icon" type="image/png" sizes="144x144" href="https://www.rotibankbettiah.org/favicon.png" />
+    <link rel="shortcut icon" href="https://www.rotibankbettiah.org/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            color: #102a43;
+            line-height: 1.6;
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            color: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        /* ─── Layout ─── */
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .max-w-sm { max-width: 28rem; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+
+        /* ─── Typography & Utilities ─── */
+        .text-2xl { font-size: 1.75rem; line-height: 2.25rem; letter-spacing: -0.025em; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .font-bold { font-weight: 700; }
+        .font-medium { font-weight: 500; }
+        
+        .p-2 { padding: 0.5rem; }
+        .p-3 { padding: 0.75rem; }
+        .p-4 { padding: 1rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+        .pt-6 { padding-top: 1.5rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        .mr-3 { margin-right: 0.75rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+
+        .top-6 { top: 1.5rem; }
+        .right-6 { right: 1.5rem; }
+
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-between { justify-content: space-between; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        
+        .w-full { width: 100%; }
+        .w-4 { width: 1rem; }
+        .h-4 { height: 1rem; }
+        .max-h-96 { max-height: 24rem; }
+        .overflow-y-auto { overflow-y: auto; }
+        .flex-shrink-0 { flex-shrink: 0; }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.02); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+        /* ─── Colors (Enhanced) ─── */
+        .text-red-500 { color: #f43f5e; }
+        .text-red-700 { color: #be123c; }
+        .text-blue-500 { color: #3b82f6; }
+        .text-gray-400 { color: #9ca3af; }
+        .text-gray-500 { color: #64748b; }
+        .text-gray-800 { color: #1e293b; }
+        .text-emerald-700 { color: #047857; }
+        .bg-red-100 { background-color: #ffe4e6; }
+        .bg-gray-100 { background-color: #f8fafc; }
+        .bg-emerald-100 { background-color: #d1fae5; }
+        
+        .hover\:bg-red-200:hover { background-color: #fecdd3; }
+        .hover\:bg-emerald-200:hover { background-color: #a7f3d0; }
+        .hover\:underline:hover { text-decoration: underline; }
+        
+        .rounded { border-radius: 0.375rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .border-t { border-top: 1px solid #e2e8f0; }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .transition-all { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+
+        @media (min-width: 640px) {
+            .sm\:flex-row { flex-direction: row; }
+            .sm\:items-center { align-items: center; }
+        }
+        @media (min-width: 768px) {
+            .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        /* ─── Custom Component Styles ─── */
+        .heading {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.05em;
+            drop-shadow: 0 2px 4px rgba(16,185,129,0.1);
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        .card h2 {
+            color: #0f172a;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #334155;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border-radius: 0.75rem;
+            border: 1.5px solid #cbd5e1;
+            transition: all 0.25s ease;
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-size: 1rem;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #10b981;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        }
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-weight: 600;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            font-size: 0.9rem;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px -1px rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px -1px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .message-box {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* JS injected lists enhancements */
+        .flex.justify-between.items-center.bg-gray-100 {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+        .flex.justify-between.items-center.bg-gray-100:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transform: translateX(4px);
+        }
+        
+        .edit-btn, .delete-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.375rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .edit-btn { background: #eff6ff; color: #2563eb; }
+        .edit-btn:hover { background: #dbeafe; color: #1d4ed8; }
+        .delete-btn { background: #fef2f2; color: #e11d48; }
+        .delete-btn:hover { background: #ffe4e6; color: #be123c; }
+        
+        /* Logout Button */
+        #logout-btn {
+            background: #fff1f2;
+            color: #e11d48;
+            border: 1px solid #ffe4e6;
+            font-weight: 600;
+        }
+        #logout-btn:hover {
+            background: #ffe4e6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(225, 29, 72, 0.1);
+        }
+
+        /* ─── Edit Modal ─── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .modal-close {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #64748b;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+        .modal-close:hover {
+            background: #fef2f2;
+            color: #e11d48;
+            border-color: #fecaca;
+            transform: rotate(90deg);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f1f5f9;
+        }
+    </style>
+  <script type="module" crossorigin src="/assets/admin-GrYmV9pP.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+</head>
+<body class="p-4">
+    <div id="app" class="container hidden relative">
+        <button id="logout-btn" class="absolute top-6 right-6 bg-red-100 hover:bg-red-200 text-red-700 font-bold px-4 py-2 rounded-lg text-sm transition-all">Logout</button>
+        <h1 class="heading">Roti Bank Admin Panel</h1>
+        
+        <!-- About Us Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Update About Us</h2>
+            <form id="about-form">
+                <div class="form-group">
+                    <label for="about-content" class="form-label">About Us Content</label>
+                    <textarea id="about-content" class="form-input" rows="8"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Save About Us</button>
+            </form>
+        </div>
+
+        <!-- Hero Banner Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Update Hero Banner Image</h2>
+            <form id="banner-form">
+                <div class="form-group">
+                    <label for="banner-file" class="form-label">Upload New Banner Image</label>
+                    <input type="file" id="banner-file" class="form-input">
+                </div>
+                <button type="submit" class="btn-primary">Update Banner</button>
+            </form>
+        </div>
+
+        <!-- Internship Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add Internship Content</h2>
+            <form id="internship-content-form">
+                <div class="form-group">
+                    <label for="internship-content-type" class="form-label">Content Type</label>
+                    <select id="internship-content-type" class="form-input">
+                        <option value="text">Text</option>
+                        <option value="youtube">YouTube Video</option>
+                        <option value="instagram">Instagram Video</option>
+                        <option value="photo">Photo</option>
+                        <option value="certificate">Certificate</option>
+                        <option value="criteria">Criteria</option>
+                    </select>
+                </div>
+                <div id="text-content-group" class="form-group">
+                    <label for="internship-text-content" class="form-label">Text Content</label>
+                    <textarea id="internship-text-content" class="form-input" rows="4"></textarea>
+                </div>
+                <div id="video-content-group" class="form-group hidden">
+                    <label for="internship-video-url" class="form-label">Video URL</label>
+                    <input type="url" id="internship-video-url" class="form-input" placeholder="e.g., https://www.youtube.com/embed/... or https://www.instagram.com/reel/...">
+                </div>
+                <div id="file-content-group" class="form-group hidden">
+                    <label for="internship-file-upload" class="form-label">Upload File</label>
+                    <input type="file" id="internship-file-upload" class="form-input">
+                </div>
+                <button type="submit" class="btn-primary">Add Content</button>
+            </form>
+            <div id="internship-content-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Set Internship Application Form</h2>
+            <form id="internship-form-url-form">
+                <div class="form-group">
+                    <label for="internship-form-url" class="form-label">Google Form URL</label>
+                    <input type="url" id="internship-form-url" class="form-input">
+                </div>
+                <button type="submit" class="btn-primary">Save Form URL</button>
+            </form>
+        </div>
+
+        <!-- Activities Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add Daily Activity</h2>
+            <form id="activities-form">
+                <div class="form-group">
+                    <label for="activity-title" class="form-label">Activity Title</label>
+                    <input type="text" id="activity-title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="activity-content" class="form-label">Activity Description</label>
+                    <textarea id="activity-content" class="form-input" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Add Activity</button>
+            </form>
+             <div id="activities-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <!-- Notice Board Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add New Notice</h2>
+            <form id="notices-form">
+                <div class="form-group">
+                    <label for="notice-title" class="form-label">Notice Title</label>
+                    <input type="text" id="notice-title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="notice-content" class="form-label">Notice Content</label>
+                    <textarea id="notice-content" class="form-input" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Add Notice</button>
+            </form>
+             <div id="notices-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <!-- Causes Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add or Update Cause</h2>
+            <form id="causes-form">
+                <div class="form-group">
+                    <label for="cause-name" class="form-label">Cause Name</label>
+                    <input type="text" id="cause-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="cause-completed" class="form-label">Completed Tasks</label>
+                    <input type="number" id="cause-completed" class="form-input" value="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="cause-target" class="form-label">Target Tasks</label>
+                    <input type="number" id="cause-target" class="form-input" required>
+                </div>
+                <button type="submit" class="btn-primary">Add/Update Cause</button>
+            </form>
+            <div id="causes-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <!-- Latest News Headlines Section (for Navbar ticker) -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Latest News Headlines</h2>
+            <p class="text-gray-500 text-sm mb-4">These headlines appear in the scrolling ticker at the top of the website.</p>
+            <form id="headlines-form">
+                <div class="form-group">
+                    <label for="headline-title" class="form-label">Headline Title</label>
+                    <input type="text" id="headline-title" class="form-input" required placeholder="e.g., रोटी बैंक बेतिया ने 500 लोगों को खाना बांटा">
+                </div>
+                <div class="form-group">
+                    <label for="headline-link" class="form-label">Link (Optional)</label>
+                    <input type="url" id="headline-link" class="form-input" placeholder="e.g., https://timesofindia.indiatimes.com/...">
+                </div>
+                <button type="submit" class="btn-primary">Add Headline</button>
+            </form>
+            
+            <div class="mt-8 border-t pt-6">
+                <h3 class="text-xl font-bold mb-4">Manage Headlines</h3>
+                <div id="headlines-list" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- News Section (Full articles) -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add News Article</h2>
+            <p class="text-gray-500 text-sm mb-4">Full news articles that appear in the News section of the website.</p>
+            <form id="news-form">
+                <div class="form-group">
+                    <label for="news-title" class="form-label">News Title</label>
+                    <input type="text" id="news-title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="news-content" class="form-label">News Content</label>
+                    <textarea id="news-content" class="form-input" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="news-image-file" class="form-label">Upload Image (Optional)</label>
+                    <input type="file" id="news-image-file" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="news-link" class="form-label">External Link (Optional)</label>
+                    <input type="url" id="news-link" class="form-input" placeholder="e.g., https://timesofindia.indiatimes.com/...">
+                </div>
+                <button type="submit" class="btn-primary">Add News Article</button>
+            </form>
+            
+            <div class="mt-8 border-t pt-6">
+                <h3 class="text-xl font-bold mb-4">Manage News Articles</h3>
+                <div id="news-list" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- Blog Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add Blog Article</h2>
+            <p class="text-gray-500 text-sm mb-4">SEO optimized articles for the knowledge base.</p>
+            <form id="blog-form">
+                <div class="form-group">
+                    <label for="blog-title" class="form-label">Title</label>
+                    <input type="text" id="blog-title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="blog-content" class="form-label">Content</label>
+                    <textarea id="blog-content" class="form-input" rows="6" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="blog-keywords" class="form-label">Target Keywords</label>
+                    <input type="text" id="blog-keywords" class="form-input" placeholder="e.g., roti bank, food donation">
+                </div>
+                <button type="submit" class="btn-primary">Add Blog Article</button>
+            </form>
+            
+            <div class="mt-8 border-t pt-6">
+                <h3 class="text-xl font-bold mb-4">Manage Blog Articles</h3>
+                <div id="blogs-list" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add Gallery Image</h2>
+            <form id="gallery-form">
+                <div class="form-group">
+                    <label for="gallery-image-file" class="form-label">Upload Image</label>
+                    <input type="file" id="gallery-image-file" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="gallery-caption" class="form-label">Caption</label>
+                    <input type="text" id="gallery-caption" class="form-input" required>
+                </div>
+                <button type="submit" class="btn-primary">Add Image</button>
+            </form>
+            <div id="gallery-list" class="mt-4 space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- Media Section (YouTube & Instagram) -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add YouTube Video / Instagram Reel</h2>
+            <form id="media-form">
+                <div class="form-group">
+                    <label for="media-type" class="form-label">Media Type</label>
+                    <select id="media-type" class="form-input" required>
+                        <option value="youtube">YouTube Video</option>
+                        <option value="instagram">Instagram Reel</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="media-title" class="form-label">Title / Caption</label>
+                    <input type="text" id="media-title" class="form-input" required placeholder="e.g., Feeding the needy at Bettiah center">
+                </div>
+                <div class="form-group">
+                    <label for="media-url" class="form-label">Video / Reel URL</label>
+                    <input type="url" id="media-url" class="form-input" required placeholder="e.g., https://www.youtube.com/watch?v=... or https://www.instagram.com/reel/...">
+                </div>
+                <button type="submit" class="btn-primary">Add Media</button>
+            </form>
+            <div id="media-list" class="mt-6 space-y-4"></div>
+        </div>
+
+        <!-- Newsletter Subscribers Section -->
+        <div class="card mb-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                <div>
+                    <h2 class="text-2xl font-bold">Newsletter Subscribers</h2>
+                    <p class="text-gray-500 text-sm mt-1">Manage users who subscribed to updates</p>
+                </div>
+                <button id="copy-emails-btn" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-bold px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    Copy All Emails
+                </button>
+            </div>
+            <div id="subscribers-list" class="mt-4 space-y-3 max-h-96 overflow-y-auto pr-2"></div>
+        </div>
+    </div>
+
+    <!-- Login Section -->
+    <div id="login-form" class="container max-w-sm">
+        <h1 class="heading">Admin Login</h1>
+        <form id="admin-login-form" class="space-y-4">
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" class="form-input" required>
+            </div>
+            <button type="submit" class="btn-primary w-full">Log In</button>
+        </form>
+        <div id="login-message" class="message-box hidden"></div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Item</h2>
+                <button id="modal-close-btn" class="modal-close">&times;</button>
+            </div>
+            <form id="edit-modal-form">
+                <div id="edit-modal-fields"></div>
+                <div id="edit-modal-message" class="message-box hidden"></div>
+                <div class="modal-actions">
+                    <button type="button" id="modal-cancel-btn" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
