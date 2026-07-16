@@ -12,6 +12,10 @@ services:
         value: production
       - key: GEMINI_API_KEY
         sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
       - key: ALLOWED_ORIGINS
         # Update this list to match your actual Vercel and custom domains
-        value: https://roti-bank-bettiah.vercel.app,https://www.rotibankbettiah.org
+        value: https://roti-bank-bettiah.vercel.app,https://www.rotibankbettiah.org,https://rotibankbettiah.org
