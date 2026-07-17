@@ -823,7 +823,7 @@ const Donation: React.FC = () => {
                           <img
                             src={details.qrUrl}
                             alt="UPI QR Code for Roti Bank Bettiah Donation"
-                            className="w-48 h-48 rounded-2xl object-cover"
+                            className="w-48 h-48 rounded-2xl object-contain"
                           />
                         </div>
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-4 flex items-center justify-center gap-2">

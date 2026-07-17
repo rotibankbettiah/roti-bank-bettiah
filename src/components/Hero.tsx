@@ -49,7 +49,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
   };
 
   return (
-    <section id="home" className="relative h-[90vh] min-h-[650px] flex items-center overflow-hidden bg-slate-900 pt-28 md:pt-36 pb-12">
+    <section id="home" className="relative min-h-[calc(100vh-112px)] lg:min-h-[calc(100vh-144px)] flex items-center overflow-hidden bg-slate-900 pt-12 pb-20 md:py-24">
       {/* Parallax Background */}
       <motion.div 
         className="absolute inset-0 z-0"
