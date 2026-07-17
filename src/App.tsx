@@ -407,14 +407,10 @@ const App: React.FC = () => {
               {data.achievements.map((ach) => (
                 <article key={ach.id} className="bg-white/5 backdrop-blur-md p-10 rounded-[3rem] border border-white/10 hover:bg-white/10 transition-all group">
                   {ach.imageUrl && (
-                    <div className="w-full h-[300px] md:h-[350px] overflow-hidden rounded-[2.5rem] mb-8 shadow-2xl border-4 border-white/10 relative bg-slate-950 flex items-center justify-center">
-                      <div 
-                        className="absolute inset-0 bg-cover bg-center blur-2xl opacity-35 scale-110"
-                        style={{ backgroundImage: `url(${ach.imageUrl})` }}
-                      ></div>
+                    <div className="w-full overflow-hidden rounded-[2.5rem] mb-8 shadow-2xl border-4 border-white/10 bg-slate-950/5 flex items-center justify-center">
                       <img 
                         src={ach.imageUrl} 
-                        className="relative z-10 max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-700" 
+                        className="w-full h-auto object-contain max-h-[350px] group-hover:scale-105 transition-transform duration-700 block" 
                         alt={ach.description || 'Achievement image'}
                         loading="lazy"
                       />
@@ -448,22 +444,16 @@ const App: React.FC = () => {
             <div className="flex flex-wrap justify-center gap-10">
               {data.branches.map((br) => (
                 <article key={br.id} className="bg-slate-50 p-10 rounded-[3rem] border border-slate-100 card-hover w-full max-w-sm group">
-                  <div className="mb-6 overflow-hidden rounded-[2rem] h-48 relative bg-slate-950 flex items-center justify-center">
+                  <div className="mb-6 overflow-hidden rounded-[2rem] bg-slate-950/5 flex items-center justify-center">
                     {br.imageUrl ? (
-                      <>
-                        <div 
-                          className="absolute inset-0 bg-cover bg-center blur-xl opacity-30 scale-110"
-                          style={{ backgroundImage: `url(${br.imageUrl})` }}
-                        ></div>
-                        <img 
-                          src={br.imageUrl} 
-                          className="relative z-10 max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-700" 
-                          alt={br.name || 'Branch image'} 
-                          loading="lazy" 
-                        />
-                      </>
+                      <img 
+                        src={br.imageUrl} 
+                        className="w-full h-auto max-h-[250px] object-contain group-hover:scale-105 transition-transform duration-700 block" 
+                        alt={br.name || 'Branch image'} 
+                        loading="lazy" 
+                      />
                     ) : (
-                      <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400">
+                      <div className="w-full h-44 bg-slate-200 flex items-center justify-center text-slate-400">
                         <i className="fas fa-building text-4xl"></i>
                       </div>
                     )}
@@ -540,14 +530,10 @@ const App: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
               {data.activities.map((act) => (
                 <article key={act.id} className="bg-slate-50 rounded-[3rem] overflow-hidden border border-slate-100 group card-hover">
-                  <div className="h-56 overflow-hidden relative bg-slate-950 flex items-center justify-center">
-                    <div 
-                      className="absolute inset-0 bg-cover bg-center blur-xl opacity-30 scale-110"
-                      style={{ backgroundImage: `url(${act.imageUrl})` }}
-                    ></div>
+                  <div className="overflow-hidden bg-slate-950/5 flex items-center justify-center">
                     <img 
                       src={act.imageUrl} 
-                      className="relative z-10 max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" 
+                      className="w-full h-auto max-h-[300px] object-contain group-hover:scale-105 transition-transform duration-500 block" 
                       alt={act.title || 'Activity image'} 
                       loading="lazy" 
                     />
@@ -606,14 +592,10 @@ const App: React.FC = () => {
                     <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mb-4 block">{new Date(item.created_at).toLocaleDateString('en-IN', { dateStyle: 'long' })}</span>
                     
                     {item.imageUrl && (
-                      <div className="rounded-[1.5rem] overflow-hidden mb-6 relative bg-slate-950 flex items-center justify-center min-h-[250px] max-h-[500px] border border-slate-200">
-                        <div 
-                          className="absolute inset-0 bg-cover bg-center blur-2xl opacity-25 scale-115"
-                          style={{ backgroundImage: `url(${item.imageUrl})` }}
-                        ></div>
+                      <div className="rounded-[1.5rem] overflow-hidden mb-6 bg-slate-950/5 flex items-center justify-center border border-slate-200">
                         <img 
                           src={item.imageUrl} 
-                          className="relative z-10 max-w-full max-h-[500px] object-contain transition-transform duration-500 hover:scale-102" 
+                          className="w-full h-auto max-h-[450px] object-contain transition-transform duration-500 hover:scale-102 block" 
                           alt={item.title || 'News image'}
                           loading="lazy"
                         />
