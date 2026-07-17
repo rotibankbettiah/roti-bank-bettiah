@@ -410,6 +410,20 @@
             </form>
         </div>
 
+        <!-- Database Maintenance & Performance Tools -->
+        <div class="card mb-6 bg-emerald-50/20 border border-emerald-100/50">
+            <h2 class="text-2xl font-bold text-emerald-800 mb-2">⚡ System Performance & Image Optimization</h2>
+            <p class="text-slate-600 mb-4 text-sm">Scan all images stored in the database and automatically compress/resize them on the server to improve website load speed by up to 10x.</p>
+            <div class="flex flex-wrap gap-4 items-center">
+                <button id="optimize-db-images-btn" type="button" class="btn-primary flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Optimize Stored Images
+                </button>
+                <div id="optimization-status" class="text-xs text-slate-500 font-medium hidden"></div>
+            </div>
+            <div id="optimization-logs" class="mt-4 p-4 bg-slate-900 text-slate-200 rounded-xl font-mono text-[10px] hidden max-h-48 overflow-y-auto whitespace-pre-wrap"></div>
+        </div>
+
         <!-- Hero Banner Section -->
         <div class="card mb-6">
             <h2 class="text-2xl font-bold mb-4">Update Hero Banner Image</h2>
@@ -1685,6 +1699,165 @@
                 });
             } else {
                 alert('No subscribers to copy.');
+            }
+        });
+
+        // ─── Optimize Stored Images (Database Utility) ───
+        document.getElementById('optimize-db-images-btn')?.addEventListener('click', async () => {
+            const btn = document.getElementById('optimize-db-images-btn');
+            const statusDiv = document.getElementById('optimization-status');
+            const logsDiv = document.getElementById('optimization-logs');
+
+            if (!confirm("Are you sure you want to optimize all existing images? This will download, compress, and overwrite files in Supabase storage, reducing their size to improve load performance.")) {
+                return;
+            }
+
+            btn.disabled = true;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<span class="animate-pulse mr-2">⏳</span> Optimizing...`;
+            statusDiv.classList.remove('hidden');
+            logsDiv.classList.remove('hidden');
+            logsDiv.innerHTML = 'Starting image optimization process...\n';
+            statusDiv.innerHTML = 'Processing...';
+            statusDiv.className = "text-xs text-slate-500 font-medium";
+
+            function log(message) {
+                logsDiv.innerHTML += `[${new Date().toLocaleTimeString()}] ${message}\n`;
+                logsDiv.scrollTop = logsDiv.scrollHeight;
+            }
+
+            try {
+                // Helper to load image securely to a canvas and compress
+                const compressFromUrl = async (url) => {
+                    if (!url || !url.startsWith('http')) {
+                        return null;
+                    }
+
+                    return new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.crossOrigin = "anonymous";
+                        img.onload = () => {
+                            let width = img.width;
+                            let height = img.height;
+                            const maxWidth = 1200;
+                            const maxHeight = 1200;
+
+                            if (width > maxWidth || height > maxHeight) {
+                                const ratio = Math.min(maxWidth / width, maxHeight / height);
+                                width = Math.floor(width * ratio);
+                                height = Math.floor(height * ratio);
+                            }
+
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            if (!ctx) {
+                                reject(new Error("Canvas context is null"));
+                                return;
+                            }
+
+                            // Draw white background
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.fillRect(0, 0, width, height);
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            canvas.toBlob((blob) => {
+                                if (blob) {
+                                    resolve(blob);
+                                } else {
+                                    reject(new Error("Canvas blob conversion failed"));
+                                }
+                            }, 'image/jpeg', 0.8);
+                        };
+                        img.onerror = () => reject(new Error("Failed to load image resource (CORS/Network error)"));
+                        // Add cache buster to avoid CORS issues
+                        img.src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+                    });
+                };
+
+                // Helper to extract path inside bucket from URL
+                const extractStoragePath = (url) => {
+                    let cleanUrl = url.split('?')[0];
+                    const match = cleanUrl.match(/\/roti-bank-public-images\/(.+)/);
+                    return match ? decodeURIComponent(match[1]) : null;
+                };
+
+                // Tables and columns storing images
+                const tasks = [
+                    { table: 'banners', col: 'imageUrl', idCol: 'id' },
+                    { table: 'gallery', col: 'imageUrl', idCol: 'id' },
+                    { table: 'news', col: 'imageUrl', idCol: 'id' },
+                    { table: 'internship_corner', col: 'url', idCol: 'id', filter: { key: 'type', values: ['photo', 'certificate'] } }
+                ];
+
+                let processedCount = 0;
+                let successCount = 0;
+
+                for (const t of tasks) {
+                    log(`Scanning table "${t.table}"...`);
+                    let query = supabase.from(t.table).select('*');
+                    if (t.filter) {
+                        query = query.in(t.filter.key, t.filter.values);
+                    }
+                    const { data, error } = await query;
+                    
+                    if (error) {
+                        log(`Error scanning ${t.table}: ${error.message}`);
+                        continue;
+                    }
+
+                    log(`Found ${data.length} records in "${t.table}".`);
+
+                    for (const record of data) {
+                        const url = record[t.col];
+                        const id = record[t.idCol];
+                        if (!url) continue;
+
+                        processedCount++;
+                        const storagePath = extractStoragePath(url);
+
+                        if (!storagePath) {
+                            log(`Skipping external image: ${url.substring(0, 50)}...`);
+                            continue;
+                        }
+
+                        log(`[${t.table} ID: ${id}] Processing image...`);
+
+                        try {
+                            const compressedBlob = await compressFromUrl(url);
+                            if (compressedBlob) {
+                                log(`[${t.table} ID: ${id}] Original compressed. Size: ${Math.round(compressedBlob.size / 1024)} KB. Re-uploading to "${storagePath}"...`);
+
+                                const { error: uploadError } = await supabase.storage
+                                    .from('roti-bank-public-images')
+                                    .upload(storagePath, compressedBlob, {
+                                        upsert: true
+                                    });
+
+                                if (uploadError) throw uploadError;
+
+                                successCount++;
+                                log(`[${t.table} ID: ${id}] Optimized successfully!`);
+                            }
+                        } catch (err) {
+                            log(`[${t.table} ID: ${id}] Optimization failed: ${err.message}`);
+                        }
+                    }
+                }
+
+                statusDiv.innerHTML = `Success! Optimized ${successCount}/${processedCount} images.`;
+                statusDiv.className = "text-xs text-emerald-600 font-bold";
+                log(`Optimization complete! Successful: ${successCount}/${processedCount}`);
+
+            } catch (err) {
+                console.error(err);
+                statusDiv.innerHTML = `Failed: ${err.message}`;
+                statusDiv.className = "text-xs text-red-600 font-bold";
+                log(`Process error: ${err.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
             }
         });
     </script>
