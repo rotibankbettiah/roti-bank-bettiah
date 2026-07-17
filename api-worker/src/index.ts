@@ -180,16 +180,10 @@ app.post('/api/webhook/notify-subscribers', async (c) => {
     `;
 
     // Send emails using Resend REST API
-    const sender = c.env.SENDER_EMAIL || 'Roti Bank Bettiah <onboarding@resend.dev>';
-    
-    // If using the sandbox onboarding domain, Resend only allows sending to the registered account email
-    let recipients = emailList;
-    if (sender.includes('onboarding@resend.dev')) {
-      console.log("Using Resend onboarding sandbox. Sending notification to the first subscriber to prevent validation errors.");
-      recipients = [emailList[0]];
-    }
+    let sender = c.env.SENDER_EMAIL || 'Roti Bank Bettiah <no-reply@rotibankbettiah.org>';
+    let recipients = emailList; // Send to ALL subscribers by default
 
-    const resendResponse = await fetch('https://api.resend.com/emails', {
+    let resendResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${c.env.RESEND_API_KEY}`,
@@ -203,12 +197,36 @@ app.post('/api/webhook/notify-subscribers', async (c) => {
       })
     });
 
+    // If it fails because the custom domain is not verified, fall back to sandbox onboarding
+    if (!resendResponse.ok) {
+      const errorText = await resendResponse.clone().text();
+      if (errorText.includes("not verified") && sender !== 'Roti Bank Bettiah <onboarding@resend.dev>') {
+        console.warn("Custom domain is not verified. Falling back to Resend onboarding sandbox to deliver a test email.");
+        sender = 'Roti Bank Bettiah <onboarding@resend.dev>';
+        recipients = [emailList[0]]; // Send only to the first subscriber (the owner account) in sandbox
+        
+        resendResponse = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${c.env.RESEND_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: sender,
+            to: recipients,
+            subject: subject,
+            html: htmlBody
+          })
+        });
+      }
+    }
+
     if (!resendResponse.ok) {
       throw new Error(`Resend API error: ${await resendResponse.text()}`);
     }
 
     const resendData = await resendResponse.json();
-    return c.json({ success: true, message: `Notifications sent to ${emailList.length} subscribers`, data: resendData }, 200);
+    return c.json({ success: true, message: `Notifications sent successfully`, data: resendData }, 200);
 
   } catch (error: any) {
     console.error('Webhook Error:', error);
