@@ -5,6 +5,87 @@ import { DonationDetails } from '../types';
 import Confetti from 'react-confetti';
 import { motion } from 'framer-motion';
 
+const BalloonAnimation: React.FC = () => {
+  const [balloons, setBalloons] = useState<Array<{
+    id: number;
+    color: string;
+    left: number;
+    delay: number;
+    speed: number;
+    scale: number;
+    particles: Array<{ x: string; y: string }>;
+  }>>([]);
+
+  useEffect(() => {
+    const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#14b8a6', '#f43f5e', '#a855f7'];
+    const list = Array.from({ length: 30 }).map((_, i) => {
+      const angleCount = 8;
+      const particles = Array.from({ length: angleCount }).map((_, pIdx) => {
+        const angle = (pIdx * (360 / angleCount) * Math.PI) / 180;
+        const distance = 40 + Math.random() * 30; // 40px to 70px spread
+        return {
+          x: `${Math.cos(angle) * distance}px`,
+          y: `${Math.sin(angle) * distance}px`,
+        };
+      });
+
+      return {
+        id: i,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        left: 5 + Math.random() * 90, // 5% to 95% width
+        delay: Math.random() * 2.5, // staggered starts
+        speed: 4 + Math.random() * 3, // 4s to 7s duration
+        scale: 0.7 + Math.random() * 0.6, // 0.7 to 1.3 size scale
+        particles,
+      };
+    });
+    setBalloons(list);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+      {balloons.map((b) => (
+        <div
+          key={b.id}
+          className="balloon-container"
+          style={{
+            left: `${b.left}%`,
+            transform: `scale(${b.scale})`,
+            animation: `balloonFloat ${b.speed}s linear ${b.delay}s forwards`,
+          }}
+        >
+          {/* Balloon Body */}
+          <div
+            className="balloon-body"
+            style={{
+              backgroundColor: b.color,
+              color: b.color,
+              animation: `balloonPop ${b.speed}s linear ${b.delay}s forwards`,
+            }}
+          >
+            <div className="balloon-knot" />
+            <div className="balloon-string" />
+          </div>
+
+          {/* Burst Particles */}
+          {b.particles.map((p, pIdx) => (
+            <div
+              key={pIdx}
+              className="balloon-particle"
+              style={{
+                backgroundColor: b.color,
+                '--x': p.x,
+                '--y': p.y,
+                animation: `particleBurst ${b.speed}s linear ${b.delay}s forwards`,
+              } as React.CSSProperties}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const Donation: React.FC = () => {
   const [selectedAmount, setSelectedAmount] = useState<number>(500);
   const [customAmount, setCustomAmount] = useState('');
@@ -467,15 +548,6 @@ const Donation: React.FC = () => {
     if (result.success && result.paymentId) {
       setPaymentSuccess(true);
       setPaymentId(result.paymentId);
-      
-      // Automatically trigger receipt printing/PDF saving!
-      triggerPrintReceipt(
-        donorName || 'Valued Donor',
-        donorEmail || '',
-        donorPhone || '',
-        amt,
-        result.paymentId
-      );
     } else if (result.error) {
       setPaymentError(result.error);
     }
@@ -486,16 +558,20 @@ const Donation: React.FC = () => {
   return (
     <section id="donation" className="py-24 bg-gradient-to-br from-slate-50 via-white to-emerald-50 relative overflow-hidden scroll-mt-24">
       {paymentSuccess && (
-        <div className="fixed inset-0 z-50 pointer-events-none">
-          <Confetti 
-            width={windowSize.width} 
-            height={windowSize.height} 
-            recycle={false} 
-            numberOfPieces={800} 
-            gravity={0.15}
-          />
-        </div>
+        <>
+          <div className="fixed inset-0 z-50 pointer-events-none">
+            <Confetti 
+              width={windowSize.width} 
+              height={windowSize.height} 
+              recycle={false} 
+              numberOfPieces={800} 
+              gravity={0.15}
+            />
+          </div>
+          <BalloonAnimation />
+        </>
       )}
+
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-100/30 rounded-full blur-3xl -mr-40 -mt-40"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-100/30 rounded-full blur-3xl -ml-40 -mb-40"></div>
