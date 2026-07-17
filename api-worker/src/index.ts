@@ -101,19 +101,32 @@ app.post('/api/webhook/notify-subscribers', async (c) => {
 
     let subject = "New Update from Roti Bank Bettiah";
     let category = "Update";
+    let sectionAnchor = "";
     
     if (table === 'blogs') {
       subject = `New Blog Post: ${title}`;
       category = "Blog Post";
+      sectionAnchor = "#blog";
     } else if (table === 'news') {
       subject = `Latest News: ${title}`;
       category = "News Flash";
+      sectionAnchor = "#news";
     } else if (table === 'notices') {
       subject = `Important Notice: ${title}`;
       category = "Official Notice";
+      sectionAnchor = "#notices";
     } else if (table === 'causes') {
       subject = `Ongoing Goal Support: ${title}`;
       category = "New Cause";
+      sectionAnchor = "#causes";
+    } else if (table === 'gallery') {
+      subject = `New Gallery Update`;
+      category = "Gallery Photo";
+      sectionAnchor = "#gallery";
+    } else if (table === 'activities') {
+      subject = `New Activity Update`;
+      category = "Daily Activity";
+      sectionAnchor = "#activities";
     }
 
     const supabaseUrl = c.env.SUPABASE_URL;
@@ -166,7 +179,7 @@ app.post('/api/webhook/notify-subscribers', async (c) => {
           ${imageUrl ? `<div style="text-align: center; margin-bottom: 20px;"><img src="${imageUrl}" alt="${title}" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);" /></div>` : ''}
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://rotibankbettiah.org" style="background-color: #059669; color: #ffffff; text-decoration: none; padding: 12px 30px; font-weight: bold; border-radius: 30px; font-size: 14px; box-shadow: 0 4px 6px rgba(5, 150, 105, 0.2);">
+            <a href="https://rotibankbettiah.org/${sectionAnchor}" style="background-color: #059669; color: #ffffff; text-decoration: none; padding: 12px 30px; font-weight: bold; border-radius: 30px; font-size: 14px; box-shadow: 0 4px 6px rgba(5, 150, 105, 0.2);">
               View on Website
             </a>
           </div>
