@@ -32,6 +32,16 @@ app.get('/api/health', (c) => {
   return c.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+app.get('/api/debug-env', (c) => {
+  return c.json({
+    SUPABASE_URL: c.env.SUPABASE_URL || "undefined",
+    SUPABASE_SERVICE_ROLE_KEY_SET: !!c.env.SUPABASE_SERVICE_ROLE_KEY,
+    SUPABASE_SERVICE_ROLE_KEY_VAL: c.env.SUPABASE_SERVICE_ROLE_KEY ? c.env.SUPABASE_SERVICE_ROLE_KEY.substring(0, 15) + "..." : "undefined",
+    RESEND_API_KEY_SET: !!c.env.RESEND_API_KEY,
+    RESEND_API_KEY_VAL: c.env.RESEND_API_KEY ? c.env.RESEND_API_KEY.substring(0, 15) + "..." : "undefined"
+  });
+});
+
 // Chat endpoint
 app.post('/api/chat', async (c) => {
   try {
@@ -170,6 +180,15 @@ app.post('/api/webhook/notify-subscribers', async (c) => {
     `;
 
     // Send emails using Resend REST API
+    const sender = c.env.SENDER_EMAIL || 'Roti Bank Bettiah <onboarding@resend.dev>';
+    
+    // If using the sandbox onboarding domain, Resend only allows sending to the registered account email
+    let recipients = emailList;
+    if (sender.includes('onboarding@resend.dev')) {
+      console.log("Using Resend onboarding sandbox. Sending notification to the first subscriber to prevent validation errors.");
+      recipients = [emailList[0]];
+    }
+
     const resendResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -177,8 +196,8 @@ app.post('/api/webhook/notify-subscribers', async (c) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'Roti Bank Bettiah <no-reply@rotibankbettiah.org>',
-        to: emailList,
+        from: sender,
+        to: recipients,
         subject: subject,
         html: htmlBody
       })
