@@ -772,6 +772,14 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2a2dlb3FyeGt4am12ZGppeWxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0NDg4NzQsImV4cCI6MjA3MTAyNDg3NH0.9N2fioPJWAWIZYisDa5X_arw2YMpngxF5zw-GP1mP3I';
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Dedicated anonymous client to read public tables to bypass RLS policies that block authenticated users
+        const publicSupabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: false,
+                autoRefreshToken: false,
+                detectSessionInUrl: false
+            }
+        });
 
         const mainApp = document.getElementById('app');
         const loginForm = document.getElementById('login-form');
@@ -985,7 +993,7 @@
         }
         
         async function loadAboutContent() {
-             const { data, error } = await supabase.from('about').select('content').single();
+             const { data, error } = await publicSupabase.from('about').select('content').single();
              if (error && error.code !== 'PGRST116') throw error;
              if (data) {
                  document.getElementById('about-content').value = data.content;
@@ -993,7 +1001,7 @@
         }
 
         async function loadActivities() {
-            const { data, error } = await supabase.from('activities').select('*');
+            const { data, error } = await publicSupabase.from('activities').select('*');
             if (error) throw error;
             const list = document.getElementById('activities-list');
             if (list) {
@@ -1016,7 +1024,7 @@
         }
 
         async function loadNotices() {
-            const { data, error } = await supabase.from('notices').select('*');
+            const { data, error } = await publicSupabase.from('notices').select('*');
             if (error) throw error;
             const list = document.getElementById('notices-list');
             if (list) {
@@ -1039,7 +1047,7 @@
         }
 
         async function loadCauses() {
-            const { data, error } = await supabase.from('causes').select('*');
+            const { data, error } = await publicSupabase.from('causes').select('*');
             if (error) throw error;
             const list = document.getElementById('causes-list');
             if (list) {
@@ -1062,7 +1070,7 @@
         }
 
         async function loadNews() {
-            const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
+            const { data, error } = await publicSupabase.from('news').select('*').order('created_at', { ascending: false });
             if (error) throw error;
             const newsList = document.getElementById('news-list');
             const headlinesList = document.getElementById('headlines-list');
@@ -1091,7 +1099,7 @@
         }
 
         async function loadBlogs() {
-            const { data, error } = await supabase.from('blogs').select('*').order('created_at', { ascending: false });
+            const { data, error } = await publicSupabase.from('blogs').select('*').order('created_at', { ascending: false });
             if (error) throw error;
             const list = document.getElementById('blogs-list');
             if (!list) return;
@@ -1114,7 +1122,7 @@
         }
         
         async function loadGallery() {
-            const { data, error } = await supabase.from('gallery').select('*');
+            const { data, error } = await publicSupabase.from('gallery').select('*');
             if (error) throw error;
             const list = document.getElementById('gallery-list');
             if (list) {
@@ -1137,7 +1145,7 @@
         }
         
         async function loadInternshipContent() {
-            const { data, error } = await supabase.from('internship_corner').select('*');
+            const { data, error } = await publicSupabase.from('internship_corner').select('*');
             if (error) throw error;
             const list = document.getElementById('internship-content-list');
             if (list) {
@@ -1161,7 +1169,7 @@
         }
         
         async function loadInternshipFormUrl() {
-            const { data, error } = await supabase.from('internship_form').select('url').single();
+            const { data, error } = await publicSupabase.from('internship_form').select('url').single();
             if (error && error.code !== 'PGRST116') throw error;
             if (data) {
                 document.getElementById('internship-form-url').value = data.url;
@@ -1698,7 +1706,7 @@
 
         // Load media items
         async function loadMediaItems() {
-            const { data, error } = await supabase.from('media').select('*').order('created_at', { ascending: false });
+            const { data, error } = await publicSupabase.from('media').select('*').order('created_at', { ascending: false });
             if (error) throw error;
             const list = document.getElementById('media-list');
             if (!list) return;
@@ -1799,7 +1807,7 @@
 
         // Load achievements list
         async function loadAchievements() {
-            const { data, error } = await supabase.from('achievements').select('*');
+            const { data, error } = await publicSupabase.from('achievements').select('*');
             if (error) throw error;
             const list = document.getElementById('achievements-list');
             if (!list) return;
@@ -1827,7 +1835,7 @@
 
         // Load branches list
         async function loadBranches() {
-            const { data, error } = await supabase.from('branches').select('*');
+            const { data, error } = await publicSupabase.from('branches').select('*');
             if (error) throw error;
             const list = document.getElementById('branches-list');
             if (!list) return;
