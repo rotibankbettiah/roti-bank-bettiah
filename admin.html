@@ -964,6 +964,8 @@
                     await fn();
                 } catch (err) {
                     console.error(`Failed to load ${name}:`, err);
+                    const msgBox = document.getElementById('app-message');
+                    showMessage(msgBox, `Failed to load ${name}: ${err.message || err}`, "error");
                 }
             };
 
@@ -984,6 +986,7 @@
         
         async function loadAboutContent() {
              const { data, error } = await supabase.from('about').select('content').single();
+             if (error && error.code !== 'PGRST116') throw error;
              if (data) {
                  document.getElementById('about-content').value = data.content;
              }
@@ -991,66 +994,76 @@
 
         async function loadActivities() {
             const { data, error } = await supabase.from('activities').select('*');
+            if (error) throw error;
             const list = document.getElementById('activities-list');
-            list.innerHTML = '';
-            if (data) {
-                data.forEach(item => {
-                    const el = document.createElement('div');
-                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
-                    el.innerHTML = `
-                        <p>${item.title}</p>
-                        <div>
-                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="activities">Edit</button>
-                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="activities">Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(el);
-                });
+            if (list) {
+                list.innerHTML = '';
+                if (data) {
+                    data.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                        el.innerHTML = `
+                            <p>${item.title}</p>
+                            <div>
+                                <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="activities">Edit</button>
+                                <button class="delete-btn text-red-500" data-id="${item.id}" data-table="activities">Delete</button>
+                            </div>
+                        `;
+                        list.appendChild(el);
+                    });
+                }
             }
         }
 
         async function loadNotices() {
             const { data, error } = await supabase.from('notices').select('*');
+            if (error) throw error;
             const list = document.getElementById('notices-list');
-            list.innerHTML = '';
-            if (data) {
-                data.forEach(item => {
-                    const el = document.createElement('div');
-                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
-                    el.innerHTML = `
-                        <p>${item.title}</p>
-                        <div>
-                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="notices">Edit</button>
-                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="notices">Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(el);
-                });
+            if (list) {
+                list.innerHTML = '';
+                if (data) {
+                    data.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                        el.innerHTML = `
+                            <p>${item.title}</p>
+                            <div>
+                                <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="notices">Edit</button>
+                                <button class="delete-btn text-red-500" data-id="${item.id}" data-table="notices">Delete</button>
+                            </div>
+                        `;
+                        list.appendChild(el);
+                    });
+                }
             }
         }
 
         async function loadCauses() {
             const { data, error } = await supabase.from('causes').select('*');
+            if (error) throw error;
             const list = document.getElementById('causes-list');
-            list.innerHTML = '';
-            if (data) {
-                data.forEach(item => {
-                    const el = document.createElement('div');
-                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
-                    el.innerHTML = `
-                        <p>${item.name}</p>
-                        <div>
-                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="causes">Edit</button>
-                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="causes">Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(el);
-                });
+            if (list) {
+                list.innerHTML = '';
+                if (data) {
+                    data.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                        el.innerHTML = `
+                            <p>${item.name}</p>
+                            <div>
+                                <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="causes">Edit</button>
+                                <button class="delete-btn text-red-500" data-id="${item.id}" data-table="causes">Delete</button>
+                            </div>
+                        `;
+                        list.appendChild(el);
+                    });
+                }
             }
         }
 
         async function loadNews() {
             const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false });
+            if (error) throw error;
             const newsList = document.getElementById('news-list');
             const headlinesList = document.getElementById('headlines-list');
             if (newsList) newsList.innerHTML = '';
@@ -1079,6 +1092,7 @@
 
         async function loadBlogs() {
             const { data, error } = await supabase.from('blogs').select('*').order('created_at', { ascending: false });
+            if (error) throw error;
             const list = document.getElementById('blogs-list');
             if (!list) return;
             list.innerHTML = '';
@@ -1101,47 +1115,54 @@
         
         async function loadGallery() {
             const { data, error } = await supabase.from('gallery').select('*');
+            if (error) throw error;
             const list = document.getElementById('gallery-list');
-            list.innerHTML = '';
-            if (data) {
-                data.forEach(item => {
-                    const el = document.createElement('div');
-                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
-                    el.innerHTML = `
-                        <p>${item.caption}</p>
-                        <div>
-                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="gallery">Edit</button>
-                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="gallery">Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(el);
-                });
+            if (list) {
+                list.innerHTML = '';
+                if (data) {
+                    data.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                        el.innerHTML = `
+                            <p>${item.caption}</p>
+                            <div>
+                                <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="gallery">Edit</button>
+                                <button class="delete-btn text-red-500" data-id="${item.id}" data-table="gallery">Delete</button>
+                            </div>
+                        `;
+                        list.appendChild(el);
+                    });
+                }
             }
         }
         
         async function loadInternshipContent() {
             const { data, error } = await supabase.from('internship_corner').select('*');
+            if (error) throw error;
             const list = document.getElementById('internship-content-list');
-            list.innerHTML = '';
-            if (data) {
-                data.forEach(item => {
-                    const el = document.createElement('div');
-                    el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
-                    const contentDisplay = item.type === 'text' || item.type === 'criteria' ? item.content.substring(0, 50) + '...' : item.url;
-                    el.innerHTML = `
-                        <p>${item.type}: ${contentDisplay}</p>
-                        <div>
-                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="internship_corner">Edit</button>
-                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="internship_corner">Delete</button>
-                        </div>
-                    `;
-                    list.appendChild(el);
-                });
+            if (list) {
+                list.innerHTML = '';
+                if (data) {
+                    data.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'flex justify-between items-center bg-gray-100 p-2 rounded';
+                        const contentDisplay = item.type === 'text' || item.type === 'criteria' ? item.content.substring(0, 50) + '...' : item.url;
+                        el.innerHTML = `
+                            <p>${item.type}: ${contentDisplay}</p>
+                            <div>
+                                <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="internship_corner">Edit</button>
+                                <button class="delete-btn text-red-500" data-id="${item.id}" data-table="internship_corner">Delete</button>
+                            </div>
+                        `;
+                        list.appendChild(el);
+                    });
+                }
             }
         }
         
         async function loadInternshipFormUrl() {
             const { data, error } = await supabase.from('internship_form').select('url').single();
+            if (error && error.code !== 'PGRST116') throw error;
             if (data) {
                 document.getElementById('internship-form-url').value = data.url;
             }
@@ -1678,6 +1699,7 @@
         // Load media items
         async function loadMediaItems() {
             const { data, error } = await supabase.from('media').select('*').order('created_at', { ascending: false });
+            if (error) throw error;
             const list = document.getElementById('media-list');
             if (!list) return;
             list.innerHTML = '';
@@ -1732,6 +1754,7 @@
         // Load subscribers list
         async function loadSubscribers() {
             const { data, error } = await supabase.from('subscribers').select('*').order('created_at', { ascending: false });
+            if (error) throw error;
             const list = document.getElementById('subscribers-list');
             if (!list) return;
             list.innerHTML = '';
@@ -1777,6 +1800,7 @@
         // Load achievements list
         async function loadAchievements() {
             const { data, error } = await supabase.from('achievements').select('*');
+            if (error) throw error;
             const list = document.getElementById('achievements-list');
             if (!list) return;
             list.innerHTML = '';
@@ -1804,6 +1828,7 @@
         // Load branches list
         async function loadBranches() {
             const { data, error } = await supabase.from('branches').select('*');
+            if (error) throw error;
             const list = document.getElementById('branches-list');
             if (!list) return;
             list.innerHTML = '';
