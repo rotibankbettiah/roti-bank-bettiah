@@ -1,0 +1,19 @@
+# Roti Bank Bettiah Trust
+
+> Registered food charity trust and NGO (Reg. No. 5071/2023) in Bettiah, West Champaran, Bihar, India.
+
+[Roti Bank Bettiah Trust](https://rotibankbettiah.org/) is a non-profit organization dedicated to fighting hunger and malnutrition by providing free, high-quality daily meals to underprivileged, homeless, and needy individuals. Since its founding in 2023 by Abishek Giri, the trust has served over 500,000 free meals.
+
+## Core Operations & Services
+
+- **Free Daily Food Distribution**: Volunteers prepare and distribute warm, nutritious meals to local centers.
+- **Volunteering & Internships**: Opportunities for students and professionals to assist in food operations and earn certified validation.
+- **Financial Transparency**: ISO-certified operations with clear financial breakdowns and tax benefits under Section 80G.
+
+## Document Sitemap
+
+- [Homepage](https://rotibankbettiah.org/) - Secure donation channels (Razorpay/UPI), live statistical counters, local branches, and notices.
+- [About Us](https://rotibankbettiah.org/about.html) - Mission statement, trust background, and registration document details.
+- [Donation Details](https://rotibankbettiah.org/#donation) - Secure gateway, UPI scanning QR code, and bank account information.
+- [Internship Form](https://docs.google.com/forms/d/e/1FAIpQLScXUtdd9WqgGERF8iDaZrDslw10lidmvpyhyY8EtFQwIvdgBQ/viewform?usp=dialog) - Google registration form for internship applications.
+- [Volunteer Form](https://docs.google.com/forms/d/e/1FAIpQLSfzN4WcusmcUmAKrpnpf4J8128O37tf7MpuJ_P96uKmX-sKsg/viewform?usp=dialog) - Google registration form for standard volunteer enrollment.
