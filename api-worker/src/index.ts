@@ -195,6 +195,26 @@ app.post('/api/webhook/notify-subscribers', async (c) => {
     // Send emails using Resend REST API
     let sender = c.env.SENDER_EMAIL || 'Roti Bank Bettiah <no-reply@rotibankbettiah.org>';
     let recipients = emailList; // Send to ALL subscribers by default
+    
+    // If using the sandbox onboarding domain, Resend only allows sending to the registered account email
+    let isSandbox = false;
+    if (sender.includes('onboarding@resend.dev')) {
+      isSandbox = true;
+      recipients = [emailList[0]];
+    }
+
+    const emailPayload: any = {
+      from: sender,
+      subject: subject,
+      html: htmlBody
+    };
+
+    if (isSandbox) {
+      emailPayload.to = recipients; // Send directly to the owner in sandbox
+    } else {
+      emailPayload.to = [sender]; // Send to self (the no-reply address)
+      emailPayload.bcc = recipients; // BCC all subscribers to hide their emails
+    }
 
     let resendResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -202,12 +222,7 @@ app.post('/api/webhook/notify-subscribers', async (c) => {
         'Authorization': `Bearer ${c.env.RESEND_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        from: sender,
-        to: recipients,
-        subject: subject,
-        html: htmlBody
-      })
+      body: JSON.stringify(emailPayload)
     });
 
     // If it fails because the custom domain is not verified, fall back to sandbox onboarding
