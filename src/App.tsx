@@ -174,6 +174,23 @@ const App: React.FC = () => {
     };
   }, []);
 
+  // Handle scrolling to hash anchor on page load once data is fetched
+  const hasScrolledRef = useRef(false);
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && !hasScrolledRef.current) {
+      const targetId = hash.substring(1);
+      const el = document.getElementById(targetId);
+      if (el) {
+        hasScrolledRef.current = true;
+        // Small timeout to allow React DOM to fully render the children list
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      }
+    }
+  }, [data]);
+
   const scrollToDonation = () => {
     const el = document.getElementById('donation');
     if (el) {
