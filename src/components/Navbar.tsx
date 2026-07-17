@@ -171,8 +171,14 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
                   <div key={item.id} className="inline-flex items-center gap-2 group cursor-default">
                     <span className="font-bold text-white group-hover:text-emerald-200 transition-colors">{item.title}</span>
                     {item.link && (
-                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="ml-2 text-amber-300 hover:text-amber-100 underline uppercase font-bold text-[10px] tracking-widest transition-colors inline-flex items-center gap-1 bg-amber-500/20 px-2 py-0.5 rounded-full">
-                        Click Here <i className="fas fa-external-link-alt text-[8px]"></i>
+                      <a 
+                        href={item.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        aria-label={`Read article: ${item.title}`}
+                        className="ml-2 text-amber-300 hover:text-amber-100 underline uppercase font-bold text-[10px] tracking-widest transition-colors inline-flex items-center gap-1 bg-amber-500/20 px-2 py-0.5 rounded-full"
+                      >
+                        Read Article <i className="fas fa-external-link-alt text-[8px]"></i>
                       </a>
                     )}
                     <i className="fas fa-star text-[6px] text-emerald-400/50 ml-8"></i>
@@ -183,8 +189,14 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
                   <div key={`${item.id}-dup`} className="inline-flex items-center gap-2 group cursor-default">
                     <span className="font-bold text-white group-hover:text-emerald-200 transition-colors">{item.title}</span>
                     {item.link && (
-                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="ml-2 text-amber-300 hover:text-amber-100 underline uppercase font-bold text-[10px] tracking-widest transition-colors inline-flex items-center gap-1 bg-amber-500/20 px-2 py-0.5 rounded-full">
-                        Click Here <i className="fas fa-external-link-alt text-[8px]"></i>
+                      <a 
+                        href={item.link} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        aria-label={`Read article: ${item.title}`}
+                        className="ml-2 text-amber-300 hover:text-amber-100 underline uppercase font-bold text-[10px] tracking-widest transition-colors inline-flex items-center gap-1 bg-amber-500/20 px-2 py-0.5 rounded-full"
+                      >
+                        Read Article <i className="fas fa-external-link-alt text-[8px]"></i>
                       </a>
                     )}
                     <i className="fas fa-star text-[6px] text-emerald-400/50 ml-8"></i>
