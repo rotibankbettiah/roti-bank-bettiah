@@ -1760,7 +1760,7 @@
             list.innerHTML = '';
             if (data && data.length > 0) {
                 data.forEach(item => {
-                    const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('en-IN', {
+                    const dateStr = item.created_at ? new Date(item.created_at).toLocaleString('en-IN', {
                         dateStyle: 'medium',
                         timeStyle: 'short'
                     }) : 'N/A';
