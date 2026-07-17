@@ -104,7 +104,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
             </span>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-50">Verified Non-Profit Organization</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-50">Registered Food NGO & Trust in India</span>
           </motion.div>
           
           <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 leading-[1.05] tracking-tighter">
@@ -118,7 +118,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
           </motion.h1>
           
           <motion.p variants={itemVariants} className="text-lg md:text-xl text-slate-300 mb-12 max-w-xl font-medium leading-relaxed">
-            Since 2023, our registered charitable food trust in West Champaran, Bihar has provided free meals to people facing hunger. Donate, volunteer, or partner with us to strengthen hunger relief in India.
+            Since 2023, Roti Bank Bettiah Trust has served as a registered food NGO and trust in India, providing free daily meals to people facing hunger. Donate or volunteer online to support hunger relief in India.
           </motion.p>
           
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-5">
