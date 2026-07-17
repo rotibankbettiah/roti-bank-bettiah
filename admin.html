@@ -959,19 +959,27 @@
 
         // Load all existing data into the admin panel
         async function loadAllData() {
-            await loadAboutContent();
-            await loadActivities();
-            await loadNotices();
-            await loadCauses();
-            await loadNews();
-            await loadGallery();
-            await loadInternshipContent();
-            await loadInternshipFormUrl();
-            await loadMediaItems();
-            await loadBlogs();
-            await loadSubscribers();
-            await loadAchievements();
-            await loadBranches();
+            const safeLoad = async (fn, name) => {
+                try {
+                    await fn();
+                } catch (err) {
+                    console.error(`Failed to load ${name}:`, err);
+                }
+            };
+
+            await safeLoad(loadAboutContent, 'About Content');
+            await safeLoad(loadActivities, 'Activities');
+            await safeLoad(loadNotices, 'Notices');
+            await safeLoad(loadCauses, 'Causes');
+            await safeLoad(loadNews, 'News');
+            await safeLoad(loadGallery, 'Gallery');
+            await safeLoad(loadInternshipContent, 'Internship Content');
+            await safeLoad(loadInternshipFormUrl, 'Internship Form URL');
+            await safeLoad(loadMediaItems, 'Media Feeds');
+            await safeLoad(loadBlogs, 'Blogs');
+            await safeLoad(loadSubscribers, 'Subscribers');
+            await safeLoad(loadAchievements, 'Achievements');
+            await safeLoad(loadBranches, 'Branches');
         }
         
         async function loadAboutContent() {
@@ -1729,10 +1737,10 @@
             list.innerHTML = '';
             if (data && data.length > 0) {
                 data.forEach(item => {
-                    const dateStr = new Date(item.created_at).toLocaleDateString('en-IN', {
+                    const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('en-IN', {
                         dateStyle: 'medium',
                         timeStyle: 'short'
-                    });
+                    }) : 'N/A';
                     const el = document.createElement('div');
                     el.className = 'flex justify-between items-center bg-gray-55 hover:bg-gray-100 p-4 rounded-xl border border-gray-200 transition-all';
                     el.innerHTML = `
