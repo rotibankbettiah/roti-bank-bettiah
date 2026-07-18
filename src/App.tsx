@@ -722,6 +722,7 @@ const App: React.FC = () => {
                 <a href="#internship" className="hover:text-white transition-colors">Career Opportunities</a>
                 <a href="#gallery" className="hover:text-white transition-colors">Media Gallery</a>
                 <a href="#donation" className="hover:text-white transition-colors">Donate Now</a>
+                <a href="/privacy.html" className="hover:text-white transition-colors">Privacy Policy</a>
               </nav>
             </div>
             

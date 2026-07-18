@@ -31,6 +31,7 @@ export default defineConfig(({ mode }) => {
           main: path.resolve(__dirname, 'index.html'),
           admin: path.resolve(__dirname, 'admin.html'),
           about: path.resolve(__dirname, 'about.html'),
+          privacy: path.resolve(__dirname, 'privacy.html'),
         },
       },
     },
