@@ -1,14 +1,22 @@
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import Stats from './components/Stats';
-import Donation from './components/Donation';
-import Chatbot from './components/Chatbot';
-import Testimonials from './components/Testimonials';
 import FloatingDonateButton from './components/FloatingDonateButton';
-import MediaCenter from './components/MediaCenter';
-import Blog from './components/Blog';
+
+// Lazy loading below-the-fold components to reduce initial bundle size and speed up FCP/LCP
+const Stats = lazy(() => import('./components/Stats'));
+const Donation = lazy(() => import('./components/Donation'));
+const Chatbot = lazy(() => import('./components/Chatbot'));
+const Testimonials = lazy(() => import('./components/Testimonials'));
+const MediaCenter = lazy(() => import('./components/MediaCenter'));
+const Blog = lazy(() => import('./components/Blog'));
+
+const SuspenseFallback: React.FC = () => (
+  <div className="py-12 flex items-center justify-center min-h-[100px]" style={{ contentVisibility: 'auto' }}>
+    <div className="w-8 h-8 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
 import { supabaseService, supabase } from './services/supabaseService';
 import {
   Activity,
@@ -234,7 +242,9 @@ const App: React.FC = () => {
         
         {/* Stats Quick View */}
         <div id="stats-section" className="relative z-20 -mt-8 container mx-auto px-6">
-          <Stats />
+          <Suspense fallback={<SuspenseFallback />}>
+            <Stats />
+          </Suspense>
         </div>
 
         {/* Gallery Slideshow Section */}
@@ -309,7 +319,9 @@ const App: React.FC = () => {
         </section>
 
         {/* Media Center Section */}
-        <MediaCenter items={data.media} />
+        <Suspense fallback={<SuspenseFallback />}>
+          <MediaCenter items={data.media} />
+        </Suspense>
 
         {/* About Us Section */}
         <section id="about" className="py-24 bg-slate-50 relative overflow-hidden scroll-mt-24 reveal">
@@ -569,7 +581,9 @@ const App: React.FC = () => {
         </section>
 
         {/* Testimonials */}
-        <Testimonials />
+        <Suspense fallback={<SuspenseFallback />}>
+          <Testimonials />
+        </Suspense>
 
         {/* Notice & News Split Section */}
         <section className="py-24 bg-slate-50 reveal">
@@ -629,7 +643,9 @@ const App: React.FC = () => {
         </section>
 
         {/* Blog Section */}
-        <Blog blogs={data.blogs} />
+        <Suspense fallback={<SuspenseFallback />}>
+          <Blog blogs={data.blogs} />
+        </Suspense>
 
         {/* Causes Section */}
         <section id="causes" className="py-24 bg-white scroll-mt-24 reveal">
@@ -667,7 +683,9 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        <Donation />
+        <Suspense fallback={<SuspenseFallback />}>
+          <Donation />
+        </Suspense>
       </main>
 
       <footer className="bg-slate-900 text-white pt-24 pb-12">
@@ -775,7 +793,9 @@ const App: React.FC = () => {
       </footer>
       
       <FloatingDonateButton onDonateClick={scrollToDonation} />
-      <Chatbot />
+      <Suspense fallback={null}>
+        <Chatbot />
+      </Suspense>
     </div>
   );
 };

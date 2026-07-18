@@ -26,6 +26,24 @@ export const DONATION_TIERS = [
 
 export const razorpayService = {
   /**
+   * Dynamically loads the Razorpay checkout script if not already present.
+   */
+  loadRazorpayScript(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (typeof window.Razorpay !== 'undefined') {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  },
+
+  /**
    * Opens the Razorpay checkout modal with the given amount.
    * Returns a promise that resolves with payment details on success,
    * or rejects on failure/dismissal.
@@ -36,8 +54,9 @@ export const razorpayService = {
     donorEmail?: string,
     donorPhone?: string
   ): Promise<PaymentResult> {
-    if (typeof window.Razorpay === 'undefined') {
-      return { success: false, error: 'Razorpay SDK not loaded. Please refresh and try again.' };
+    const isLoaded = await this.loadRazorpayScript();
+    if (!isLoaded || typeof window.Razorpay === 'undefined') {
+      return { success: false, error: 'Razorpay SDK failed to load. Please check your internet connection and try again.' };
     }
 
     if (RAZORPAY_KEY === 'RAZORPAY_KEY_PLACEHOLDER') {

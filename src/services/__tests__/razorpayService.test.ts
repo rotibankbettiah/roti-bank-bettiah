@@ -64,10 +64,11 @@ describe('razorpayService', () => {
       Object.defineProperty(window, 'Razorpay', { value: undefined, configurable: true, writable: true });
 
       const { razorpayService } = await import('../razorpayService');
+      vi.spyOn(razorpayService, 'loadRazorpayScript').mockResolvedValue(false);
       const result = await razorpayService.openCheckout(100);
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Razorpay SDK not loaded');
+      expect(result.error).toContain('Razorpay SDK failed to load');
 
       // Restore
       Object.defineProperty(window, 'Razorpay', { value: original, configurable: true, writable: true });
@@ -81,6 +82,7 @@ describe('razorpayService', () => {
       } as Response);
 
       const { razorpayService } = await import('../razorpayService');
+      vi.spyOn(razorpayService, 'loadRazorpayScript').mockResolvedValue(true);
       const result = await razorpayService.openCheckout(100);
 
       expect(result.success).toBe(false);
@@ -136,6 +138,7 @@ describe('razorpayService', () => {
       });
 
       const { razorpayService } = await import('../razorpayService');
+      vi.spyOn(razorpayService, 'loadRazorpayScript').mockResolvedValue(true);
       
       // Start checkout
       const checkoutPromise = razorpayService.openCheckout(100, 'John Doe', 'john@example.com', '1234567890');
