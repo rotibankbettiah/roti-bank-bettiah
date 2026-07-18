@@ -1,6 +1,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { Activity, Achievement, Branch, NewsItem, Notice, InternshipContent, Cause, DonationDetails, MediaItem } from '../types';
+import { DEFAULT_BLOGS } from './utils/defaultBlogs';
 
 const SUPABASE_URL = 'https://rvkgeoqrxkxjmvdjiyli.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2a2dlb3FyeGt4am12ZGppeWxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0NDg4NzQsImV4cCI6MjA3MTAyNDg3NH0.9N2fioPJWAWIZYisDa5X_arw2YMpngxF5zw-GP1mP3I';
@@ -110,10 +111,13 @@ export const supabaseService = {
         .select('*')
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return data || [];
+      if (!data || data.length === 0) {
+        return DEFAULT_BLOGS;
+      }
+      return data;
     } catch (err) {
       console.error('Failed to fetch blogs:', err);
-      return [];
+      return DEFAULT_BLOGS;
     }
   },
 

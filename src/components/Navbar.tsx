@@ -49,6 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
     { name: 'Notice', href: '#notices', icon: 'fa-bullhorn' },
     { name: 'Causes', href: '#causes', icon: 'fa-seedling' },
     { name: 'News', href: '#news', icon: 'fa-newspaper' },
+    { name: 'Blog', href: '#blog', icon: 'fa-book-open' },
   ];
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {

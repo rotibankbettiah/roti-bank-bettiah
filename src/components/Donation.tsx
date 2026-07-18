@@ -114,6 +114,33 @@ const Donation: React.FC = () => {
       .catch(console.error);
   }, []);
 
+  useEffect(() => {
+    const handleSelectAmount = (e: Event) => {
+      const customEvent = e as CustomEvent<{ amount: number }>;
+      if (customEvent.detail && typeof customEvent.detail.amount === 'number') {
+        const amt = customEvent.detail.amount;
+        const standardAmounts = [100, 500, 1000, 2500, 5000];
+        if (standardAmounts.includes(amt)) {
+          setSelectedAmount(amt);
+          setIsCustom(false);
+          setCustomAmount('');
+        } else {
+          setIsCustom(true);
+          setCustomAmount(amt.toString());
+        }
+        
+        setTimeout(() => {
+          const el = document.getElementById('donation');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 50);
+      }
+    };
+    window.addEventListener('select-donation-amount', handleSelectAmount);
+    return () => window.removeEventListener('select-donation-amount', handleSelectAmount);
+  }, []);
+
   const getActiveAmount = () => {
     if (isCustom && customAmount) return parseInt(customAmount);
     return selectedAmount;
