@@ -44,7 +44,7 @@ export class GeminiService {
     try {
       const ai = this.getAiInstance();
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-1.5-flash",
         contents: userPrompt,
         config: {
           systemInstruction: SYSTEM_INSTRUCTION,

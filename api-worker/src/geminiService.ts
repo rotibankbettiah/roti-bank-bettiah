@@ -40,7 +40,7 @@ export const generateChatResponse = async (userPrompt: string, apiKey: string): 
     const ai = new GoogleGenAI({ apiKey });
     
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-1.5-flash",
       contents: userPrompt,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,

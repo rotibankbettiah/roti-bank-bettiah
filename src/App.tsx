@@ -789,6 +789,11 @@ const App: React.FC = () => {
           <div className="text-center">
             <p className="text-slate-400 text-[10px] uppercase tracking-[0.4em] font-black mb-2">© 2025 Roti Bank Bettiah Trust | Serving with Compassion</p>
             <p className="text-slate-400 text-[9px] uppercase font-bold">Registration Number: 5071/2023 | Registered NGO & Charitable Trust</p>
+            <div className="flex justify-center gap-4 text-[10px] text-slate-500 uppercase tracking-widest font-black mt-4">
+              <a href="/privacy.html" className="hover:text-emerald-500 transition-colors">Privacy Policy</a>
+              <span className="text-slate-700">•</span>
+              <a href="/about.html" className="hover:text-emerald-500 transition-colors">About Us</a>
+            </div>
           </div>
         </div>
       </footer>
