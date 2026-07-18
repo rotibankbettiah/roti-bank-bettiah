@@ -257,35 +257,63 @@
 
   <body class="bg-slate-50 text-slate-900">
     <div id="root">
-      <!-- Fallback SEO Content for Search Engine Indexing (replaced by React on load) -->
-      <header style="padding: 20px; text-align: center; background: #059669; color: white;">
-        <h1>Roti Bank Bettiah Trust</h1>
-        <p>Registered Food Donation NGO & Charitable Trust in West Champaran, Bihar, India (Reg No: 5071/2023)</p>
-      </header>
-      <main style="padding: 20px; max-width: 800px; margin: 0 auto;">
-        <section>
-          <h2>Eradicating Hunger & Malnutrition in Bettiah, Bihar</h2>
-          <p>Roti Bank Bettiah Trust is a registered charitable food NGO dedicated to fighting hunger by providing free, high-quality daily meals to the underprivileged, homeless, and needy individuals in Bettiah and surrounding areas of Bihar. Founded in 2023 by Abishek Giri, the organization has served over 500,000 free meals to date.</p>
-        </section>
-        <section>
-          <h2>Support Our Cause — Donate Online</h2>
-          <p>Your generous contribution helps us serve free, nutritious meals to those who need it most. A donation of just ₹100 can feed up to 10 people. You can donate online securely via our Razorpay payment gateway using UPI, credit cards, debit cards, or net banking. Direct bank transfers can also be made to our Punjab National Bank account (Account No: 1919202100001486, IFSC: PUNB0191920).</p>
-          <p><a href="#donation" style="background: #059669; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Donate Online Now</a></p>
-        </section>
-        <section>
-          <h2>Our Center Location & Branches</h2>
-          <p>Our main operations and food distribution center is located at: <strong>Kalibag Chowk, Near Kali Bagh Mandir, Ward No. 3, Kali Bagh Colony, Bettiah, Bihar - 845438</strong>.</p>
-          <p>Open daily for distributing meals and providing essential support to the community.</p>
-        </section>
-        <section>
-          <h2>Frequently Asked Questions (FAQ)</h2>
-          <ul>
-            <li><strong>What is Roti Bank Bettiah?</strong> A registered charitable food trust in Bihar serving daily hot meals to people facing hunger.</li>
-            <li><strong>How can I volunteer?</strong> Get in touch with us at rotibankbettiah@gmail.com or call +91 9473228888.</li>
-            <li><strong>Is Roti Bank Bettiah a registered NGO?</strong> Yes, it is registered under Registration Number 5071/2023 in Bihar.</li>
-          </ul>
-        </section>
-      </main>
+      <!-- Loading Indicator while React mounts -->
+      <div id="initial-loading" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: 'Outfit', 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; transition: opacity 0.5s ease;">
+        <div style="position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+          <!-- Outer Pulsing Ring -->
+          <div style="position: absolute; width: 80px; height: 80px; border-radius: 50%; border: 3px solid #10b981; opacity: 0.15; animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;"></div>
+          <!-- Inner Rotating Spinner -->
+          <div style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid transparent; border-top-color: #059669; border-bottom-color: #059669; animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;"></div>
+          <!-- Center Logo -->
+          <img src="/logo.png" alt="Roti Bank Bettiah" style="position: absolute; width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" onerror="this.style.display='none';" />
+        </div>
+        <h2 style="font-size: 1.25rem; font-weight: 600; margin: 0; color: #065f46; letter-spacing: -0.025em;">Roti Bank Bettiah</h2>
+        <p style="font-size: 0.875rem; color: #64748b; margin-top: 6px; font-weight: 500;">Serving Hope, Ending Hunger</p>
+      </div>
+
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes pulse-ring {
+          0% { transform: scale(0.95); opacity: 0.8; }
+          50% { transform: scale(1.2); opacity: 0.2; }
+          100% { transform: scale(0.95); opacity: 0.8; }
+        }
+      </style>
+
+      <noscript>
+        <!-- Fallback SEO Content for Search Engine Indexing (replaced by React on load) -->
+        <header style="padding: 20px; text-align: center; background: #059669; color: white;">
+          <h1>Roti Bank Bettiah Trust</h1>
+          <p>Registered Food Donation NGO & Charitable Trust in West Champaran, Bihar, India (Reg No: 5071/2023)</p>
+        </header>
+        <main style="padding: 20px; max-width: 800px; margin: 0 auto;">
+          <section>
+            <h2>Eradicating Hunger & Malnutrition in Bettiah, Bihar</h2>
+            <p>Roti Bank Bettiah Trust is a registered charitable food NGO dedicated to fighting hunger by providing free, high-quality daily meals to the underprivileged, homeless, and needy individuals in Bettiah and surrounding areas of Bihar. Founded in 2023 by Abishek Giri, the organization has served over 500,000 free meals to date.</p>
+          </section>
+          <section>
+            <h2>Support Our Cause — Donate Online</h2>
+            <p>Your generous contribution helps us serve free, nutritious meals to those who need it most. A donation of just ₹100 can feed up to 10 people. You can donate online securely via our Razorpay payment gateway using UPI, credit cards, debit cards, or net banking. Direct bank transfers can also be made to our Punjab National Bank account (Account No: 1919202100001486, IFSC: PUNB0191920).</p>
+            <p><a href="#donation" style="background: #059669; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Donate Online Now</a></p>
+          </section>
+          <section>
+            <h2>Our Center Location & Branches</h2>
+            <p>Our main operations and food distribution center is located at: <strong>Kalibag Chowk, Near Kali Bagh Mandir, Ward No. 3, Kali Bagh Colony, Bettiah, Bihar - 845438</strong>.</p>
+            <p>Open daily for distributing meals and providing essential support to the community.</p>
+          </section>
+          <section>
+            <h2>Frequently Asked Questions (FAQ)</h2>
+            <ul>
+              <li><strong>What is Roti Bank Bettiah?</strong> A registered charitable food trust in Bihar serving daily hot meals to people facing hunger.</li>
+              <li><strong>How can I volunteer?</strong> Get in touch with us at rotibankbettiah@gmail.com or call +91 9473228888.</li>
+              <li><strong>Is Roti Bank Bettiah a registered NGO?</strong> Yes, it is registered under Registration Number 5071/2023 in Bihar.</li>
+            </ul>
+          </section>
+        </main>
+      </noscript>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
