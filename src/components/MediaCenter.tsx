@@ -65,15 +65,15 @@ const MediaCenter: React.FC<MediaCenterProps> = ({ items }) => {
         </div>
 
         {/* Filters */}
-        <div className="flex justify-center gap-4 mb-12">
+        <div className="flex justify-center gap-3 mb-12">
           {(['all', 'youtube', 'instagram'] as const).map((filter) => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
+              className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
                 activeFilter === filter
-                  ? 'bg-emerald-800 text-white shadow-lg shadow-emerald-800/20'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
+                  ? 'bg-emerald-800 text-white shadow-md shadow-emerald-900/20'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-700'
               }`}
             >
               {filter === 'all'
@@ -92,10 +92,10 @@ const MediaCenter: React.FC<MediaCenterProps> = ({ items }) => {
               <motion.div
                 key={item.id}
                 layout
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                className="bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full group cursor-pointer"
+                exit={{ opacity: 0, y: 16 }}
+                className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full group cursor-pointer"
                 onClick={() => setActiveVideo(item)}
               >
                 {/* Media Preview Container */}
@@ -108,22 +108,22 @@ const MediaCenter: React.FC<MediaCenterProps> = ({ items }) => {
                     />
                   ) : (
                     // Instagram Reel fallback representation
-                    <div className="w-full h-full bg-gradient-to-tr from-purple-600 via-pink-600 to-yellow-500 flex items-center justify-center relative">
-                      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-200 via-red-300 to-indigo-900"></div>
-                      <i className="fab fa-instagram text-white text-6xl drop-shadow-lg opacity-90"></i>
+                    <div className="w-full h-full bg-gradient-to-tr from-slate-900 via-slate-800 to-emerald-950 flex items-center justify-center relative">
+                      <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-200 via-emerald-300 to-slate-900"></div>
+                      <i className="fab fa-instagram text-white text-5xl drop-shadow-lg opacity-90"></i>
                     </div>
                   )}
 
                   {/* Play Overlay */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="w-16 h-16 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center transform scale-90 group-hover:scale-100 transition-all duration-300 shadow-lg">
-                      <i className="fas fa-play text-white text-xl ml-1"></i>
+                    <div className="w-14 h-14 bg-white/20 backdrop-blur-md border border-white/30 rounded-xl flex items-center justify-center transform scale-90 group-hover:scale-100 transition-all duration-300 shadow-lg">
+                      <i className="fas fa-play text-white text-lg ml-0.5"></i>
                     </div>
                   </div>
 
                   {/* Badge */}
-                  <span className={`absolute top-4 left-4 text-[9px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full text-white shadow-sm flex items-center gap-1.5 ${
-                    item.type === 'youtube' ? 'bg-red-700' : 'bg-gradient-to-r from-purple-600 to-pink-500'
+                  <span className={`absolute top-4 left-4 text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg text-white shadow-sm flex items-center gap-1.5 ${
+                    item.type === 'youtube' ? 'bg-red-700' : 'bg-rose-700'
                   }`}>
                     <i className={item.type === 'youtube' ? 'fab fa-youtube' : 'fab fa-instagram'}></i>
                     {item.type}
@@ -170,26 +170,26 @@ const MediaCenter: React.FC<MediaCenterProps> = ({ items }) => {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden w-full max-w-4xl border border-white/20"
+              className="bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-4xl border border-slate-200"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="px-8 py-5 border-b border-slate-100 flex items-center justify-between">
+              <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-white ${
-                    activeVideo.type === 'youtube' ? 'bg-red-700' : 'bg-gradient-to-r from-purple-600 to-pink-500'
+                    activeVideo.type === 'youtube' ? 'bg-red-700' : 'bg-rose-700'
                   }`}>
                     <i className={activeVideo.type === 'youtube' ? 'fab fa-youtube' : 'fab fa-instagram'}></i>
                   </span>
-                  <h3 className="font-extrabold text-slate-800 line-clamp-1 max-w-xs sm:max-w-md md:max-w-xl">
+                  <h3 className="font-bold text-slate-800 line-clamp-1 max-w-xs sm:max-w-md md:max-w-xl text-sm md:text-base">
                     {activeVideo.title}
                   </h3>
                 </div>
                 <button
                   onClick={() => setActiveVideo(null)}
-                  className="w-10 h-10 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center"
+                  className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors flex items-center justify-center"
                 >
-                  <i className="fas fa-times"></i>
+                  <i className="fas fa-times text-xs"></i>
                 </button>
               </div>
 

@@ -4,6 +4,7 @@ import { razorpayService, DONATION_TIERS } from '../services/razorpayService';
 import { DonationDetails } from '../types';
 import Confetti from 'react-confetti';
 import { motion } from 'framer-motion';
+import PaymentSuccess from './PaymentSuccess';
 
 const BalloonAnimation: React.FC = () => {
   const [balloons, setBalloons] = useState<Array<{
@@ -557,20 +558,15 @@ const Donation: React.FC = () => {
 
   return (
     <section id="donation" className="py-24 bg-gradient-to-br from-slate-50 via-white to-emerald-50 relative overflow-hidden scroll-mt-24">
-      {paymentSuccess && (
-        <>
-          <div className="fixed inset-0 z-50 pointer-events-none">
-            <Confetti 
-              width={windowSize.width} 
-              height={windowSize.height} 
-              recycle={false} 
-              numberOfPieces={800} 
-              gravity={0.15}
-            />
-          </div>
-          <BalloonAnimation />
-        </>
-      )}
+      {/* Premium Payment Success Animation */}
+      <PaymentSuccess
+        isVisible={paymentSuccess}
+        paymentId={paymentId}
+        amount={getActiveAmount()}
+        donorName={donorName}
+        onClose={() => setPaymentSuccess(false)}
+        onPrintReceipt={() => triggerPrintReceipt(donorName, donorEmail, donorPhone, getActiveAmount(), paymentId)}
+      />
 
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-100/30 rounded-full blur-3xl -mr-40 -mt-40"></div>
@@ -579,29 +575,29 @@ const Donation: React.FC = () => {
       <div className="container mx-auto px-6 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <span className="inline-block px-5 py-2 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
-            <i className="fas fa-hand-holding-heart mr-2"></i>Make a Difference
+          <span className="inline-block px-4 py-2 bg-emerald-100 text-emerald-800 rounded-lg text-[10px] font-bold uppercase tracking-[0.18em] mb-4 border border-emerald-200">
+            <i className="fas fa-hand-holding-heart mr-2 text-emerald-600"></i>Online Donation Portal
           </span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 section-title tracking-tight">
-            Support Our Mission
+            Support Our Daily Mission
           </h2>
-          <p className="text-slate-500 mt-6 max-w-2xl mx-auto text-lg">
-            Every rupee you donate helps us serve warm meals to the hungry. Your generosity can change lives.
+          <p className="text-slate-500 mt-4 max-w-2xl mx-auto text-base md:text-lg">
+            Every rupee you donate directly funds fresh, hot meals for the needy in Bettiah. 100% transparent and Section 80G tax-exempt.
           </p>
         </div>
 
         {/* Impact Indicators */}
-        <div className="flex flex-wrap justify-center gap-6 mb-16">
+        <div className="flex flex-wrap justify-center gap-4 mb-14">
           {[
-            { icon: 'fa-utensils', text: '₹10 = 1 Meal', color: 'emerald' },
-            { icon: 'fa-people-group', text: '₹100 = 10 Meals', color: 'emerald' },
-            { icon: 'fa-house-chimney', text: '₹500 = Family/Week', color: 'emerald' },
+            { icon: 'fa-utensils', text: '₹10 = 1 Fresh Meal', color: 'emerald' },
+            { icon: 'fa-people-group', text: '₹100 = 10 Meals for Needy', color: 'emerald' },
+            { icon: 'fa-house-chimney', text: '₹500 = Family Meal Support', color: 'emerald' },
           ].map((item, i) => (
-            <div key={i} className="flex items-center gap-3 px-6 py-3 bg-white rounded-full shadow-md border border-emerald-100 trust-badge">
-              <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-                <i className={`fas ${item.icon} text-emerald-600 text-xs`}></i>
+            <div key={i} className="flex items-center gap-3 px-5 py-2.5 bg-white rounded-xl shadow-sm border border-slate-200/80 trust-badge">
+              <div className="w-7 h-7 bg-emerald-100 text-emerald-700 rounded-lg flex items-center justify-center">
+                <i className={`fas ${item.icon} text-xs`}></i>
               </div>
-              <span className="text-sm font-bold text-slate-700">{item.text}</span>
+              <span className="text-xs font-bold text-slate-700">{item.text}</span>
             </div>
           ))}
         </div>
@@ -751,7 +747,7 @@ const Donation: React.FC = () => {
                     <div className="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-glow">
                       <i className="fas fa-check text-white text-2xl animate-bounce"></i>
                     </div>
-                    <h4 className="text-xl font-bold text-emerald-800 mb-2">Thank You! 🙏</h4>
+                    <h4 className="text-xl font-bold text-emerald-800 mb-2">Thank You!</h4>
                     <p className="text-emerald-600 text-sm mb-2 font-bold">Your donation was successful!</p>
                     <p className="text-xs text-slate-500 mb-4">Payment ID: <strong>{paymentId}</strong></p>
                     

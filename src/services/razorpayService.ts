@@ -74,7 +74,7 @@ export const razorpayService = {
           currency: orderData.currency || 'INR',
           order_id: orderData.orderId, // critical for backend verification!
           name: 'Roti Bank Bettiah',
-          description: `Donation of ₹${amountInRupees.toLocaleString('en-IN')} — Nourishing Lives`,
+          description: `Donation of ₹${amountInRupees.toLocaleString('en-IN')}: Nourishing Lives`,
           image: '/logo.png',
           handler: async (response: RazorpayResponse) => {
             try {

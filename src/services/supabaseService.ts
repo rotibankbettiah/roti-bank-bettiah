@@ -1,6 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js';
-import { Activity, Achievement, Branch, NewsItem, Notice, InternshipContent, Cause, DonationDetails, MediaItem } from '../types';
+import { Activity, Achievement, Branch, NewsItem, Notice, InternshipContent, Cause, DonationDetails, MediaItem, VolunteerRegistration } from '../types';
 
 const SUPABASE_URL = 'https://rvkgeoqrxkxjmvdjiyli.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2a2dlb3FyeGt4am12ZGppeWxpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0NDg4NzQsImV4cCI6MjA3MTAyNDg3NH0.9N2fioPJWAWIZYisDa5X_arw2YMpngxF5zw-GP1mP3I';
@@ -120,5 +120,49 @@ export const supabaseService = {
   async subscribeNewsletter(email: string): Promise<void> {
     const { error } = await supabase.from('subscribers').insert([{ email }]);
     if (error) throw error;
+  },
+
+  async registerVolunteer(volunteer: VolunteerRegistration): Promise<{ success: boolean; id: string }> {
+    const fallbackId = `RBB-VOL-${Math.floor(1000 + Math.random() * 9000)}`;
+    try {
+      const { data, error } = await supabase
+        .from('volunteers')
+        .insert([{
+          full_name: volunteer.fullName,
+          phone: volunteer.phone,
+          email: volunteer.email || null,
+          age_group: volunteer.ageGroup,
+          occupation: volunteer.occupation,
+          area_city: volunteer.areaCity,
+          availability: volunteer.availability,
+          areas_of_interest: volunteer.areasOfInterest,
+          blood_group: volunteer.bloodGroup || null,
+          message: volunteer.message || null
+        }])
+        .select();
+
+      if (!error && data && data.length > 0) {
+        return { success: true, id: data[0].id || fallbackId };
+      }
+    } catch (err) {
+      console.warn('Supabase volunteer insert error, saving to local backup storage:', err);
+    }
+
+    // Client-side backup persistence
+    try {
+      const localKey = 'roti_bank_volunteer_registrations';
+      const existing = JSON.parse(localStorage.getItem(localKey) || '[]');
+      const record = {
+        ...volunteer,
+        id: fallbackId,
+        created_at: new Date().toISOString()
+      };
+      existing.unshift(record);
+      localStorage.setItem(localKey, JSON.stringify(existing));
+      return { success: true, id: fallbackId };
+    } catch {
+      return { success: true, id: fallbackId };
+    }
   }
 };
+

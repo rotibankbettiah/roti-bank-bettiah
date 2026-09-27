@@ -11,6 +11,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   const headlines = news.filter(item => item.is_headline);
 
@@ -31,6 +32,28 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
+  // Track active section
+  useEffect(() => {
+    const sections = ['gallery', 'media', 'about', 'achievements', 'branches', 'internship', 'activities', 'causes', 'donation'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.3, rootMargin: '-100px 0px -50% 0px' }
+    );
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
@@ -45,6 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
     { name: 'Achievements', href: '#achievements', icon: 'fa-trophy' },
     { name: 'Branches', href: '#branches', icon: 'fa-building' },
     { name: 'Internship', href: '#internship', icon: 'fa-graduation-cap' },
+    { name: 'Volunteer', href: 'https://docs.google.com/forms/d/e/1FAIpQLSfzN4WcusmcUmAKrpnpf4J8128O37tf7MpuJ_P96uKmX-sKsg/viewform?usp=dialog', icon: 'fa-hands-helping' },
     { name: 'Activities', href: '#activities', icon: 'fa-calendar' },
     { name: 'Notice', href: '#notices', icon: 'fa-bullhorn' },
     { name: 'Causes', href: '#causes', icon: 'fa-seedling' },
@@ -75,50 +99,68 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
     <>
       <nav 
         id="navbar" 
-        className={`fixed top-0 w-full z-50 transition-all duration-500 ease-in-out border-b ${
+        className={`fixed top-0 w-full z-50 transition-all duration-500 ease-in-out ${
           !isVisible ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
         } ${
           isScrolled 
-            ? 'glass-nav shadow-lg border-slate-200/50' 
-            : 'bg-white border-transparent'
+            ? 'glass-nav shadow-lg' 
+            : 'bg-white/95 backdrop-blur-sm border-b border-transparent'
         }`}
       >
-        <div className={`container mx-auto px-4 md:px-6 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}>
+        <div className={`container mx-auto px-4 md:px-6 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-3.5'}`}>
           {/* Top: Logo + Brand + Hamburger */}
           <div className="flex items-center justify-between">
             {/* Logo + Brand */}
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <img 
-                src="/logo.png" 
-                width={48}
-                height={48}
-                alt="Roti Bank Bettiah Logo" 
-                className={`rounded-full shadow-lg border-2 border-emerald-50 transition-all duration-500 ${isScrolled ? 'h-9' : 'h-12'}`}
-              />
+            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <div className="relative">
+                <img 
+                  src="/logo.png" 
+                  width={48}
+                  height={48}
+                  alt="Roti Bank Bettiah Logo" 
+                  className={`rounded-full shadow-lg border-2 border-emerald-100 transition-all duration-500 group-hover:scale-105 ${isScrolled ? 'h-9' : 'h-12'}`}
+                />
+                {/* Active indicator dot */}
+                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white shadow-lg shadow-emerald-500/30"></div>
+              </div>
               <div>
-                <span className={`font-extrabold tracking-tight text-emerald-800 transition-all duration-500 leading-tight block ${isScrolled ? 'text-base' : 'text-lg md:text-2xl'}`}>
+                <span className={`font-extrabold tracking-tight text-slate-800 transition-all duration-500 leading-tight block group-hover:text-emerald-700 ${isScrolled ? 'text-base' : 'text-lg md:text-xl'}`}>
                   Roti Bank Bettiah Trust
                 </span>
                 {!isScrolled && (
-                  <span className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em] block animate-fade-in">
+                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em] block animate-fade-in">
                     रोटी बैंक बेतिया ट्रस्ट • Reg. No. 5071/2023
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Desktop: Donate Button */}
-            <div className="hidden lg:flex items-center gap-4">
+            {/* Desktop: Actions */}
+            <div className="hidden lg:flex items-center gap-3">
+              <a 
+                href="https://docs.google.com/forms/d/e/1FAIpQLSfzN4WcusmcUmAKrpnpf4J8128O37tf7MpuJ_P96uKmX-sKsg/viewform?usp=dialog" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm active:scale-95 flex items-center gap-2"
+                id="nav-volunteer-btn"
+              >
+                <i className="fas fa-hands-helping text-xs text-emerald-600"></i>
+                Volunteer
+                <i className="fas fa-external-link-alt text-[9px] text-slate-400"></i>
+              </a>
               <a 
                 href="#donation" 
                 onClick={(e) => handleLinkClick(e, '#donation')}
-                className="px-6 py-2.5 bg-emerald-600 text-white rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-md shadow-emerald-600/20 active:scale-95 donate-btn-shimmer flex items-center gap-2"
+                className="relative px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm active:scale-95 flex items-center gap-2 group"
                 id="nav-donate-btn"
               >
+
                 <i className="fas fa-heart text-[8px] animate-heartbeat"></i>
                 Donate Now
+                <i className="fas fa-arrow-right text-[8px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"></i>
               </a>
             </div>
+
 
             {/* Mobile: Hamburger */}
             <button
@@ -135,28 +177,37 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
             </button>
           </div>
           
-          {/* Desktop Navigation Links */}
-          <div className="hidden lg:flex flex-wrap justify-center items-center gap-x-5 gap-y-2 mt-3">
-            {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href}
-                target={link.name === 'Location' ? '_blank' : '_self'}
-                rel={link.name === 'Location' ? 'noopener noreferrer' : undefined}
-                onClick={(e) => handleLinkClick(e, link.href)}
-                className="text-[10px] uppercase tracking-widest font-bold text-slate-500 hover:text-emerald-600 transition-all duration-200 relative group py-1"
-              >
-                {link.name}
-                <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-emerald-500 transition-all group-hover:w-full rounded-full"></span>
-              </a>
-            ))}
+          {/* Desktop Navigation Links - Enhanced with active indicator */}
+          <div className="hidden lg:flex flex-wrap justify-center items-center gap-x-1 gap-y-1 mt-3">
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.replace('#', '');
+              return (
+                <a 
+                  key={link.name} 
+                  href={link.href}
+                  target={link.href.startsWith('http') ? '_blank' : '_self'}
+                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  onClick={(e) => handleLinkClick(e, link.href)}
+                  className={`text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg transition-all duration-200 relative group ${
+                    isActive
+                      ? 'text-emerald-700 bg-emerald-50'
+                      : 'text-slate-500 hover:text-emerald-600 hover:bg-emerald-50/50'
+                  }`}
+                >
+                  {link.name}
+                  <span className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 bg-emerald-500 rounded-full transition-all ${
+                    isActive ? 'w-4' : 'w-0 group-hover:w-3'
+                  }`}></span>
+                </a>
+              );
+            })}
           </div>
         </div>
 
-        {/* News Ticker */}
+        {/* News Ticker - Enhanced */}
         {headlines.length > 0 && (
-          <div className="bg-emerald-700/95 text-white text-xs w-full overflow-hidden flex items-center h-8 border-t border-emerald-600/50 shadow-inner backdrop-blur-sm">
-            <div className="bg-emerald-800 px-3 py-2 font-bold uppercase tracking-widest z-10 flex-shrink-0 flex items-center h-full shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
+          <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 text-white text-xs w-full overflow-hidden flex items-center h-8 border-t border-emerald-600/30 shadow-inner">
+            <div className="bg-emerald-900/80 px-3 py-2 font-bold uppercase tracking-widest z-10 flex-shrink-0 flex items-center h-full shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
               <span className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -167,7 +218,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
             </div>
             <div className="flex-1 overflow-hidden relative h-full flex items-center">
               <div className="animate-marquee whitespace-nowrap flex items-center gap-8 pl-4">
-                {headlines.map((item, i) => (
+                {headlines.map((item) => (
                   <div key={item.id} className="inline-flex items-center gap-2 group cursor-default">
                     <span className="font-bold text-white group-hover:text-emerald-200 transition-colors">{item.title}</span>
                     {item.link && (
@@ -185,7 +236,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
                   </div>
                 ))}
                 {/* Duplicate for infinite marquee effect */}
-                {headlines.map((item, i) => (
+                {headlines.map((item) => (
                   <div key={`${item.id}-dup`} className="inline-flex items-center gap-2 group cursor-default">
                     <span className="font-bold text-white group-hover:text-emerald-200 transition-colors">{item.title}</span>
                     {item.link && (
@@ -216,29 +267,48 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
         />
       )}
 
-      {/* Mobile Menu Panel */}
+      {/* Mobile Menu Panel - Enhanced */}
       <div 
         className={`fixed top-0 right-0 h-full w-[300px] z-[45] mobile-menu-panel shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden ${
           isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         <div className="p-6 pt-20 h-full overflow-y-auto">
+          {/* Close button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="absolute top-5 right-5 w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-red-50 hover:text-red-500 transition-all"
+          >
+            <i className="fas fa-times"></i>
+          </button>
+
           <div className="space-y-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                target={link.name === 'Location' ? '_blank' : '_self'}
-                rel={link.name === 'Location' ? 'noopener noreferrer' : undefined}
-                onClick={(e) => handleLinkClick(e, link.href)}
-                className="flex items-center gap-4 px-4 py-3.5 rounded-xl text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all font-medium text-sm"
-              >
-                <div className="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <i className={`fas ${link.icon} text-slate-400 text-xs`}></i>
-                </div>
-                {link.name}
-              </a>
-            ))}
+            {navLinks.map((link, index) => {
+              const isActive = activeSection === link.href.replace('#', '');
+              return (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target={link.href.startsWith('http') ? '_blank' : '_self'}
+                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  onClick={(e) => handleLinkClick(e, link.href)}
+                  className={`flex items-center gap-4 px-4 py-3.5 rounded-xl font-medium text-sm transition-all ${
+                    isActive 
+                      ? 'bg-emerald-50 text-emerald-700' 
+                      : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-700'
+                  }`}
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                    isActive ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'
+                  }`}>
+                    <i className={`fas ${link.icon} text-xs`}></i>
+                  </div>
+                  {link.name}
+                  {isActive && <div className="ml-auto w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>}
+                </a>
+              );
+            })}
           </div>
 
           {/* Mobile Donate Button */}
@@ -246,7 +316,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
             <a
               href="#donation"
               onClick={(e) => handleLinkClick(e, '#donation')}
-              className="flex items-center justify-center gap-3 w-full px-6 py-4 bg-emerald-600 text-white rounded-2xl font-bold uppercase tracking-wider text-sm shadow-xl shadow-emerald-600/20 hover:bg-emerald-700 active:scale-95 transition-all donate-btn-shimmer"
+              className="flex items-center justify-center gap-3 w-full px-6 py-4 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-2xl font-bold uppercase tracking-wider text-sm shadow-xl shadow-emerald-600/20 hover:from-emerald-700 hover:to-emerald-600 active:scale-95 transition-all donate-btn-shimmer"
             >
               <i className="fas fa-heart animate-heartbeat"></i>
               Donate Now

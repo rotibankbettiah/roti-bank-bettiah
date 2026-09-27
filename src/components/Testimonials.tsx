@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Tilt3DCard } from './ScrollAnimations';
 
 const testimonials = [
   {
@@ -7,8 +8,8 @@ const testimonials = [
     name: 'Rajesh Kumar',
     role: 'Regular Donor',
     location: 'Patna, Bihar',
-    text: 'Roti Bank Bettiah is doing incredible work. Knowing that my small contribution feeds families gives me immense satisfaction. Their transparency and dedication is unmatched.',
-    avatar: '👨‍💼',
+    text: 'Roti Bank Bettiah is doing incredible work. Knowing that my contribution feeds families directly gives me immense satisfaction. Their transparency and dedication is unmatched.',
+    initials: 'RK',
     rating: 5,
   },
   {
@@ -16,8 +17,8 @@ const testimonials = [
     name: 'Priya Sharma',
     role: 'Volunteer',
     location: 'Bettiah, Bihar',
-    text: 'Volunteering with Roti Bank changed my perspective on life. Seeing the smiles on children\'s faces when they receive a warm meal — that is priceless.',
-    avatar: '👩‍🎓',
+    text: 'Volunteering with Roti Bank changed my perspective on life. Seeing the relief on people\'s faces when they receive a warm, fresh meal, that is priceless.',
+    initials: 'PS',
     rating: 5,
   },
   {
@@ -25,17 +26,17 @@ const testimonials = [
     name: 'Dr. Amit Verma',
     role: 'Monthly Supporter',
     location: 'Delhi',
-    text: 'I\'ve been supporting Roti Bank for over a year now. Their monthly reports and updates give me confidence that every rupee is going towards feeding the hungry.',
-    avatar: '👨‍⚕️',
+    text: 'I have been supporting Roti Bank for over two years. Their monthly reports and photo updates give me absolute confidence that every rupee is going towards feeding the hungry.',
+    initials: 'AV',
     rating: 5,
   },
   {
     id: 4,
     name: 'Sunita Devi',
-    role: 'Beneficiary',
+    role: 'Community Member',
     location: 'West Champaran',
-    text: 'When my family had nothing to eat, Roti Bank was there for us. They not only provided food but also helped my children with education. God bless this organization.',
-    avatar: '👩‍👧‍👦',
+    text: 'When our family had nothing to eat during medical treatment at MJK Hospital, Roti Bank was there for us every single evening. God bless this dedicated team.',
+    initials: 'SD',
     rating: 5,
   },
 ];
@@ -58,14 +59,14 @@ const Testimonials: React.FC = () => {
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-block px-5 py-2 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
-            <i className="fas fa-heart mr-2"></i>What People Say
+          <span className="inline-block px-4 py-2 bg-emerald-100 text-emerald-800 rounded-lg text-[10px] font-bold uppercase tracking-[0.18em] mb-4 border border-emerald-200">
+            <i className="fas fa-heart mr-2 text-emerald-600"></i>Community Voices
           </span>
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 section-title tracking-tight uppercase">
             Voices of Impact
           </h2>
-          <p className="text-slate-500 mt-6 max-w-2xl mx-auto">
-            Real stories from donors, volunteers, and beneficiaries who make our mission possible.
+          <p className="text-slate-500 mt-4 max-w-2xl mx-auto text-sm md:text-base">
+            Real stories from donors, volunteers, and supporters who power our daily seva.
           </p>
         </div>
 
@@ -81,38 +82,40 @@ const Testimonials: React.FC = () => {
                     : 'opacity-0 translate-x-12 z-0 pointer-events-none'
                 }`}
               >
-                <div className="bg-white p-10 md:p-12 rounded-[2.5rem] shadow-xl shadow-emerald-100/50 border border-emerald-100/50 h-full">
-                  {/* Quote icon */}
-                  <div className="absolute -top-4 left-10">
-                    <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/30">
-                      <i className="fas fa-quote-left text-white text-sm"></i>
-                    </div>
-                  </div>
-
-                  <p className="text-slate-800 italic leading-relaxed text-sm lg:text-base mb-8">
-                    "{testimonial.text}"
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl border-2 border-emerald-100">
-                        {testimonial.avatar}
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-slate-900 text-lg">{testimonial.name}</h3>
-                        <p className="text-emerald-800 text-xs font-bold uppercase tracking-widest">{testimonial.role}</p>
-                        <p className="text-slate-400 text-xs mt-0.5">
-                          <i className="fas fa-map-marker-alt mr-1"></i>{testimonial.location}
-                        </p>
+                <Tilt3DCard maxTilt={8} glare={true} className="h-full">
+                  <div className="bg-white p-8 md:p-10 rounded-2xl shadow-lg border border-slate-200/80 h-full relative">
+                    {/* Quote icon */}
+                    <div className="absolute -top-4 left-8">
+                      <div className="w-9 h-9 bg-emerald-600 rounded-lg flex items-center justify-center shadow-md shadow-emerald-600/30">
+                        <i className="fas fa-quote-left text-white text-xs"></i>
                       </div>
                     </div>
-                    <div className="flex gap-1">
-                      {Array.from({ length: testimonial.rating }).map((_, i) => (
-                        <i key={i} className="fas fa-star text-amber-400 text-sm"></i>
-                      ))}
+
+                    <p className="text-slate-700 italic leading-relaxed text-sm lg:text-base mb-8">
+                      &quot;{testimonial.text}&quot;
+                    </p>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3.5">
+                        <div className="w-12 h-12 bg-emerald-50 text-emerald-800 font-bold rounded-xl flex items-center justify-center text-sm border border-emerald-200/70">
+                          {testimonial.initials}
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-900 text-base">{testimonial.name}</h3>
+                          <p className="text-emerald-700 text-xs font-semibold uppercase tracking-wider">{testimonial.role}</p>
+                          <p className="text-slate-400 text-xs mt-0.5">
+                            <i className="fas fa-location-dot mr-1"></i>{testimonial.location}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-1">
+                        {Array.from({ length: testimonial.rating }).map((_, i) => (
+                          <i key={i} className="fas fa-star text-amber-400 text-xs"></i>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Tilt3DCard>
               </div>
             ))}
           </div>

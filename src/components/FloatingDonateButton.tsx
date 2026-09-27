@@ -1,5 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface FloatingDonateButtonProps {
   onDonateClick: () => void;
@@ -7,60 +7,60 @@ interface FloatingDonateButtonProps {
 
 const FloatingDonateButton: React.FC<FloatingDonateButtonProps> = ({ onDonateClick }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [mealCount, setMealCount] = useState(0);
+  const [showPulse, setShowPulse] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show after scrolling past the hero section (~600px)
       setIsVisible(window.scrollY > 600);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Animated meal counter
+  // Pulse every 5 seconds
   useEffect(() => {
-    const target = 500000;
-    const duration = 2000;
-    const steps = 60;
-    const increment = target / steps;
-    let current = 0;
-
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setMealCount(target);
-        clearInterval(timer);
-      } else {
-        setMealCount(Math.floor(current));
-      }
-    }, duration / steps);
-
-    return () => clearInterval(timer);
+    const interval = setInterval(() => {
+      setShowPulse(true);
+      setTimeout(() => setShowPulse(false), 2000);
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
-  if (!isVisible) return null;
-
   return (
-    <div className="floating-donate">
-      <button
-        onClick={onDonateClick}
-        className="flex items-center gap-3 px-6 py-4 text-white rounded-full font-bold shadow-2xl active:scale-95 transition-all group"
-        aria-label="Donate Now"
-        id="floating-donate-btn"
-      >
-        <span className="relative">
-          <i className="fas fa-heart text-lg animate-heartbeat"></i>
-        </span>
-        <span className="flex flex-col items-start">
-          <span className="text-sm font-black uppercase tracking-wider">Donate Now</span>
-          <span className="text-[9px] text-emerald-100 font-medium tracking-wide">
-            {mealCount.toLocaleString('en-IN')}+ meals served
-          </span>
-        </span>
-        <i className="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
-      </button>
-    </div>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          className="floating-donate"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <motion.button
+            id="floating-donate-btn"
+            onClick={onDonateClick}
+            className="relative w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-2xl group"
+            whileHover={{ scale: 1.1, rotate: -5 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Donate Now"
+          >
+            {/* Animated ring */}
+            {showPulse && (
+              <div className="absolute inset-0 rounded-2xl border-2 border-emerald-400 animate-ping opacity-30"></div>
+            )}
+            
+            <i className="fas fa-heart text-lg relative z-10 group-hover:scale-110 transition-transform"></i>
+            
+            {/* Label on hover */}
+            <div className="absolute right-full mr-3 bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-xl pointer-events-none text-left">
+              <span>Donate Now</span>
+              <span className="text-[9px] text-emerald-400 block font-normal">50,000+ meals served</span>
+              <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-slate-900 rotate-45"></div>
+            </div>
+          </motion.button>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

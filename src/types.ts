@@ -117,3 +117,18 @@ export interface BlogItem {
   content: string;
   created_at: string;
 }
+
+export interface VolunteerRegistration {
+  id?: string;
+  fullName: string;
+  phone: string;
+  email?: string;
+  ageGroup: string;
+  occupation: string;
+  areaCity: string;
+  availability: string;
+  areasOfInterest: string[];
+  bloodGroup?: string;
+  message?: string;
+  created_at?: string;
+}

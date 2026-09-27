@@ -9,6 +9,9 @@ import Testimonials from './components/Testimonials';
 import FloatingDonateButton from './components/FloatingDonateButton';
 import MediaCenter from './components/MediaCenter';
 import Blog from './components/Blog';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsAndConditions from './components/TermsAndConditions';
+import { ScrollReveal3D, Tilt3DCard, ParallaxLayer } from './components/ScrollAnimations';
 import { supabaseService, supabase } from './services/supabaseService';
 import {
   Activity,
@@ -58,6 +61,43 @@ const App: React.FC = () => {
   const [subEmail, setSubEmail] = useState('');
   const [subStatus, setSubStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [subMessage, setSubMessage] = useState('');
+  const [currentView, setCurrentView] = useState<'home' | 'privacy' | 'terms'>('home');
+
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash.includes('privacy')) {
+        setCurrentView('privacy');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (hash.includes('term')) {
+        setCurrentView('terms');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (hash.includes('volunteer')) {
+        setCurrentView('home');
+        setTimeout(() => {
+          document.getElementById('volunteer')?.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      } else {
+        setCurrentView('home');
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  const navigateTo = (newView: 'home' | 'privacy' | 'terms') => {
+    setCurrentView(newView);
+    if (newView === 'privacy') {
+      window.location.hash = '#/privacy-policy';
+    } else if (newView === 'terms') {
+      window.location.hash = '#/terms-and-conditions';
+    } else {
+      window.location.hash = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   const fetchAllData = useCallback(async () => {
     // Helper to safely execute promises and fallback to defaults on DB exceptions
@@ -225,6 +265,26 @@ const App: React.FC = () => {
     }
   };
 
+  if (currentView === 'privacy') {
+    return (
+      <div className="min-h-screen bg-slate-50 selection:bg-emerald-100 selection:text-emerald-900">
+        <Navbar news={data.news} />
+        <PrivacyPolicy onBack={() => navigateTo('home')} />
+        <Chatbot />
+      </div>
+    );
+  }
+
+  if (currentView === 'terms') {
+    return (
+      <div className="min-h-screen bg-slate-50 selection:bg-emerald-100 selection:text-emerald-900">
+        <Navbar news={data.news} />
+        <TermsAndConditions onBack={() => navigateTo('home')} />
+        <Chatbot />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 selection:bg-emerald-100 selection:text-emerald-900">
       <Navbar news={data.news} />
@@ -233,12 +293,15 @@ const App: React.FC = () => {
         <Hero customBanner={data.banner} />
         
         {/* Stats Quick View */}
-        <div id="stats-section" className="relative z-20 -mt-8 container mx-auto px-6">
-          <Stats />
-        </div>
+        <ScrollReveal3D effect="tiltUp">
+          <div id="stats-section" className="relative z-20 -mt-8 container mx-auto px-6">
+            <Stats />
+          </div>
+        </ScrollReveal3D>
 
         {/* Gallery Slideshow Section */}
-        <section id="gallery" className="py-24 bg-white overflow-hidden scroll-mt-24 reveal">
+        <ScrollReveal3D effect="flipUp">
+        <section id="gallery" className="py-24 bg-white overflow-hidden scroll-mt-24">
           <div className="container mx-auto px-6 text-center">
             <span className="inline-block px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
               <i className="fas fa-camera mr-2"></i>Visual Stories
@@ -307,12 +370,16 @@ const App: React.FC = () => {
             </div>
           </div>
         </section>
+        </ScrollReveal3D>
 
         {/* Media Center Section */}
-        <MediaCenter items={data.media} />
+        <ScrollReveal3D effect="tiltLeft">
+          <MediaCenter items={data.media} />
+        </ScrollReveal3D>
 
         {/* About Us Section */}
-        <section id="about" className="py-24 bg-slate-50 relative overflow-hidden scroll-mt-24 reveal">
+        <ScrollReveal3D effect="perspectiveIn">
+        <section id="about" className="py-24 bg-slate-50 relative overflow-hidden scroll-mt-24">
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-100/50 rounded-full blur-3xl -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-100/30 rounded-full blur-3xl -ml-32 -mb-32"></div>
           <div className="container mx-auto px-6 max-w-4xl relative z-10">
@@ -322,6 +389,7 @@ const App: React.FC = () => {
               </span>
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-12 section-title tracking-tight uppercase">About Us</h2>
+            <Tilt3DCard className="group">
             <div className="bg-white p-10 md:p-12 rounded-[3rem] shadow-xl shadow-emerald-100/30 border border-emerald-50/50 text-center">
               <div className="w-20 h-20 bg-emerald-100 rounded-3xl flex items-center justify-center text-emerald-600 mb-8 mx-auto">
                 <i className="fas fa-hand-holding-heart text-3xl"></i>
@@ -338,11 +406,14 @@ const App: React.FC = () => {
                 </a>
               </div>
             </div>
+            </Tilt3DCard>
           </div>
         </section>
+        </ScrollReveal3D>
 
         {/* Why Donate Section */}
-        <section className="py-24 bg-white overflow-hidden reveal">
+        <ScrollReveal3D effect="slideDepth">
+        <section className="py-24 bg-white overflow-hidden">
           <div className="container mx-auto px-6 max-w-5xl">
             <div className="text-center mb-16">
               <span className="inline-block px-5 py-2 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
@@ -372,26 +443,31 @@ const App: React.FC = () => {
                   color: 'amber',
                 },
               ].map((item, i) => (
-                <div key={i} className="bg-slate-50 p-8 md:p-10 rounded-[2.5rem] border border-slate-100 card-hover group text-center glow-card-emerald">
-                  <div className={`w-16 h-16 bg-${item.color}-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all`}>
-                    <i className={`fas ${item.icon} text-${item.color}-600 text-2xl`}></i>
+                <Tilt3DCard key={i} className="group" maxTilt={10}>
+                  <div className="bg-slate-50 p-8 md:p-10 rounded-[2.5rem] border border-slate-100 card-hover text-center glow-card-emerald h-full">
+                    <div className={`w-16 h-16 bg-${item.color}-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all`}>
+                      <i className={`fas ${item.icon} text-${item.color}-600 text-2xl`}></i>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                    <p className="text-slate-500 leading-relaxed text-sm">{item.desc}</p>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
-                  <p className="text-slate-500 leading-relaxed text-sm">{item.desc}</p>
-                </div>
+                </Tilt3DCard>
               ))}
             </div>
           </div>
         </section>
+        </ScrollReveal3D>
 
         {/* Location Section */}
-        <section id="location" className="py-24 bg-slate-50 scroll-mt-24 reveal">
+        <ScrollReveal3D effect="zoomRotate">
+        <section id="location" className="py-24 bg-slate-50 scroll-mt-24">
           <div className="container mx-auto px-6 text-center">
             <span className="inline-block px-5 py-2 bg-red-50 text-red-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
               <i className="fas fa-map-pin mr-2"></i>Visit Us
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-12 section-title tracking-tight uppercase">Our Location</h2>
-            <div className="flex flex-col items-center bg-white p-10 md:p-12 rounded-[3rem] border border-slate-100 max-w-3xl mx-auto shadow-xl shadow-slate-100/50">
+            <Tilt3DCard className="max-w-3xl mx-auto group" maxTilt={8}>
+            <div className="flex flex-col items-center bg-white p-10 md:p-12 rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-100/50">
               <div className="relative mb-8">
                 <div className="absolute inset-0 bg-red-500/20 rounded-full blur-xl animate-pulse"></div>
                 <svg className="map-pin w-20 h-20 text-red-500 relative z-10" fill="currentColor" viewBox="0 0 20 20">
@@ -407,11 +483,14 @@ const App: React.FC = () => {
                 Open in Google Maps
               </a>
             </div>
+            </Tilt3DCard>
           </div>
         </section>
+        </ScrollReveal3D>
 
         {/* Achievements Section */}
-        <section id="achievements" className="py-24 bg-slate-900 text-white relative scroll-mt-24 reveal">
+        <ScrollReveal3D effect="tiltUp">
+        <section id="achievements" className="py-24 bg-slate-900 text-white relative scroll-mt-24">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
           <div className="container mx-auto px-6 relative z-10">
             <span className="block text-center mb-6">
@@ -422,7 +501,8 @@ const App: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-16 section-title tracking-tight uppercase">Our Achievements</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {data.achievements.map((ach) => (
-                <article key={ach.id} className="bg-white/5 backdrop-blur-md p-10 rounded-[3rem] border border-white/10 hover:bg-white/10 transition-all group">
+                <Tilt3DCard key={ach.id} className="group" maxTilt={8}>
+                <article className="bg-white/5 backdrop-blur-md p-10 rounded-[3rem] border border-white/10 hover:bg-white/10 transition-all h-full">
                   {ach.imageUrl && (
                     <div className="w-full h-[250px] sm:h-[300px] md:h-[350px] overflow-hidden rounded-[2.5rem] mb-8 shadow-2xl border-4 border-white/10 bg-slate-950/5 flex items-center justify-center">
                       <img 
@@ -444,13 +524,16 @@ const App: React.FC = () => {
                   <p className="text-emerald-400 font-bold uppercase tracking-widest text-xs mb-4">{ach.description}</p>
                   {ach.caption && <p className="text-slate-400 text-sm leading-relaxed">{ach.caption}</p>}
                 </article>
+                </Tilt3DCard>
               ))}
             </div>
           </div>
         </section>
+        </ScrollReveal3D>
 
         {/* Our Branches Section */}
-        <section id="branches" className="py-24 bg-white scroll-mt-24 reveal">
+        <ScrollReveal3D effect="tiltRight">
+        <section id="branches" className="py-24 bg-white scroll-mt-24">
           <div className="container mx-auto px-6">
             <span className="block text-center mb-6">
               <span className="inline-block px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
@@ -460,7 +543,8 @@ const App: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-16 section-title tracking-tight uppercase">Our Branches</h2>
             <div className="flex flex-wrap justify-center gap-10">
               {data.branches.map((br) => (
-                <article key={br.id} className="bg-slate-50 p-10 rounded-[3rem] border border-slate-100 card-hover w-full max-w-sm group">
+                <Tilt3DCard key={br.id} className="w-full max-w-sm group" maxTilt={10}>
+                <article className="bg-slate-50 p-10 rounded-[3rem] border border-slate-100 card-hover h-full">
                   <div className="mb-6 overflow-hidden rounded-[2rem] bg-slate-950/5 flex items-center justify-center h-48 w-full">
                     {br.imageUrl ? (
                       <img 
@@ -483,13 +567,16 @@ const App: React.FC = () => {
                     <span className="w-1.5 h-1.5 bg-emerald-500/20 rounded-full"></span>
                   </div>
                 </article>
+                </Tilt3DCard>
               ))}
             </div>
           </div>
         </section>
+        </ScrollReveal3D>
 
         {/* Internship Section */}
-        <section id="internship" className="py-24 bg-emerald-900 text-white scroll-mt-24 reveal">
+        <ScrollReveal3D effect="tiltLeft">
+        <section id="internship" className="py-24 bg-emerald-900 text-white scroll-mt-24">
           <div className="container mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center max-w-6xl mx-auto">
               <div>
@@ -512,13 +599,28 @@ const App: React.FC = () => {
                   ))}
                 </div>
                 <div className="flex flex-wrap gap-4">
-                  <a href="https://docs.google.com/forms/d/e/1FAIpQLScXUtdd9WqgGERF8iDaZrDslw10lidmvpyhyY8EtFQwIvdgBQ/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" className="px-10 py-4 bg-white text-emerald-900 rounded-full font-black uppercase tracking-widest text-sm hover:bg-emerald-50 transition-all active:scale-95 shadow-xl text-center">
-                    Apply as Intern
+                  <a 
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSfzN4WcusmcUmAKrpnpf4J8128O37tf7MpuJ_P96uKmX-sKsg/viewform?usp=dialog" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="px-8 py-3.5 bg-white text-emerald-950 rounded-xl font-bold uppercase tracking-wider text-xs hover:bg-emerald-50 transition-all active:scale-95 shadow-lg text-center flex items-center justify-center gap-2"
+                  >
+                    <i className="fas fa-hands-helping text-emerald-700"></i>
+                    Join as Volunteer
+                    <i className="fas fa-external-link-alt text-[9px] text-emerald-600"></i>
                   </a>
-                  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfzN4WcusmcUmAKrpnpf4J8128O37tf7MpuJ_P96uKmX-sKsg/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" className="px-10 py-4 bg-emerald-800 text-white border-2 border-emerald-700 rounded-full font-black uppercase tracking-widest text-sm hover:bg-emerald-700 transition-all active:scale-95 text-center">
-                    Volunteer
+                  <a 
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScXUtdd9WqgGERF8iDaZrDslw10lidmvpyhyY8EtFQwIvdgBQ/viewform?usp=dialog" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="px-8 py-3.5 bg-emerald-800 text-white border border-emerald-700 rounded-xl font-bold uppercase tracking-wider text-xs hover:bg-emerald-700 transition-all active:scale-95 text-center flex items-center justify-center gap-2"
+                  >
+                    <i className="fas fa-graduation-cap"></i>
+                    Apply as Intern
+                    <i className="fas fa-external-link-alt text-[9px] text-emerald-300"></i>
                   </a>
                 </div>
+
               </div>
               <div className="relative">
                 <div className="absolute -inset-10 bg-emerald-500/20 blur-[100px] rounded-full"></div>
@@ -526,7 +628,7 @@ const App: React.FC = () => {
                   <img 
                     src={data.internship.find(i => i.type === 'certificate')?.url} 
                     className="relative z-10 w-full rounded-[2.5rem] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500" 
-                    alt="Roti Bank Bettiah Internship Certificate Sample"
+                    alt="Roti Bank Bettiah Internship Certificate Sample" 
                     loading="lazy"
                   />
                 )}
@@ -534,9 +636,11 @@ const App: React.FC = () => {
             </div>
           </div>
         </section>
+        </ScrollReveal3D>
 
         {/* Activities Section */}
-        <section id="activities" className="py-24 bg-white scroll-mt-24 reveal">
+        <ScrollReveal3D effect="floatUp">
+        <section id="activities" className="py-24 bg-white scroll-mt-24">
           <div className="container mx-auto px-6 max-w-5xl">
             <span className="block text-center mb-6">
               <span className="inline-block px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
@@ -546,7 +650,8 @@ const App: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-16 section-title tracking-tight uppercase">Recent Activities</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
               {data.activities.map((act) => (
-                <article key={act.id} className="bg-slate-50 rounded-[3rem] overflow-hidden border border-slate-100 group card-hover">
+                <Tilt3DCard key={act.id} className="group" maxTilt={6}>
+                <article className="bg-slate-50 rounded-[3rem] overflow-hidden border border-slate-100 card-hover h-full">
                   <div className="overflow-hidden bg-slate-950/5 flex items-center justify-center h-56 w-full">
                     <img 
                       src={act.imageUrl} 
@@ -563,16 +668,21 @@ const App: React.FC = () => {
                     <p className="text-slate-500 leading-relaxed text-sm">{act.content}</p>
                   </div>
                 </article>
+                </Tilt3DCard>
               ))}
             </div>
           </div>
         </section>
+        </ScrollReveal3D>
 
         {/* Testimonials */}
-        <Testimonials />
+        <ScrollReveal3D effect="perspectiveIn">
+          <Testimonials />
+        </ScrollReveal3D>
 
         {/* Notice & News Split Section */}
-        <section className="py-24 bg-slate-50 reveal">
+        <ScrollReveal3D effect="tiltUp">
+        <section className="py-24 bg-slate-50">
           <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div id="notices" className="scroll-mt-32">
               <div className="flex items-center gap-4 mb-12">
@@ -627,12 +737,16 @@ const App: React.FC = () => {
             </div>
           </div>
         </section>
+        </ScrollReveal3D>
 
         {/* Blog Section */}
-        <Blog blogs={data.blogs} />
+        <ScrollReveal3D effect="flipUp">
+          <Blog blogs={data.blogs} />
+        </ScrollReveal3D>
 
         {/* Causes Section */}
-        <section id="causes" className="py-24 bg-white scroll-mt-24 reveal">
+        <ScrollReveal3D effect="slideDepth">
+        <section id="causes" className="py-24 bg-white scroll-mt-24">
           <div className="container mx-auto px-6 max-w-4xl">
             <span className="block text-center mb-6">
               <span className="inline-block px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
@@ -666,83 +780,154 @@ const App: React.FC = () => {
             </div>
           </div>
         </section>
+        </ScrollReveal3D>
 
-        <Donation />
+        <ScrollReveal3D effect="flipUp">
+          <Donation />
+        </ScrollReveal3D>
       </main>
 
-      <footer className="bg-slate-900 text-white pt-24 pb-12">
-        <div className="container mx-auto px-6">
+      {/* Premium Footer */}
+      <footer className="bg-slate-950 text-white pt-24 pb-12 relative overflow-hidden">
+        {/* Decorative gradient blobs */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-[150px] pointer-events-none"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/3 rounded-full blur-[150px] pointer-events-none"></div>
+        
+        {/* Top gradient border */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
+
+        <div className="container mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 text-center md:text-left border-b border-white/5 pb-16 mb-12">
             <div>
               <div className="flex items-center gap-3 justify-center md:justify-start mb-8">
-                <img src="/logo.png" width={40} height={40} className="h-10 rounded-full" alt="Roti Bank Bettiah logo" />
+                <div className="relative">
+                  <img src="/logo.png" width={40} height={40} className="h-10 rounded-full shadow-lg shadow-emerald-500/20" alt="Roti Bank Bettiah logo" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-950"></div>
+                </div>
                 <span className="font-black text-2xl tracking-tighter">Roti Bank Bettiah Trust</span>
               </div>
-              <p className="text-slate-400 leading-relaxed mb-8">
+              <p className="text-slate-400 leading-relaxed mb-8 text-sm">
                 Roti Bank Bettiah Trust is a registered non-profit NGO and charitable trust. Eradicating hunger and providing hope to the underprivileged since 2023. Join our journey to make Bettiah hunger-free.
               </p>
-              <div className="flex justify-center md:justify-start gap-4 text-xl">
+              <div className="flex justify-center md:justify-start gap-3">
                 {[
-                  { href: 'https://www.facebook.com/ROTIBANKBETTIAH', icon: 'fab fa-facebook', label: 'Facebook' },
-                  { href: 'https://twitter.com/Rotibankbettiah', icon: 'fab fa-twitter', label: 'Twitter' },
-                  { href: 'https://instagram.com/rotibankbettiah', icon: 'fab fa-instagram', label: 'Instagram' },
-                  { href: 'https://wa.me/+919473228888', icon: 'fab fa-whatsapp', label: 'WhatsApp' },
-                  { href: 'https://github.com/rotibankbettiah/roti-bank-bettiah', icon: 'fab fa-github', label: 'GitHub' },
+                  { href: 'https://www.facebook.com/ROTIBANKBETTIAH', icon: 'fab fa-facebook', label: 'Facebook', hoverBg: 'hover:bg-blue-600/20 hover:text-blue-400 hover:border-blue-500/30' },
+                  { href: 'https://twitter.com/Rotibankbettiah', icon: 'fab fa-twitter', label: 'Twitter', hoverBg: 'hover:bg-sky-500/20 hover:text-sky-400 hover:border-sky-500/30' },
+                  { href: 'https://instagram.com/rotibankbettiah', icon: 'fab fa-instagram', label: 'Instagram', hoverBg: 'hover:bg-pink-500/20 hover:text-pink-400 hover:border-pink-500/30' },
+                  { href: 'https://wa.me/+919473228888', icon: 'fab fa-whatsapp', label: 'WhatsApp', hoverBg: 'hover:bg-emerald-500/20 hover:text-emerald-400 hover:border-emerald-500/30' },
+                  { href: 'https://github.com/rotibankbettiah/roti-bank-bettiah', icon: 'fab fa-github', label: 'GitHub', hoverBg: 'hover:bg-white/10 hover:text-white hover:border-white/20' },
                 ].map((social) => (
-                  <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-slate-400 hover:text-emerald-500 hover:bg-white/10 transition-all" aria-label={social.label}>
+                  <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" className={`w-10 h-10 bg-white/[0.04] border border-white/[0.06] rounded-xl flex items-center justify-center text-slate-500 transition-all duration-300 ${social.hoverBg}`} aria-label={social.label}>
                     <i className={social.icon}></i>
                   </a>
                 ))}
               </div>
             </div>
             
-            <div className="space-y-8">
-              <h4 className="text-lg font-bold uppercase tracking-widest text-emerald-500">Quick Links</h4>
-              <nav className="flex flex-col gap-4 text-slate-400 font-medium" aria-label="Footer navigation">
-                <a href="#about" className="hover:text-white transition-colors">Our Mission</a>
-                <a href="#branches" className="hover:text-white transition-colors">Find a Branch</a>
-                <a href="#internship" className="hover:text-white transition-colors">Career Opportunities</a>
-                <a href="#gallery" className="hover:text-white transition-colors">Media Gallery</a>
-                <a href="#donation" className="hover:text-white transition-colors">Donate Now</a>
+            <div className="space-y-6">
+              <h4 className="text-sm font-black uppercase tracking-[0.2em] text-emerald-400 flex items-center gap-2 justify-center md:justify-start">
+                <div className="w-6 h-0.5 bg-emerald-500 rounded-full"></div>
+                Quick Links
+              </h4>
+              <nav className="flex flex-col gap-3 text-slate-400 text-sm" aria-label="Footer navigation">
+                {[
+                  { href: '#about', text: 'Our Mission', icon: 'fa-heart' },
+                  { href: 'https://docs.google.com/forms/d/e/1FAIpQLSfzN4WcusmcUmAKrpnpf4J8128O37tf7MpuJ_P96uKmX-sKsg/viewform?usp=dialog', text: 'Volunteer with Us', icon: 'fa-hands-helping', external: true },
+                  { href: '#branches', text: 'Find a Branch', icon: 'fa-map-location-dot' },
+                  { href: '#internship', text: 'Career Opportunities', icon: 'fa-graduation-cap' },
+                  { href: '#gallery', text: 'Media Gallery', icon: 'fa-images' },
+                  { href: '#donation', text: 'Donate Now', icon: 'fa-hand-holding-heart' },
+                ].map((link) => (
+                  <a 
+                    key={link.text} 
+                    href={link.href} 
+                    target={link.external ? '_blank' : undefined}
+                    rel={link.external ? 'noopener noreferrer' : undefined}
+                    className="group flex items-center gap-3 hover:text-white transition-colors justify-center md:justify-start"
+                  >
+                    <i className={`fas ${link.icon} text-[10px] text-slate-600 group-hover:text-emerald-500 transition-colors w-4`}></i>
+                    <span>{link.text}</span>
+                    <i className="fas fa-chevron-right text-[8px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all text-emerald-500"></i>
+                  </a>
+                ))}
+                <button onClick={() => navigateTo('privacy')} className="group flex items-center gap-3 hover:text-white transition-colors justify-center md:justify-start text-left cursor-pointer">
+                  <i className="fas fa-shield-halved text-[10px] text-slate-600 group-hover:text-emerald-500 transition-colors w-4"></i>
+                  <span>Privacy Policy</span>
+                  <i className="fas fa-chevron-right text-[8px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all text-emerald-500"></i>
+                </button>
+                <button onClick={() => navigateTo('terms')} className="group flex items-center gap-3 hover:text-white transition-colors justify-center md:justify-start text-left cursor-pointer">
+                  <i className="fas fa-file-contract text-[10px] text-slate-600 group-hover:text-emerald-500 transition-colors w-4"></i>
+                  <span>Terms &amp; Conditions</span>
+                  <i className="fas fa-chevron-right text-[8px] opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all text-emerald-500"></i>
+                </button>
               </nav>
             </div>
             
-            <div className="space-y-8">
-              <h4 className="text-lg font-bold uppercase tracking-widest text-emerald-500">Contact Us</h4>
-              <div className="text-slate-400 space-y-4">
-                <p className="flex items-center gap-4 justify-center md:justify-start"><i className="fas fa-phone-alt text-emerald-500"></i> +91 9473228888</p>
-                <p className="flex items-center gap-4 justify-center md:justify-start"><i className="fas fa-envelope text-emerald-500"></i> rotibankbettiah@gmail.com</p>
-                <p className="flex items-start gap-4 justify-center md:justify-start leading-relaxed"><i className="fas fa-map-marker-alt text-emerald-500 mt-1"></i> Kalibag Chowk, Bettiah, Bihar - 845438</p>
+            <div className="space-y-6">
+              <h4 className="text-sm font-black uppercase tracking-[0.2em] text-emerald-400 flex items-center gap-2 justify-center md:justify-start">
+                <div className="w-6 h-0.5 bg-emerald-500 rounded-full"></div>
+                Contact Us
+              </h4>
+              <div className="text-slate-400 space-y-4 text-sm">
+                <a href="tel:+919473228888" className="flex items-center gap-4 justify-center md:justify-start hover:text-white transition-colors group">
+                  <div className="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
+                    <i className="fas fa-phone-alt text-emerald-500 text-xs"></i>
+                  </div>
+                  +91 9473228888
+                </a>
+                <a href="mailto:rotibankbettiah@gmail.com" className="flex items-center gap-4 justify-center md:justify-start hover:text-white transition-colors group">
+                  <div className="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
+                    <i className="fas fa-envelope text-emerald-500 text-xs"></i>
+                  </div>
+                  rotibankbettiah@gmail.com
+                </a>
+                <div className="flex items-start gap-4 justify-center md:justify-start leading-relaxed">
+                  <div className="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i className="fas fa-map-marker-alt text-emerald-500 text-xs"></i>
+                  </div>
+                  Kalibag Chowk, Bettiah, Bihar - 845438
+                </div>
               </div>
 
-              {/* Razorpay Trust Badge */}
-              <div className="pt-6 border-t border-white/5">
-                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-2 justify-center md:justify-start">
-                  <i className="fas fa-lock text-emerald-500"></i>
-                  Payments Secured by Razorpay
-                </p>
+              {/* Trust Badges */}
+              <div className="pt-4 border-t border-white/5 flex flex-wrap gap-3 justify-center md:justify-start">
+                {[
+                  { icon: 'fa-lock', text: 'Razorpay Secured' },
+                  { icon: 'fa-shield-halved', text: '256-bit SSL' },
+                ].map((badge, i) => (
+                  <span key={i} className="text-[9px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1.5 bg-white/[0.03] px-2.5 py-1.5 rounded-lg border border-white/[0.04]">
+                    <i className={`fas ${badge.icon} text-emerald-500`}></i>
+                    {badge.text}
+                  </span>
+                ))}
               </div>
             </div>
             
             {/* Newsletter Subscription */}
             <div className="space-y-6">
-              <h4 className="text-lg font-bold uppercase tracking-widest text-emerald-500">Stay Updated</h4>
+              <h4 className="text-sm font-black uppercase tracking-[0.2em] text-emerald-400 flex items-center gap-2 justify-center md:justify-start">
+                <div className="w-6 h-0.5 bg-emerald-500 rounded-full"></div>
+                Stay Updated
+              </h4>
               <p className="text-slate-400 text-sm leading-relaxed">
                 Subscribe to our newsletter to see how your contributions are making a difference.
               </p>
               <form className="flex flex-col gap-3" onSubmit={handleSubscribe}>
-                <input 
-                  type="email" 
-                  placeholder="Enter your email" 
-                  required 
-                  value={subEmail}
-                  onChange={(e) => setSubEmail(e.target.value)}
-                  className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-colors text-sm w-full" 
-                />
+                <div className="relative">
+                  <i className="fas fa-envelope text-slate-500 absolute left-4 top-1/2 -translate-y-1/2 text-xs"></i>
+                  <input 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    required 
+                    value={subEmail}
+                    onChange={(e) => setSubEmail(e.target.value)}
+                    className="bg-white/[0.04] border border-white/[0.08] rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all text-sm w-full" 
+                  />
+                </div>
                 <button 
                   type="submit" 
                   disabled={subStatus === 'loading'}
-                  className="bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl px-4 py-3 font-bold text-sm transition-colors shadow-lg shadow-emerald-700/20 w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white rounded-xl px-4 py-3 font-bold text-sm transition-all shadow-lg shadow-emerald-700/20 w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] donate-btn-shimmer"
                 >
                   {subStatus === 'loading' ? (
                     <>
@@ -756,20 +941,40 @@ const App: React.FC = () => {
                 </button>
               </form>
               {subMessage && (
-                <div className={`text-xs mt-2 px-4 py-2.5 rounded-lg border font-medium ${
+                <div className={`text-xs mt-2 px-4 py-2.5 rounded-xl border font-medium ${
                   subStatus === 'success' 
                     ? 'bg-emerald-950/40 border-emerald-800 text-emerald-400' 
                     : 'bg-red-950/40 border-red-900 text-red-400'
                 }`}>
+                  <i className={`fas ${subStatus === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2`}></i>
                   {subMessage}
                 </div>
               )}
             </div>
           </div>
           
-          <div className="text-center">
-            <p className="text-slate-400 text-[10px] uppercase tracking-[0.4em] font-black mb-2">© 2025 Roti Bank Bettiah Trust | Serving with Compassion</p>
-            <p className="text-slate-400 text-[9px] uppercase font-bold">Registration Number: 5071/2023 | Registered NGO & Charitable Trust</p>
+          {/* Bottom Bar */}
+          <div className="text-center space-y-3">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-16 bg-gradient-to-r from-transparent to-emerald-500/30"></div>
+              <i className="fas fa-heart text-emerald-500 text-[10px] animate-heartbeat"></i>
+              <div className="h-px w-16 bg-gradient-to-l from-transparent to-emerald-500/30"></div>
+            </div>
+            <p className="text-slate-400 text-xs font-medium">© 2025 Roti Bank Bettiah Trust | Serving with Compassion</p>
+            <p className="text-slate-500 text-[11px] font-medium tracking-wide">Registration Number: 5071/2023 | Registered NGO &amp; Charitable Trust</p>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400 pt-2">
+              <button onClick={() => navigateTo('privacy')} className="hover:text-emerald-400 underline underline-offset-4 transition-colors cursor-pointer">
+                Privacy Policy
+              </button>
+              <span className="text-slate-600">•</span>
+              <button onClick={() => navigateTo('terms')} className="hover:text-emerald-400 underline underline-offset-4 transition-colors cursor-pointer">
+                Terms &amp; Conditions
+              </button>
+              <span className="text-slate-600">•</span>
+              <a href="mailto:rotibankbettiah@gmail.com" className="hover:text-emerald-400 transition-colors">
+                rotibankbettiah@gmail.com
+              </a>
+            </div>
           </div>
         </div>
       </footer>
