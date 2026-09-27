@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://rotibankbettiah.github.io/roti-bank-bettiah/",
+  "homepage": "https://rotibankbettiah.org/",
   "scripts": {
     "dev": "vite",
     "dev:all": "concurrently \"npm run dev\" \"cd server && npm run dev\"",
