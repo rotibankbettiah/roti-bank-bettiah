@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import logoImg from '../assets/logo.png';
 import { geminiService } from '../services/geminiService';
 import { aiKnowledgeEngine } from '../services/aiKnowledgeEngine';
 import { supabaseService } from '../services/supabaseService';
@@ -169,7 +170,7 @@ const Chatbot: React.FC = () => {
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <img
-                    src="/logo.png"
+                    src={logoImg}
                     className="w-10 h-10 rounded-xl border border-emerald-500/30 object-cover"
                     alt="Roti Bank AI"
                   />

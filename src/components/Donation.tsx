@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import logoImg from '../assets/logo.png';
 import { supabaseService } from '../services/supabaseService';
 import { razorpayService, DONATION_TIERS } from '../services/razorpayService';
 import { DonationDetails } from '../types';
@@ -428,7 +429,7 @@ const Donation: React.FC = () => {
             <div class="center-watermark">ROTI BANK BETTIAH TRUST</div>
             <div class="header">
               <div class="logo-details">
-                <img src="/logo.png" alt="Roti Bank Bettiah Logo" />
+                <img src="${logoImg}" alt="Roti Bank Bettiah Logo" />
                 <div>
                   <h1 class="org-title">ROTI BANK BETTIAH</h1>
                   <p class="org-subtitle">Nourishing Lives, Sharing Compassion</p>

@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import logoImg from './assets/logo.png';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Stats from './components/Stats';
@@ -801,7 +802,7 @@ const App: React.FC = () => {
             <div>
               <div className="flex items-center gap-3 justify-center md:justify-start mb-8">
                 <div className="relative">
-                  <img src="/logo.png" width={40} height={40} className="h-10 rounded-full shadow-lg shadow-emerald-500/20" alt="Roti Bank Bettiah logo" />
+                  <img src={logoImg} width={40} height={40} className="h-10 rounded-full shadow-lg shadow-emerald-500/20" alt="Roti Bank Bettiah logo" />
                   <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-950"></div>
                 </div>
                 <span className="font-black text-2xl tracking-tighter">Roti Bank Bettiah Trust</span>

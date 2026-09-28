@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { NewsItem } from '../types';
+import logoImg from '../assets/logo.png';
 
 interface NavbarProps {
   news?: NewsItem[];
@@ -114,7 +115,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <div className="relative">
                 <img 
-                  src="/logo.png" 
+                  src={logoImg} 
                   width={48}
                   height={48}
                   alt="Roti Bank Bettiah Logo" 
