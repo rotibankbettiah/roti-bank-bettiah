@@ -21,9 +21,18 @@ export const supabaseService = {
   },
 
   async getBanner(): Promise<string> {
-    const { data, error } = await supabase.from('banners').select('imageUrl').single();
-    if (error) return '';
-    return data?.imageUrl || '';
+    try {
+      const { data, error } = await supabase
+        .from('banners')
+        .select('imageUrl')
+        .order('id', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error || !data) return '';
+      return data.imageUrl || '';
+    } catch {
+      return '';
+    }
   },
 
   async getAchievements(): Promise<Achievement[]> {

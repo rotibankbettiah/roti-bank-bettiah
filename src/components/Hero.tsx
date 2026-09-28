@@ -1,13 +1,39 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Tilt3DCard, Floating3D } from './ScrollAnimations';
+import { supabaseService } from '../services/supabaseService';
 
 interface HeroProps {
   customBanner?: string;
 }
 
+const DEFAULT_BANNER = "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=75&w=1200&fm=webp";
+
 const Hero: React.FC<HeroProps> = ({ customBanner }) => {
-  const bannerImage = customBanner || "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=75&w=1200&fm=webp";
+  const [heroImage, setHeroImage] = useState<string>(customBanner || '');
+  const [imgError, setImgError] = useState(false);
+
+  useEffect(() => {
+    if (customBanner) {
+      setHeroImage(customBanner);
+      setImgError(false);
+    } else {
+      let isMounted = true;
+      supabaseService.getBanner().then((url) => {
+        if (isMounted && url) {
+          setHeroImage(url);
+          setImgError(false);
+        }
+      }).catch((err) => {
+        console.warn('Hero Supabase banner load notice:', err);
+      });
+      return () => {
+        isMounted = false;
+      };
+    }
+  }, [customBanner]);
+
+  const activeBanner = (!imgError && heroImage) ? heroImage : DEFAULT_BANNER;
   const [mealCount, setMealCount] = useState(0);
   const rotatingWords = ['Lives', 'Hope', 'Dreams', 'Futures', 'Smiles', 'Hearts'];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -69,10 +95,11 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
         style={{ y: y1, opacity: opacity1, scale: scale1 }}
       >
         <img 
-          src={bannerImage} 
+          src={activeBanner} 
           alt="Roti Bank Bettiah serving meals to the underprivileged in Bihar" 
           className="w-full h-full object-cover opacity-50"
           fetchPriority="high"
+          onError={() => setImgError(true)}
         />
         {/* Premium gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900/90 to-emerald-950/50"></div>
@@ -226,7 +253,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
 
           {/* Right Column: 3D Interactive Hero Showcase */}
           <motion.div 
-            className="hidden lg:block lg:col-span-5 relative"
+            className="block mt-10 lg:mt-0 lg:col-span-5 relative max-w-lg mx-auto lg:max-w-none w-full"
             initial={{ opacity: 0, scale: 0.92, rotateY: -12 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 1.1, delay: 0.35, type: 'spring', stiffness: 50, damping: 18 }}
@@ -253,10 +280,11 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
                 {/* Center Visual Feature with 3D Depth */}
                 <div className="my-6 relative rounded-2xl overflow-hidden border border-white/[0.12] shadow-inner bg-slate-900/60 aspect-video flex items-center justify-center group/img">
                   <img
-                    src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=75&w=800&fm=webp"
+                    src={activeBanner}
                     alt="Roti Bank Bettiah daily food distribution"
-                    className="w-full h-full object-cover opacity-85 group-hover/img:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover opacity-90 group-hover/img:scale-105 transition-transform duration-700"
                     loading="lazy"
+                    onError={() => setImgError(true)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
                   <div className="absolute bottom-3 left-4 right-4">
