@@ -68,6 +68,15 @@ export const razorpayService = {
 
       // 2. Open the Razorpay checkout modal
       return new Promise<PaymentResult>((resolve) => {
+        const prefill: { name?: string; email?: string; contact?: string } = {};
+        if (donorName && donorName.trim()) prefill.name = donorName.trim();
+        if (donorEmail && donorEmail.trim()) prefill.email = donorEmail.trim();
+        if (donorPhone && donorPhone.trim()) prefill.contact = donorPhone.trim();
+
+        const logoUrl = (typeof window !== 'undefined' && window.location.origin)
+          ? `${window.location.origin}/logo.png`
+          : 'https://rotibankbettaih.org/logo.png';
+
         const options: RazorpayOptions = {
           key: (orderData as any).keyId || (orderData as any).key || RAZORPAY_KEY,
           amount: orderData.amount, // from backend order (already in paise)
@@ -75,7 +84,7 @@ export const razorpayService = {
           order_id: orderData.orderId, // critical for backend verification!
           name: 'Roti Bank Bettiah',
           description: `Donation of ₹${amountInRupees.toLocaleString('en-IN')}: Nourishing Lives`,
-          image: '/logo.png',
+          image: logoUrl,
           handler: async (response: RazorpayResponse) => {
             try {
               // 3. Send payment details to backend for signature verification
@@ -120,11 +129,7 @@ export const razorpayService = {
               });
             }
           },
-          prefill: {
-            name: donorName || '',
-            email: donorEmail || '',
-            contact: donorPhone || '',
-          },
+          prefill,
           theme: {
             color: '#059669',
           },
