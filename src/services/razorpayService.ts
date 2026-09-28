@@ -44,7 +44,7 @@ export const razorpayService = {
       return { success: false, error: 'Razorpay API Key is missing. Please configure VITE_RAZORPAY_KEY in your .env.local file.' };
     }
 
-    const apiUrl = import.meta.env.VITE_API_URL || '';
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://roti-bank-api-worker.rotibankbettiaah.workers.dev';
 
     try {
       // 1. Create order on the backend
