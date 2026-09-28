@@ -7,8 +7,8 @@ declare global {
   }
 }
 
-// Use environment variable or placeholder — replace with your live/test key
-const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY || 'RAZORPAY_KEY_PLACEHOLDER';
+// Use environment variable or live key for Razorpay checkout
+const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY || 'rzp_live_TEGAPWFq1HQ5gr';
 
 export interface PaymentResult {
   success: boolean;
@@ -69,7 +69,7 @@ export const razorpayService = {
       // 2. Open the Razorpay checkout modal
       return new Promise<PaymentResult>((resolve) => {
         const options: RazorpayOptions = {
-          key: RAZORPAY_KEY,
+          key: (orderData as any).keyId || (orderData as any).key || RAZORPAY_KEY,
           amount: orderData.amount, // from backend order (already in paise)
           currency: orderData.currency || 'INR',
           order_id: orderData.orderId, // critical for backend verification!
