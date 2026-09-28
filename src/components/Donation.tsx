@@ -98,6 +98,7 @@ const Donation: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentError, setPaymentError] = useState('');
+  const [donorErrors, setDonorErrors] = useState<{ name?: string; phone?: string }>({});
   const [paymentId, setPaymentId] = useState('');
   const [details, setDetails] = useState<DonationDetails | null>(null);
   const [showBankDetails, setShowBankDetails] = useState(true);
@@ -530,7 +531,42 @@ const Donation: React.FC = () => {
     }
   };
 
+  const validateDonorInfo = (): boolean => {
+    const errors: { name?: string; phone?: string } = {};
+
+    if (!donorName.trim()) {
+      errors.name = 'Full Name is compulsory';
+    } else if (donorName.trim().length < 2) {
+      errors.name = 'Name must be at least 2 characters';
+    }
+
+    const cleanPhone = donorPhone.replace(/\D/g, '');
+    if (!donorPhone.trim()) {
+      errors.phone = 'Phone number is compulsory';
+    } else if (cleanPhone.length < 10) {
+      errors.phone = 'Please enter a valid 10-digit mobile number';
+    }
+
+    setDonorErrors(errors);
+
+    if (errors.name) {
+      document.getElementById('donor-name-input')?.focus();
+      return false;
+    }
+    if (errors.phone) {
+      document.getElementById('donor-phone-input')?.focus();
+      return false;
+    }
+
+    return true;
+  };
+
   const handleRazorpayPayment = async () => {
+    if (!validateDonorInfo()) {
+      setPaymentError('Please fill in your compulsory Name and Phone number before proceeding.');
+      return;
+    }
+
     const amt = getActiveAmount();
     if (!amt || amt < 1) return;
 
@@ -538,11 +574,14 @@ const Donation: React.FC = () => {
     setPaymentSuccess(false);
     setPaymentError('');
 
+    const cleanPhone = donorPhone.replace(/\D/g, '');
+    const formattedPhone = cleanPhone.length === 10 ? `+91${cleanPhone}` : donorPhone.trim();
+
     const result = await razorpayService.openCheckout(
       amt,
-      donorName || undefined,
-      donorEmail || undefined,
-      donorPhone || undefined
+      donorName.trim(),
+      donorEmail.trim() || undefined,
+      formattedPhone
     );
 
     setIsProcessing(false);
@@ -677,35 +716,95 @@ const Donation: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Donor Info (optional) */}
-                <div className="mt-6 space-y-3">
-                  <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">
-                    <i className="fas fa-user mr-1"></i> Donor Information (optional)
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <input
-                      placeholder="Full Name"
-                      value={donorName}
-                      onChange={(e) => setDonorName(e.target.value)}
-                      className="px-5 py-3.5 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 text-sm transition-all"
-                      id="donor-name-input"
-                    />
-                    <input
-                      type="email"
-                      placeholder="Email"
-                      value={donorEmail}
-                      onChange={(e) => setDonorEmail(e.target.value)}
-                      className="px-5 py-3.5 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 text-sm transition-all"
-                      id="donor-email-input"
-                    />
-                    <input
-                      type="tel"
-                      placeholder="Phone"
-                      value={donorPhone}
-                      onChange={(e) => setDonorPhone(e.target.value)}
-                      className="px-5 py-3.5 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 text-sm transition-all"
-                      id="donor-phone-input"
-                    />
+                {/* Donor Info (Compulsory Name & Phone) */}
+                <div className="mt-8 space-y-3 bg-slate-50/90 p-5 rounded-2xl border border-slate-200">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <p className="text-xs text-slate-800 font-extrabold uppercase tracking-wider flex items-center gap-1.5">
+                      <i className="fas fa-id-card text-emerald-600"></i> Donor Details (Compulsory)
+                    </p>
+                    <span className="text-[11px] text-amber-700 font-semibold bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-200">
+                      * Name &amp; Phone required for 80G Tax Receipt
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                    {/* Full Name - Compulsory */}
+                    <div>
+                      <label htmlFor="donor-name-input" className="block text-[11px] font-bold text-slate-700 mb-1">
+                        Full Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        placeholder="e.g. Ramesh Kumar"
+                        value={donorName}
+                        onChange={(e) => {
+                          setDonorName(e.target.value);
+                          if (donorErrors.name && e.target.value.trim().length >= 2) {
+                            setDonorErrors((prev) => ({ ...prev, name: undefined }));
+                          }
+                          if (paymentError) setPaymentError('');
+                        }}
+                        className={`w-full px-4 py-3 rounded-xl border ${
+                          donorErrors.name
+                            ? 'border-red-400 bg-red-50/40 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
+                            : 'border-slate-200 bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10'
+                        } focus:outline-none text-sm transition-all`}
+                        id="donor-name-input"
+                        required
+                      />
+                      {donorErrors.name && (
+                        <p className="text-[11px] text-red-600 font-semibold mt-1 flex items-center gap-1">
+                          <i className="fas fa-circle-exclamation text-xs"></i> {donorErrors.name}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Phone Number - Compulsory */}
+                    <div>
+                      <label htmlFor="donor-phone-input" className="block text-[11px] font-bold text-slate-700 mb-1">
+                        Phone Number <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        placeholder="e.g. 9876543210"
+                        value={donorPhone}
+                        maxLength={13}
+                        onChange={(e) => {
+                          setDonorPhone(e.target.value);
+                          const digits = e.target.value.replace(/\D/g, '');
+                          if (donorErrors.phone && digits.length >= 10) {
+                            setDonorErrors((prev) => ({ ...prev, phone: undefined }));
+                          }
+                          if (paymentError) setPaymentError('');
+                        }}
+                        className={`w-full px-4 py-3 rounded-xl border ${
+                          donorErrors.phone
+                            ? 'border-red-400 bg-red-50/40 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
+                            : 'border-slate-200 bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10'
+                        } focus:outline-none text-sm transition-all`}
+                        id="donor-phone-input"
+                        required
+                      />
+                      {donorErrors.phone && (
+                        <p className="text-[11px] text-red-600 font-semibold mt-1 flex items-center gap-1">
+                          <i className="fas fa-circle-exclamation text-xs"></i> {donorErrors.phone}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Email - Optional */}
+                    <div>
+                      <label htmlFor="donor-email-input" className="block text-[11px] font-bold text-slate-700 mb-1">
+                        Email Address <span className="text-slate-400 font-normal">(Optional)</span>
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="name@email.com"
+                        value={donorEmail}
+                        onChange={(e) => setDonorEmail(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 text-sm transition-all"
+                        id="donor-email-input"
+                      />
+                    </div>
                   </div>
                 </div>
 
