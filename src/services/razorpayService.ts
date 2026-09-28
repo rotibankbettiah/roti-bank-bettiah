@@ -68,10 +68,15 @@ export const razorpayService = {
 
       // 2. Open the Razorpay checkout modal
       return new Promise<PaymentResult>((resolve) => {
+        const cleanName = (donorName || '').replace(/[^\w\s.-]/g, '').trim();
+        const cleanDigits = (donorPhone || '').replace(/\D/g, '');
+        const cleanPhone = cleanDigits.length === 10 ? `+91${cleanDigits}` : (cleanDigits ? `+${cleanDigits}` : undefined);
+        const cleanEmail = (donorEmail || '').trim();
+
         const prefill: { name?: string; email?: string; contact?: string } = {};
-        if (donorName && donorName.trim()) prefill.name = donorName.trim();
-        if (donorEmail && donorEmail.trim()) prefill.email = donorEmail.trim();
-        if (donorPhone && donorPhone.trim()) prefill.contact = donorPhone.trim();
+        if (cleanName) prefill.name = cleanName;
+        if (cleanEmail && cleanEmail.includes('@')) prefill.email = cleanEmail;
+        if (cleanPhone) prefill.contact = cleanPhone;
 
         const logoUrl = (typeof window !== 'undefined' && window.location.origin)
           ? `${window.location.origin}/logo.png`
@@ -83,7 +88,7 @@ export const razorpayService = {
           currency: orderData.currency || 'INR',
           order_id: orderData.orderId, // critical for backend verification!
           name: 'Roti Bank Bettiah',
-          description: `Donation of ₹${amountInRupees.toLocaleString('en-IN')}: Nourishing Lives`,
+          description: `Donation of INR ${amountInRupees} - Roti Bank Bettiah`,
           image: logoUrl,
           handler: async (response: RazorpayResponse) => {
             try {
