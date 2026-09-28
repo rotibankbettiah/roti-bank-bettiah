@@ -392,13 +392,14 @@
             border-top: 1px solid #f1f5f9;
         }
     </style>
-  <script type="module" crossorigin src="/assets/admin-GrYmV9pP.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <script type="module" crossorigin src="./assets/admin-BQBeLBz4.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
 </head>
 <body class="p-4">
     <div id="app" class="container hidden relative">
         <button id="logout-btn" class="absolute top-6 right-6 bg-red-100 hover:bg-red-200 text-red-700 font-bold px-4 py-2 rounded-lg text-sm transition-all">Logout</button>
         <h1 class="heading">Roti Bank Admin Panel</h1>
+        <div id="app-message" class="message-box hidden"></div>
         
         <!-- About Us Section -->
         <div class="card mb-6">
@@ -410,6 +411,20 @@
                 </div>
                 <button type="submit" class="btn-primary">Save About Us</button>
             </form>
+        </div>
+
+        <!-- Database Maintenance & Performance Tools -->
+        <div class="card mb-6 bg-emerald-50/20 border border-emerald-100/50">
+            <h2 class="text-2xl font-bold text-emerald-800 mb-2">⚡ System Performance & Image Optimization</h2>
+            <p class="text-slate-600 mb-4 text-sm">Scan all images stored in the database and automatically compress/resize them on the server to improve website load speed by up to 10x.</p>
+            <div class="flex flex-wrap gap-4 items-center">
+                <button id="optimize-db-images-btn" type="button" class="btn-primary flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Optimize Stored Images
+                </button>
+                <div id="optimization-status" class="text-xs text-slate-500 font-medium hidden"></div>
+            </div>
+            <div id="optimization-logs" class="mt-4 p-4 bg-slate-900 text-slate-200 rounded-xl font-mono text-[10px] hidden max-h-48 overflow-y-auto whitespace-pre-wrap"></div>
         </div>
 
         <!-- Hero Banner Section -->
@@ -520,6 +535,65 @@
                 <button type="submit" class="btn-primary">Add/Update Cause</button>
             </form>
             <div id="causes-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add New Achievement</h2>
+            <form id="achievements-form">
+                <div class="form-group">
+                    <label for="achievement-icon" class="form-label">Icon Class (FontAwesome)</label>
+                    <select id="achievement-icon" class="form-input">
+                        <option value="fa-utensils">Utensils (Food)</option>
+                        <option value="fa-certificate">Certificate</option>
+                        <option value="fa-hands-helping">Helping Hands</option>
+                        <option value="fa-users">Users</option>
+                        <option value="fa-building">Building</option>
+                        <option value="fa-award">Award</option>
+                        <option value="fa-heart">Heart</option>
+                        <option value="fa-calendar-alt">Calendar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="achievement-count" class="form-label">Count / Number</label>
+                    <input type="text" id="achievement-count" class="form-input" placeholder="e.g., 500,000+ or 15+" required>
+                </div>
+                <div class="form-group">
+                    <label for="achievement-description" class="form-label">Short Description</label>
+                    <input type="text" id="achievement-description" class="form-input" placeholder="e.g., Meals Served or Volunteers" required>
+                </div>
+                <div class="form-group">
+                    <label for="achievement-caption" class="form-label">Caption / Long Description (Optional)</label>
+                    <textarea id="achievement-caption" class="form-input" rows="2" placeholder="e.g., NUTRIENT DAILY COOKED MEALS"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="achievement-image-file" class="form-label">Upload Image (Optional)</label>
+                    <input type="file" id="achievement-image-file" class="form-input">
+                </div>
+                <button type="submit" class="btn-primary">Add Achievement</button>
+            </form>
+            <div id="achievements-list" class="mt-4 space-y-4"></div>
+        </div>
+
+        <!-- Branches Section -->
+        <div class="card mb-6">
+            <h2 class="text-2xl font-bold mb-4">Add New Branch</h2>
+            <form id="branches-form">
+                <div class="form-group">
+                    <label for="branch-name" class="form-label">Branch Name</label>
+                    <input type="text" id="branch-name" class="form-input" placeholder="e.g., Bettiah Center" required>
+                </div>
+                <div class="form-group">
+                    <label for="branch-location" class="form-label">Location Address</label>
+                    <input type="text" id="branch-location" class="form-input" placeholder="e.g., Bettiah, Bihar" required>
+                </div>
+                <div class="form-group">
+                    <label for="branch-image-file" class="form-label">Upload Branch Image (Optional)</label>
+                    <input type="file" id="branch-image-file" class="form-input">
+                </div>
+                <button type="submit" class="btn-primary">Add Branch</button>
+            </form>
+            <div id="branches-list" class="mt-4 space-y-4"></div>
         </div>
 
         <!-- Latest News Headlines Section (for Navbar ticker) -->
@@ -691,6 +765,6 @@
             </form>
         </div>
     </div>
-
+
 </body>
 </html>

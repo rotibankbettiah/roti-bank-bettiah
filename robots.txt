@@ -1,42 +1,6 @@
-# Roti Bank Bettiah — Registered Non-Profit Food Trust, Bihar India
-# Website: https://rotibankbettiah.org
-# Contact: rotibankbettiah@gmail.com
-
-# Allow all search engines
 User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /api/
-Crawl-delay: 1
 
-# Googlebot specific
-User-agent: Googlebot
-Allow: /
-Allow: /about.html
-Disallow: /admin.html
-Disallow: /api/
-
-# Google Image Bot — allow all images for Google Images ranking
-User-agent: Googlebot-Image
-Allow: /
-
-# Bing
-User-agent: Bingbot
-Allow: /
-Disallow: /admin.html
-
-# Social crawlers — allow for rich previews on WhatsApp, Facebook etc.
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: LinkedInBot
-Allow: /
-
-User-agent: WhatsApp
-Allow: /
-
-# Sitemaps
 Sitemap: https://rotibankbettiah.org/sitemap.xml
