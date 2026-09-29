@@ -1,19 +1,21 @@
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, Suspense } from 'react';
 import logoImg from './assets/logo.png';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import Stats from './components/Stats';
 import Donation from './components/Donation';
-import Chatbot from './components/Chatbot';
-import Testimonials from './components/Testimonials';
 import FloatingDonateButton from './components/FloatingDonateButton';
-import MediaCenter from './components/MediaCenter';
-import Blog from './components/Blog';
-import PrivacyPolicy from './components/PrivacyPolicy';
-import TermsAndConditions from './components/TermsAndConditions';
 import { ScrollReveal3D, Tilt3DCard, ParallaxLayer } from './components/ScrollAnimations';
-import { supabaseService, supabase } from './services/supabaseService';
+import { supabaseService } from './services/supabaseService';
+
+// Lazy-loaded components for optimal bundle splitting
+const Stats = React.lazy(() => import('./components/Stats'));
+const Chatbot = React.lazy(() => import('./components/Chatbot'));
+const Testimonials = React.lazy(() => import('./components/Testimonials'));
+const MediaCenter = React.lazy(() => import('./components/MediaCenter'));
+const Blog = React.lazy(() => import('./components/Blog'));
+const PrivacyPolicy = React.lazy(() => import('./components/PrivacyPolicy'));
+const TermsAndConditions = React.lazy(() => import('./components/TermsAndConditions'));
 import {
   Activity,
   Achievement,
@@ -148,22 +150,6 @@ const App: React.FC = () => {
 
   useEffect(() => {
     fetchAllData();
-
-    const channel = supabase
-      .channel('supabase-realtime-global')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public' },
-        (payload) => {
-          console.debug('Supabase Update Received:', payload.eventType, payload.table);
-          fetchAllData();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, [fetchAllData]);
 
   // Slideshow Logic
@@ -270,8 +256,12 @@ const App: React.FC = () => {
     return (
       <div className="min-h-screen bg-slate-50 selection:bg-emerald-100 selection:text-emerald-900">
         <Navbar news={data.news} />
-        <PrivacyPolicy onBack={() => navigateTo('home')} />
-        <Chatbot />
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-slate-400">Loading Privacy Policy...</div>}>
+          <PrivacyPolicy onBack={() => navigateTo('home')} />
+        </Suspense>
+        <Suspense fallback={null}>
+          <Chatbot />
+        </Suspense>
       </div>
     );
   }
@@ -280,8 +270,12 @@ const App: React.FC = () => {
     return (
       <div className="min-h-screen bg-slate-50 selection:bg-emerald-100 selection:text-emerald-900">
         <Navbar news={data.news} />
-        <TermsAndConditions onBack={() => navigateTo('home')} />
-        <Chatbot />
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-slate-400">Loading Terms & Conditions...</div>}>
+          <TermsAndConditions onBack={() => navigateTo('home')} />
+        </Suspense>
+        <Suspense fallback={null}>
+          <Chatbot />
+        </Suspense>
       </div>
     );
   }
@@ -296,7 +290,9 @@ const App: React.FC = () => {
         {/* Stats Quick View */}
         <ScrollReveal3D effect="tiltUp">
           <div id="stats-section" className="relative z-20 -mt-8 container mx-auto px-4 sm:px-6">
-            <Stats />
+            <Suspense fallback={<div className="h-44 flex items-center justify-center text-slate-400">Loading Live Statistics...</div>}>
+              <Stats />
+            </Suspense>
           </div>
         </ScrollReveal3D>
 
@@ -315,33 +311,42 @@ const App: React.FC = () => {
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
             >
-              {data.gallery.length > 0 ? data.gallery.map((item, index) => (
-                <div 
-                  key={item.id}
-                  className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === activeSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                >
+              {data.gallery.length > 0 ? data.gallery.map((item, index) => {
+                const isActive = index === activeSlide;
+                const isAdjacent = Math.abs(index - activeSlide) <= 1;
+                return (
                   <div 
-                    className="absolute inset-0 bg-cover bg-center blur-2xl opacity-30 scale-110"
-                    style={{ backgroundImage: `url(${item.imageUrl})` }}
-                  ></div>
-                  
-                  <img 
-                    src={item.imageUrl} 
-                    alt={item.title || 'Gallery image'} 
-                    className="relative z-10 w-full h-full object-contain"
-                    loading="lazy"
-                  />
-                  
-                  <div className="absolute inset-0 z-20 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent flex flex-col justify-end p-5 sm:p-8 md:p-12 text-left">
-                    {item.title ? (
-                      <h3 className="text-white text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2">{item.title}</h3>
-                    ) : (
-                      <h3 className="sr-only">Gallery Image</h3>
+                    key={item.id}
+                    className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}
+                  >
+                    {isActive && (
+                      <div 
+                        className="absolute inset-0 bg-cover bg-center blur-2xl opacity-30 scale-110"
+                        style={{ backgroundImage: `url(${item.imageUrl})` }}
+                      ></div>
                     )}
-                    <p className="text-emerald-400 font-bold uppercase tracking-[0.2em] text-xs sm:text-sm">{item.caption || 'Field Operations'}</p>
+                    
+                    {isAdjacent && (
+                      <img 
+                        src={item.imageUrl} 
+                        alt={item.title || 'Gallery image'} 
+                        className="relative z-10 w-full h-full object-contain"
+                        loading={isActive ? "eager" : "lazy"}
+                        decoding="async"
+                      />
+                    )}
+                    
+                    <div className="absolute inset-0 z-20 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent flex flex-col justify-end p-5 sm:p-8 md:p-12 text-left">
+                      {item.title ? (
+                        <h3 className="text-white text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2">{item.title}</h3>
+                      ) : (
+                        <h3 className="sr-only">Gallery Image</h3>
+                      )}
+                      <p className="text-emerald-400 font-bold uppercase tracking-[0.2em] text-xs sm:text-sm">{item.caption || 'Field Operations'}</p>
+                    </div>
                   </div>
-                </div>
-              )) : (
+                );
+              }) : (
                 <div className="w-full h-full flex items-center justify-center text-slate-500 font-medium">
                   <div className="text-center">
                     <i className="fas fa-images text-4xl text-slate-400 mb-4 block"></i>
@@ -375,7 +380,9 @@ const App: React.FC = () => {
 
         {/* Media Center Section */}
         <ScrollReveal3D effect="tiltLeft">
-          <MediaCenter items={data.media} />
+          <Suspense fallback={<div className="py-12 text-center text-slate-400">Loading Media...</div>}>
+            <MediaCenter items={data.media} />
+          </Suspense>
         </ScrollReveal3D>
 
         {/* About Us Section */}
@@ -492,7 +499,7 @@ const App: React.FC = () => {
         {/* Achievements Section */}
         <ScrollReveal3D effect="tiltUp">
         <section id="achievements" className="py-16 sm:py-24 bg-slate-900 text-white relative scroll-mt-24">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
             <span className="block text-center mb-6">
               <span className="inline-block px-5 py-2 bg-white/10 text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
@@ -678,7 +685,9 @@ const App: React.FC = () => {
 
         {/* Testimonials */}
         <ScrollReveal3D effect="perspectiveIn">
-          <Testimonials />
+          <Suspense fallback={<div className="py-12 text-center text-slate-400">Loading Testimonials...</div>}>
+            <Testimonials />
+          </Suspense>
         </ScrollReveal3D>
 
         {/* Notice & News Split Section */}
@@ -742,7 +751,9 @@ const App: React.FC = () => {
 
         {/* Blog Section */}
         <ScrollReveal3D effect="flipUp">
-          <Blog blogs={data.blogs} />
+          <Suspense fallback={<div className="py-12 text-center text-slate-400">Loading Blogs...</div>}>
+            <Blog blogs={data.blogs} />
+          </Suspense>
         </ScrollReveal3D>
 
         {/* Causes Section */}
@@ -802,7 +813,7 @@ const App: React.FC = () => {
             <div>
               <div className="flex items-center gap-3 justify-center md:justify-start mb-6 sm:mb-8">
                 <div className="relative">
-                  <img src={logoImg} width={40} height={40} className="h-10 rounded-full shadow-lg shadow-emerald-500/20" alt="Roti Bank Bettiah logo" />
+                  <img src={logoImg} width={40} height={40} className="w-10 h-10 aspect-square object-contain rounded-full shadow-lg shadow-emerald-500/20" alt="Roti Bank Bettiah logo" />
                   <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-950"></div>
                 </div>
                 <span className="font-black text-xl sm:text-2xl tracking-tight">Roti Bank Bettiah Trust</span>
@@ -896,7 +907,7 @@ const App: React.FC = () => {
                   { icon: 'fa-lock', text: 'Razorpay Secured' },
                   { icon: 'fa-shield-halved', text: '256-bit SSL' },
                 ].map((badge, i) => (
-                  <span key={i} className="text-[9px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1.5 bg-white/[0.03] px-2.5 py-1.5 rounded-lg border border-white/[0.04]">
+                  <span key={i} className="text-[9px] text-slate-300 font-semibold uppercase tracking-wider flex items-center gap-1.5 bg-white/[0.06] px-2.5 py-1.5 rounded-lg border border-white/[0.08]">
                     <i className={`fas ${badge.icon} text-emerald-500`}></i>
                     {badge.text}
                   </span>
@@ -981,7 +992,9 @@ const App: React.FC = () => {
       </footer>
       
       <FloatingDonateButton onDonateClick={scrollToDonation} />
-      <Chatbot />
+      <Suspense fallback={null}>
+        <Chatbot />
+      </Suspense>
     </div>
   );
 };

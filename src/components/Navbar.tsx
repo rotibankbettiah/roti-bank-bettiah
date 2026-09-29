@@ -129,7 +129,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
                   Roti Bank Bettiah Trust
                 </span>
                 {!isScrolled && (
-                  <span className="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase tracking-[0.08em] sm:tracking-[0.15em] block truncate animate-fade-in">
+                  <span className="text-[8px] sm:text-[9px] text-slate-600 font-bold uppercase tracking-[0.08em] sm:tracking-[0.15em] block truncate animate-fade-in">
                     रोटी बैंक बेतिया ट्रस्ट • Reg. No. 5071/2023
                   </span>
                 )}
@@ -152,7 +152,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
               <a 
                 href="#donation" 
                 onClick={(e) => handleLinkClick(e, '#donation')}
-                className="relative px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm active:scale-95 flex items-center gap-2 group"
+                className="relative px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm active:scale-95 flex items-center gap-2 group"
                 id="nav-donate-btn"
               >
 

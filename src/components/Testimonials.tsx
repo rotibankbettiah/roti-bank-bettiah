@@ -131,9 +131,9 @@ const Testimonials: React.FC = () => {
                 aria-label={`View testimonial ${idx + 1}`}
               >
                 <div
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                  className={`h-2.5 rounded-full transition-colors duration-300 ${
                     idx === activeIndex
-                      ? 'w-10 bg-emerald-600'
+                      ? 'w-8 bg-emerald-600'
                       : 'w-2.5 bg-emerald-200 group-hover:bg-emerald-300'
                   }`}
                 />

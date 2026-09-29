@@ -24,6 +24,39 @@ export const DONATION_TIERS = [
   { amount: 5000, label: '₹5,000', impact: 'Sponsors a food drive',     icon: 'fa-truck-field' },
 ];
 
+export const loadRazorpaySdk = (): Promise<boolean> => {
+  if (typeof window === 'undefined') return Promise.resolve(false);
+  if (typeof window.Razorpay !== 'undefined') return Promise.resolve(true);
+  // Avoid network injection during unit tests (Vitest/JSDOM)
+  if (typeof process !== 'undefined' && (process.env?.NODE_ENV === 'test' || (process.env as any)?.VITEST)) {
+    return Promise.resolve(false);
+  }
+
+  return new Promise((resolve) => {
+    const existing = document.querySelector('script[src*="checkout.razorpay.com"]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve(true));
+      existing.addEventListener('error', () => resolve(false));
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    const timeout = setTimeout(() => resolve(false), 8000);
+    script.onload = () => {
+      clearTimeout(timeout);
+      resolve(true);
+    };
+    script.onerror = () => {
+      clearTimeout(timeout);
+      console.warn('Failed to dynamically load Razorpay SDK');
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+};
+
 export const razorpayService = {
   /**
    * Opens the Razorpay checkout modal with the given amount.
@@ -36,7 +69,11 @@ export const razorpayService = {
     donorEmail?: string,
     donorPhone?: string
   ): Promise<PaymentResult> {
-    if (typeof window.Razorpay === 'undefined') {
+    if (typeof window !== 'undefined' && typeof window.Razorpay === 'undefined') {
+      await loadRazorpaySdk();
+    }
+
+    if (typeof window === 'undefined' || typeof window.Razorpay === 'undefined') {
       return { success: false, error: 'Razorpay SDK not loaded. Please refresh and try again.' };
     }
 
