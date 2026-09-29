@@ -71,21 +71,22 @@ const Testimonials: React.FC = () => {
         </div>
 
         {/* Testimonial Cards */}
-        <div className="max-w-4xl mx-auto relative">
-          <div className="relative h-[320px] md:h-[260px]">
+        <div className="max-w-4xl mx-auto relative overflow-hidden">
+          <div className="relative min-h-[380px] sm:min-h-[290px] md:min-h-[260px]">
             {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
                 className={`absolute inset-0 transition duration-700 ease-in-out ${
                   index === activeIndex
-                    ? 'opacity-100 translate-x-0 z-10'
-                    : 'opacity-0 translate-x-12 z-0 pointer-events-none'
+                    ? 'opacity-100 translate-x-0 z-10 pointer-events-auto visible'
+                    : 'opacity-0 translate-x-8 z-0 pointer-events-none invisible'
                 }`}
+                aria-hidden={index !== activeIndex}
               >
                 <Tilt3DCard maxTilt={8} glare={true} className="h-full">
-                  <div className="bg-white p-8 md:p-10 rounded-2xl shadow-lg border border-slate-200/80 h-full relative">
+                  <div className="bg-white p-6 sm:p-8 md:p-10 rounded-2xl shadow-lg border border-slate-200/80 h-full relative flex flex-col justify-between">
                     {/* Quote icon */}
-                    <div className="absolute -top-4 left-8">
+                    <div className="absolute -top-4 left-6 sm:left-8">
                       <div className="w-9 h-9 bg-emerald-600 rounded-lg flex items-center justify-center shadow-md shadow-emerald-600/30">
                         <i className="fas fa-quote-left text-white text-xs"></i>
                       </div>

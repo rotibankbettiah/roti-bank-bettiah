@@ -112,24 +112,24 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
           {/* Top: Logo + Brand + Hamburger */}
           <div className="flex items-center justify-between">
             {/* Logo + Brand */}
-            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <div className="relative">
+            <div className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group min-w-0" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <div className="relative flex-shrink-0">
                 <img 
                   src={logoImg} 
                   width={48}
                   height={48}
                   alt="Roti Bank Bettiah Logo" 
-                  className={`rounded-full shadow-lg border-2 border-emerald-100 transition-all duration-500 group-hover:scale-105 ${isScrolled ? 'h-9' : 'h-12'}`}
+                  className={`rounded-full shadow-lg border-2 border-emerald-100 transition-all duration-500 group-hover:scale-105 ${isScrolled ? 'h-8 w-8 sm:h-9 sm:w-9' : 'h-10 w-10 sm:h-12 sm:w-12'}`}
                 />
                 {/* Active indicator dot */}
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white shadow-lg shadow-emerald-500/30"></div>
+                <div className="absolute -bottom-0.5 -right-0.5 w-2.5 sm:w-3 h-2.5 sm:h-3 bg-emerald-500 rounded-full border-2 border-white shadow-lg shadow-emerald-500/30"></div>
               </div>
-              <div>
-                <span className={`font-extrabold tracking-tight text-slate-800 transition-all duration-500 leading-tight block group-hover:text-emerald-700 ${isScrolled ? 'text-base' : 'text-lg md:text-xl'}`}>
+              <div className="min-w-0">
+                <span className={`font-extrabold tracking-tight text-slate-800 transition-all duration-500 leading-tight block group-hover:text-emerald-700 truncate ${isScrolled ? 'text-sm sm:text-base' : 'text-base sm:text-lg md:text-xl'}`}>
                   Roti Bank Bettiah Trust
                 </span>
                 {!isScrolled && (
-                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em] block animate-fade-in">
+                  <span className="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase tracking-[0.08em] sm:tracking-[0.15em] block truncate animate-fade-in">
                     रोटी बैंक बेतिया ट्रस्ट • Reg. No. 5071/2023
                   </span>
                 )}
@@ -208,8 +208,8 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
         {/* News Ticker - Enhanced */}
         {headlines.length > 0 && (
           <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 text-white text-xs w-full overflow-hidden flex items-center h-8 border-t border-emerald-600/30 shadow-inner">
-            <div className="bg-emerald-900/80 px-3 py-2 font-bold uppercase tracking-widest z-10 flex-shrink-0 flex items-center h-full shadow-[4px_0_10px_rgba(0,0,0,0.2)]">
-              <span className="flex items-center gap-2">
+            <div className="bg-emerald-900/80 px-2.5 sm:px-3 py-2 font-bold uppercase tracking-widest z-10 flex-shrink-0 flex items-center h-full shadow-[4px_0_10px_rgba(0,0,0,0.2)] text-[10px] sm:text-xs">
+              <span className="flex items-center gap-1.5 sm:gap-2">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
@@ -217,7 +217,7 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
                 Latest News
               </span>
             </div>
-            <div className="flex-1 overflow-hidden relative h-full flex items-center">
+            <div className="flex-1 min-w-0 overflow-hidden relative h-full flex items-center">
               <div className="animate-marquee whitespace-nowrap flex items-center gap-8 pl-4">
                 {headlines.map((item) => (
                   <div key={item.id} className="inline-flex items-center gap-2 group cursor-default">
@@ -270,9 +270,12 @@ const Navbar: React.FC<NavbarProps> = ({ news = [] }) => {
 
       {/* Mobile Menu Panel - Enhanced */}
       <div 
-        className={`fixed top-0 right-0 h-full w-[300px] z-[45] mobile-menu-panel shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden ${
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 right-0 h-full w-[280px] sm:w-[320px] max-w-[85vw] z-[45] mobile-menu-panel shadow-2xl transform transition-all duration-300 ease-in-out lg:hidden ${
+          isMobileMenuOpen 
+            ? 'translate-x-0 opacity-100 visible pointer-events-auto' 
+            : 'translate-x-full opacity-0 invisible pointer-events-none'
         }`}
+        aria-hidden={!isMobileMenuOpen}
       >
         <div className="p-6 pt-20 h-full overflow-y-auto">
           {/* Close button */}

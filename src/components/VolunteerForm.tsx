@@ -10,14 +10,14 @@ export const GOOGLE_FORM_EMBED_URL = "https://docs.google.com/forms/d/e/1FAIpQLS
 
 export const VolunteerForm: React.FC<VolunteerFormProps> = ({ isModal = false, onClose }) => {
   return (
-    <div className={`relative bg-white rounded-3xl ${isModal ? 'p-6 md:p-8 max-h-[90vh] overflow-y-auto' : 'p-6 md:p-10 shadow-xl border border-slate-100'}`}>
+    <div className={`relative bg-white rounded-2xl sm:rounded-3xl ${isModal ? 'p-4 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto' : 'p-4 sm:p-6 md:p-10 shadow-xl border border-slate-100'}`}>
       {/* Modal Close Button */}
       {isModal && onClose && (
         <button
           type="button"
           onClick={onClose}
           aria-label="Close form"
-          className="absolute top-6 right-6 w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-all z-10"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-all z-10"
         >
           <i className="fas fa-times"></i>
         </button>
@@ -42,7 +42,7 @@ export const VolunteerForm: React.FC<VolunteerFormProps> = ({ isModal = false, o
           href={GOOGLE_FORM_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-md active:scale-95 flex items-center gap-2 whitespace-nowrap"
+          className="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap w-full sm:w-auto"
           id="open-google-form-direct-btn"
         >
           <span>Open Google Form</span>

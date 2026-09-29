@@ -44,8 +44,8 @@ const TermsAndConditions: React.FC<TermsProps> = ({ onBack }) => {
       </div>
 
       {/* Main Content Body */}
-      <div className="container mx-auto px-6 max-w-4xl -mt-6">
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8 md:p-12 space-y-10 text-slate-700 leading-relaxed text-sm md:text-base">
+      <div className="container mx-auto px-4 sm:px-6 max-w-4xl -mt-6">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-8 md:p-12 space-y-8 sm:space-y-10 text-slate-700 leading-relaxed text-sm md:text-base break-words">
           
           {/* Section 1 */}
           <MotionFadeIn>

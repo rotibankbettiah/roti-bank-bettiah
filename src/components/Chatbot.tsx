@@ -154,7 +154,7 @@ const Chatbot: React.FC = () => {
 
 
   return (
-    <div className="fixed bottom-6 right-6 z-[60]">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[60]">
       <AnimatePresence>
         {isOpen ? (
           <motion.div
@@ -163,7 +163,7 @@ const Chatbot: React.FC = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 16 }}
             transition={{ type: "spring", stiffness: 320, damping: 26 }}
-            className="bg-white w-[350px] sm:w-[420px] h-[640px] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200"
+            className="bg-white w-[calc(100vw-32px)] sm:w-[400px] max-w-[420px] h-[78vh] sm:h-[600px] max-h-[640px] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200"
           >
             {/* Header */}
             <div className="bg-slate-900 p-5 text-white flex justify-between items-center border-b border-slate-800">
@@ -297,6 +297,7 @@ const Chatbot: React.FC = () => {
           /* Floating FAB Button */
           <motion.button
             key="chatbot-fab"
+            id="chatbot-fab-btn"
             onClick={() => setIsOpen(true)}
             className="relative bg-emerald-600 hover:bg-emerald-700 text-white w-14 h-14 rounded-2xl shadow-xl flex items-center justify-center group border border-emerald-500/30"
             aria-label="Open Roti Bank Assistant"

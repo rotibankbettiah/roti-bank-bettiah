@@ -49,35 +49,35 @@ const effectVariants: Record<
   }
 > = {
   tiltUp: {
-    hidden: { opacity: 0, y: 55, rotateX: 16, scale: 0.95 },
+    hidden: { opacity: 0, y: 35, rotateX: 10, scale: 0.97 },
     visible: { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1 },
   },
   tiltLeft: {
-    hidden: { opacity: 0, x: -45, rotateY: 16, scale: 0.95 },
+    hidden: { opacity: 0, y: 25, x: -12, rotateY: 6, scale: 0.97 },
     visible: { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1 },
   },
   tiltRight: {
-    hidden: { opacity: 0, x: 45, rotateY: -16, scale: 0.95 },
+    hidden: { opacity: 0, y: 25, x: 12, rotateY: -6, scale: 0.97 },
     visible: { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1 },
   },
   flipUp: {
-    hidden: { opacity: 0, y: 65, rotateX: 24, scale: 0.93 },
+    hidden: { opacity: 0, y: 35, rotateX: 14, scale: 0.96 },
     visible: { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1 },
   },
   zoomRotate: {
-    hidden: { opacity: 0, scale: 0.88, rotateZ: -3, y: 40 },
+    hidden: { opacity: 0, scale: 0.92, rotateZ: -1.5, y: 25 },
     visible: { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1 },
   },
   slideDepth: {
-    hidden: { opacity: 0, scale: 0.88, y: 50 },
+    hidden: { opacity: 0, scale: 0.94, y: 30 },
     visible: { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1 },
   },
   perspectiveIn: {
-    hidden: { opacity: 0, rotateX: 14, rotateY: -10, y: 50, scale: 0.94 },
+    hidden: { opacity: 0, rotateX: 8, rotateY: -4, y: 30, scale: 0.96 },
     visible: { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1 },
   },
   floatUp: {
-    hidden: { opacity: 0, y: 55, rotateX: 10, scale: 0.96 },
+    hidden: { opacity: 0, y: 30, rotateX: 6, scale: 0.97 },
     visible: { opacity: 1, y: 0, x: 0, rotateX: 0, rotateY: 0, rotateZ: 0, scale: 1 },
   },
 };
@@ -96,7 +96,7 @@ export const ScrollReveal3D: React.FC<ScrollReveal3DProps> = ({
 
   return (
     <div
-      className={className}
+      className={`overflow-x-clip max-w-full ${className}`}
       style={{
         perspective: perspective ? '1200px' : undefined,
         perspectiveOrigin: '50% 50%',
@@ -106,7 +106,7 @@ export const ScrollReveal3D: React.FC<ScrollReveal3DProps> = ({
         variants={chosenVariant}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-50px' }}
+        viewport={{ once: true, margin: '-20px' }}
         transition={{
           type: 'spring',
           stiffness: 70,

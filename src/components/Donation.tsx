@@ -648,43 +648,43 @@ const Donation: React.FC = () => {
             {/* Left: Amount Selection (3 cols) */}
             <div className="lg:col-span-3 space-y-8">
               {/* Preset Amount Cards */}
-              <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-xl shadow-emerald-100/30 border border-emerald-50">
-                <h3 className="text-xl font-bold text-slate-900 mb-2">
+              <div className="bg-white p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-[2.5rem] shadow-xl shadow-emerald-100/30 border border-emerald-50">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">
                   <i className="fas fa-coins text-emerald-500 mr-2"></i>Choose Donation Amount
                 </h3>
-                <p className="text-slate-500 text-sm mb-8">Select a preset amount or enter your own</p>
+                <p className="text-slate-500 text-xs sm:text-sm mb-6 sm:mb-8">Select a preset amount or enter your own</p>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-4 mb-6">
                   {DONATION_TIERS.map((tier) => (
                     <motion.button
                       key={tier.amount}
-                      whileHover={{ scale: 1.05, y: -5 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.03, y: -3 }}
+                      whileTap={{ scale: 0.96 }}
                       onClick={() => { setSelectedAmount(tier.amount); setIsCustom(false); }}
-                      className={`p-5 rounded-2xl border-2 text-left transition-colors glow-card-emerald ${
+                      className={`p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 text-left transition-colors glow-card-emerald ${
                         !isCustom && selectedAmount === tier.amount
                           ? 'border-emerald-500 bg-emerald-50/50 shadow-lg shadow-emerald-500/20'
                           : 'border-slate-100 bg-slate-50 hover:border-emerald-200'
                       }`}
                     >
-                      <i className={`fas ${tier.icon} text-emerald-500 text-lg mb-3 block`}></i>
-                      <p className="text-2xl font-black text-slate-900">{tier.label}</p>
-                      <p className="text-[11px] text-emerald-600 font-bold mt-1">{tier.impact}</p>
+                      <i className={`fas ${tier.icon} text-emerald-500 text-base sm:text-lg mb-2 sm:mb-3 block`}></i>
+                      <p className="text-xl sm:text-2xl font-black text-slate-900">{tier.label}</p>
+                      <p className="text-[10px] sm:text-[11px] text-emerald-600 font-bold mt-1 line-clamp-2">{tier.impact}</p>
                     </motion.button>
                   ))}
 
                   {/* Custom amount */}
                   <motion.button
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.03, y: -3 }}
+                    whileTap={{ scale: 0.96 }}
                     onClick={() => setIsCustom(true)}
-                    className={`p-5 rounded-2xl border-2 text-left transition-colors glow-card-emerald ${
+                    className={`p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 text-left transition-colors glow-card-emerald ${
                       isCustom ? 'border-emerald-500 bg-emerald-50/50 shadow-lg shadow-emerald-500/20' : 'border-slate-100 bg-slate-50 hover:border-emerald-200'
                     }`}
                   >
-                    <i className="fas fa-pen text-emerald-500 text-lg mb-3 block"></i>
-                    <p className="text-lg font-black text-slate-900">Custom</p>
-                    <p className="text-[11px] text-emerald-600 font-bold mt-1">Enter any amount</p>
+                    <i className="fas fa-pen text-emerald-500 text-base sm:text-lg mb-2 sm:mb-3 block"></i>
+                    <p className="text-base sm:text-lg font-black text-slate-900">Custom</p>
+                    <p className="text-[10px] sm:text-[11px] text-emerald-600 font-bold mt-1">Enter any amount</p>
                   </motion.button>
                 </div>
 
@@ -892,7 +892,7 @@ const Donation: React.FC = () => {
             {/* Right: Bank Transfer & Receipt (2 cols) */}
             <div className="lg:col-span-2 space-y-8">
               {/* Alternative: Bank Transfer */}
-              <div className="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-slate-100/50 border border-slate-100">
+              <div className="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-[2.5rem] shadow-xl shadow-slate-100/50 border border-slate-100">
                 <button
                   onClick={() => setShowBankDetails(!showBankDetails)}
                   className="w-full flex items-center justify-between"
@@ -946,16 +946,16 @@ const Donation: React.FC = () => {
                           { label: 'Account No.', value: details?.accountNumber || '1919202100001486', copyable: true },
                           { label: 'IFSC Code', value: details?.ifscCode || 'PUNB0191920', copyable: true },
                         ].map((item, i) => (
-                          <div key={i} className="flex justify-between items-center py-3 border-b border-slate-200/50 last:border-0 hover:bg-white/50 px-2 -mx-2 rounded-lg transition-colors">
-                            <span className="text-[11px] text-slate-500 font-bold uppercase tracking-wider">{item.label}</span>
-                            <div className="flex items-center gap-3">
-                              <span className={`font-black text-slate-800 ${item.copyable ? 'font-mono text-sm tracking-tight' : 'text-xs tracking-wide'}`}>
+                          <div key={i} className="flex flex-wrap justify-between items-center gap-1.5 py-2.5 sm:py-3 border-b border-slate-200/50 last:border-0 hover:bg-white/50 px-2 -mx-2 rounded-lg transition-colors">
+                            <span className="text-[10px] sm:text-[11px] text-slate-500 font-bold uppercase tracking-wider">{item.label}</span>
+                            <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+                              <span className={`font-black text-slate-800 break-all ${item.copyable ? 'font-mono text-xs sm:text-sm tracking-tight' : 'text-xs tracking-wide'}`}>
                                 {item.value}
                               </span>
                               {item.copyable && (
                                 <button 
                                   onClick={() => navigator.clipboard.writeText(item.value)}
-                                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-400 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all flex items-center justify-center active:scale-95 shadow-sm"
+                                  className="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-400 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all flex items-center justify-center active:scale-95 shadow-sm flex-shrink-0"
                                   title="Copy to clipboard"
                                 >
                                   <i className="fas fa-copy text-[11px]"></i>

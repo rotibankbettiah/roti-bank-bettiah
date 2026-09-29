@@ -147,11 +147,11 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
       </div>
 
       {/* Glowing orbs */}
-      <div className="absolute top-1/4 -left-32 w-64 h-64 bg-emerald-500/10 rounded-full blur-[120px] z-[1]"></div>
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-cyan-500/5 rounded-full blur-[120px] z-[1]"></div>
+      <div className="absolute top-1/4 -left-16 sm:-left-32 w-48 sm:w-64 h-48 sm:h-64 bg-emerald-500/10 rounded-full blur-[120px] z-[1] pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -right-16 sm:-right-32 w-64 sm:w-96 h-64 sm:h-96 bg-cyan-500/5 rounded-full blur-[120px] z-[1] pointer-events-none"></div>
 
-      <div className="container mx-auto px-6 relative z-10 text-white mt-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 text-white mt-4 sm:mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Hero Content */}
           <motion.div 
             className="lg:col-span-7"
@@ -160,20 +160,20 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
             animate="show"
           >
             {/* Badge */}
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-3 bg-white/[0.08] backdrop-blur-2xl border border-white/[0.1] px-5 py-2.5 rounded-xl mb-10 shadow-xl hover:bg-white/[0.12] transition-colors cursor-default">
-              <span className="relative flex h-2.5 w-2.5">
+            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 sm:gap-3 bg-white/[0.08] backdrop-blur-2xl border border-white/[0.1] px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl mb-6 sm:mb-10 shadow-xl hover:bg-white/[0.12] transition-colors cursor-default max-w-full">
+              <span className="relative flex h-2 sm:h-2.5 w-2 sm:w-2.5 flex-shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 shadow-lg shadow-emerald-500/50"></span>
+                <span className="relative inline-flex rounded-full h-2 sm:h-2.5 w-2 sm:w-2.5 bg-emerald-500 shadow-lg shadow-emerald-500/50"></span>
               </span>
-              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-100">Registered Food NGO &amp; Trust | Reg. 5071/2023</span>
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.08em] sm:tracking-[0.18em] text-emerald-100 truncate">Registered Food NGO &amp; Trust | Reg. 5071/2023</span>
             </motion.div>
             
-            {/* Main Heading - Clean typography without em dashes */}
-            <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-[4.8rem] font-black mb-6 leading-[1.06] tracking-tight">
+            {/* Main Heading - Responsive Typography */}
+            <motion.h1 variants={itemVariants} className="text-3xl sm:text-5xl md:text-7xl lg:text-[4.8rem] font-black mb-6 leading-[1.12] sm:leading-[1.06] tracking-tight break-words">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-300 to-teal-200">Roti Bank Bettiah</span>
               <br className="hidden md:block" />
-              <span className="text-white">Nourishing </span>
-              <span className="relative inline-block align-bottom overflow-hidden" style={{ height: '1.3em' }}>
+              <span className="text-white"> Nourishing </span>
+              <span className="relative inline-block align-bottom overflow-hidden max-w-full" style={{ height: '1.3em' }}>
                 {/* Invisible words to auto-size container to the widest word */}
                 {rotatingWords.map((word) => (
                   <span key={word} className="invisible font-black block h-0 overflow-hidden" aria-hidden="true">{word}</span>
@@ -200,17 +200,17 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
             </motion.h1>
             
             {/* Direct, non-vague hero copy */}
-            <motion.p variants={itemVariants} className="text-lg md:text-xl text-slate-300/90 mb-10 max-w-2xl font-normal leading-relaxed">
+            <motion.p variants={itemVariants} className="text-base sm:text-lg md:text-xl text-slate-300/90 mb-8 sm:mb-10 max-w-2xl font-normal leading-relaxed">
               A registered non-profit charitable trust delivering daily hot, hygienic meals to hospital patients at MJK Hospital, daily-wage laborers, and underprivileged families across Bettiah and West Champaran.
             </motion.p>
             
             {/* CTA Buttons */}
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
               <motion.a 
                 href="#donation" 
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="group relative px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl font-bold uppercase tracking-wider text-xs shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2.5 overflow-hidden"
+                className="group relative px-6 sm:px-8 py-3.5 sm:py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl font-bold uppercase tracking-wider text-xs shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2.5 overflow-hidden w-full sm:w-auto text-center"
               >
                 <i className="fas fa-heart text-xs text-slate-950"></i>
                 <span>Donate a Meal</span>
@@ -220,7 +220,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
                 href="#about" 
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 bg-white/[0.08] hover:bg-white/[0.12] backdrop-blur-xl text-white border border-white/[0.15] rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center justify-center gap-2.5 hover:border-white/[0.3]"
+                className="px-6 sm:px-8 py-3.5 sm:py-4 bg-white/[0.08] hover:bg-white/[0.12] backdrop-blur-xl text-white border border-white/[0.15] rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center justify-center gap-2.5 hover:border-white/[0.3] w-full sm:w-auto text-center"
               >
                 <i className="fas fa-compass text-emerald-400 text-xs"></i>
                 <span>Our Daily Mission</span>
@@ -228,7 +228,7 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
             </motion.div>
 
             {/* Trust Ribbon */}
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mt-12">
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-2.5 sm:gap-4 mt-8 sm:mt-12">
               {[
                 { icon: 'fa-utensils', label: 'Daily Meals Served', value: mealCount.toLocaleString('en-IN') + '+', color: 'emerald' },
                 { icon: 'fa-file-shield', label: 'Registered Trust', value: '5071/2023', color: 'cyan' },
@@ -236,15 +236,15 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
               ].map((item, i) => (
                 <motion.div 
                   key={i} 
-                  className="flex items-center gap-3 bg-white/[0.06] backdrop-blur-xl border border-white/[0.08] px-5 py-3 rounded-xl hover:bg-white/[0.1] hover:border-white/[0.15] transition-all cursor-default group"
+                  className="flex items-center gap-2.5 sm:gap-3 bg-white/[0.06] backdrop-blur-xl border border-white/[0.08] px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl hover:bg-white/[0.1] hover:border-white/[0.15] transition-all cursor-default group flex-1 min-w-[130px] sm:min-w-0 sm:flex-initial"
                   whileHover={{ y: -2 }}
                 >
-                  <div className={`w-9 h-9 bg-${item.color === 'emerald' ? 'emerald' : item.color === 'cyan' ? 'cyan' : 'amber'}-500/20 rounded-lg flex items-center justify-center shadow-inner border border-${item.color === 'emerald' ? 'emerald' : item.color === 'cyan' ? 'cyan' : 'amber'}-500/30`}>
+                  <div className={`w-8 h-8 sm:w-9 sm:h-9 bg-${item.color === 'emerald' ? 'emerald' : item.color === 'cyan' ? 'cyan' : 'amber'}-500/20 rounded-lg flex items-center justify-center shadow-inner border border-${item.color === 'emerald' ? 'emerald' : item.color === 'cyan' ? 'cyan' : 'amber'}-500/30 flex-shrink-0`}>
                     <i className={`fas ${item.icon} text-${item.color === 'emerald' ? 'emerald' : item.color === 'cyan' ? 'cyan' : 'amber'}-400 text-xs`}></i>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-white/50 font-bold uppercase tracking-wider">{item.label}</p>
-                    <p className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">{item.value}</p>
+                  <div className="min-w-0">
+                    <p className="text-[9px] sm:text-[10px] text-white/50 font-bold uppercase tracking-wider truncate">{item.label}</p>
+                    <p className="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300 transition-colors truncate">{item.value}</p>
                   </div>
                 </motion.div>
               ))}
@@ -322,8 +322,8 @@ const Hero: React.FC<HeroProps> = ({ customBanner }) => {
       </div>
 
       {/* SVG Wave Bottom - Enhanced with gradient */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-20">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[calc(100%+1.3px)] h-[80px]">
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] z-20 pointer-events-none">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[50px] sm:h-[80px]">
           <defs>
             <linearGradient id="wave-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#f8fafc" />

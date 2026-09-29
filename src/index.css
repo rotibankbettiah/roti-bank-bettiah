@@ -57,10 +57,13 @@
 html {
   scroll-padding-top: 180px;
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 @media (max-width: 1024px) {
-  html { scroll-padding-top: 100px; }
+  html { scroll-padding-top: 90px; }
 }
 
 body {
@@ -68,9 +71,16 @@ body {
   background-color: var(--slate-50);
   color: var(--slate-900);
   overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 ::selection {
@@ -493,10 +503,17 @@ body {
 
 .floating-donate {
   position: fixed;
-  bottom: 100px;
-  right: 24px;
+  bottom: 84px;
+  right: 16px;
   z-index: 55;
   animation: float 4s ease-in-out infinite;
+}
+
+@media (min-width: 640px) {
+  .floating-donate {
+    bottom: 96px;
+    right: 24px;
+  }
 }
 
 .floating-donate button {
@@ -615,15 +632,24 @@ body {
 
 .payment-success-card {
   background: white;
-  border-radius: 2.5rem;
-  padding: 3rem;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
   max-width: 480px;
-  width: 90%;
+  width: 92%;
+  max-height: 90vh;
+  overflow-y: auto;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
   animation: success-circle-grow 0.6s var(--ease-bounce) forwards;
   box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 640px) {
+  .payment-success-card {
+    border-radius: 2.5rem;
+    padding: 3rem;
+  }
 }
 
 .payment-success-card::before {
@@ -796,6 +822,17 @@ body {
 @media (max-width: 768px) {
   .section-title {
     font-size: 1.75rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-title {
+    font-size: 1.5rem !important;
+  }
+  .section-title::after {
+    width: 48px;
+    height: 3px;
+    margin-top: 1rem;
   }
 }
 

@@ -290,28 +290,28 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-slate-50 selection:bg-emerald-100 selection:text-emerald-900">
       <Navbar news={data.news} />
       
-      <main className="pt-28 lg:pt-36">
+      <main className="pt-24 sm:pt-28 lg:pt-36 max-w-full overflow-x-clip">
         <Hero customBanner={data.banner} />
         
         {/* Stats Quick View */}
         <ScrollReveal3D effect="tiltUp">
-          <div id="stats-section" className="relative z-20 -mt-8 container mx-auto px-6">
+          <div id="stats-section" className="relative z-20 -mt-8 container mx-auto px-4 sm:px-6">
             <Stats />
           </div>
         </ScrollReveal3D>
 
         {/* Gallery Slideshow Section */}
         <ScrollReveal3D effect="flipUp">
-        <section id="gallery" className="py-24 bg-white overflow-hidden scroll-mt-24">
-          <div className="container mx-auto px-6 text-center">
+        <section id="gallery" className="py-16 sm:py-24 bg-white overflow-hidden scroll-mt-24">
+          <div className="container mx-auto px-4 sm:px-6 text-center">
             <span className="inline-block px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
               <i className="fas fa-camera mr-2"></i>Visual Stories
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 section-title tracking-tight uppercase">Impact Gallery</h2>
-            <p className="text-slate-500 mb-12 max-w-2xl mx-auto">Hover over photos to pause and view our mission in detail.</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 section-title tracking-tight uppercase">Impact Gallery</h2>
+            <p className="text-slate-500 mb-8 sm:mb-12 max-w-2xl mx-auto text-sm sm:text-base">Hover over photos to pause and view our mission in detail.</p>
             
             <div 
-              className="relative max-w-5xl mx-auto h-[400px] md:h-[600px] rounded-[3rem] shadow-2xl overflow-hidden group cursor-pointer border-8 border-slate-50 bg-slate-900"
+              className="relative max-w-5xl mx-auto h-[320px] sm:h-[450px] md:h-[600px] rounded-2xl sm:rounded-[3rem] shadow-2xl overflow-hidden group cursor-pointer border-4 sm:border-8 border-slate-50 bg-slate-900"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
             >
@@ -332,13 +332,13 @@ const App: React.FC = () => {
                     loading="lazy"
                   />
                   
-                  <div className="absolute inset-0 z-20 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent flex flex-col justify-end p-8 md:p-12 text-left">
+                  <div className="absolute inset-0 z-20 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent flex flex-col justify-end p-5 sm:p-8 md:p-12 text-left">
                     {item.title ? (
-                      <h3 className="text-white text-2xl md:text-3xl font-black mb-2">{item.title}</h3>
+                      <h3 className="text-white text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2">{item.title}</h3>
                     ) : (
                       <h3 className="sr-only">Gallery Image</h3>
                     )}
-                    <p className="text-emerald-400 font-bold uppercase tracking-[0.2em] text-sm">{item.caption || 'Field Operations'}</p>
+                    <p className="text-emerald-400 font-bold uppercase tracking-[0.2em] text-xs sm:text-sm">{item.caption || 'Field Operations'}</p>
                   </div>
                 </div>
               )) : (
@@ -350,7 +350,7 @@ const App: React.FC = () => {
                 </div>
               )}
 
-              <div className="absolute bottom-6 right-8 md:right-12 z-30 flex gap-3">
+              <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 md:right-12 z-30 flex gap-2 sm:gap-3">
                 {data.gallery.map((_, idx) => (
                   <button 
                     key={idx}
@@ -358,13 +358,13 @@ const App: React.FC = () => {
                     className="p-2 -m-2 group"
                     aria-label={`View slide ${idx + 1}`}
                   >
-                    <div className={`h-2 rounded-full transition-all duration-300 ${idx === activeSlide ? 'w-8 bg-emerald-500' : 'w-2 bg-white/50 group-hover:bg-white'}`} />
+                    <div className={`h-2 rounded-full transition-all duration-300 ${idx === activeSlide ? 'w-6 sm:w-8 bg-emerald-500' : 'w-2 bg-white/50 group-hover:bg-white'}`} />
                   </button>
                 ))}
               </div>
 
               {isPaused && (
-                <div className="absolute top-8 right-8 z-30 bg-black/30 backdrop-blur-md px-4 py-2 rounded-full text-white text-[10px] font-black uppercase tracking-widest flex items-center gap-2 animate-pulse">
+                <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-30 bg-black/30 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-2 animate-pulse">
                   <i className="fas fa-pause"></i> Paused
                 </div>
               )}
@@ -380,29 +380,29 @@ const App: React.FC = () => {
 
         {/* About Us Section */}
         <ScrollReveal3D effect="perspectiveIn">
-        <section id="about" className="py-24 bg-slate-50 relative overflow-hidden scroll-mt-24">
+        <section id="about" className="py-16 sm:py-24 bg-slate-50 relative overflow-hidden scroll-mt-24">
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-100/50 rounded-full blur-3xl -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-100/30 rounded-full blur-3xl -ml-32 -mb-32"></div>
-          <div className="container mx-auto px-6 max-w-4xl relative z-10">
+          <div className="container mx-auto px-4 sm:px-6 max-w-4xl relative z-10">
             <span className="block text-center mb-6">
               <span className="inline-block px-5 py-2 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
                 <i className="fas fa-info-circle mr-2"></i>Who We Are
               </span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-12 section-title tracking-tight uppercase">About Us</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-8 sm:mb-12 section-title tracking-tight uppercase">About Us</h2>
             <Tilt3DCard className="group">
-            <div className="bg-white p-10 md:p-12 rounded-[3rem] shadow-xl shadow-emerald-100/30 border border-emerald-50/50 text-center">
-              <div className="w-20 h-20 bg-emerald-100 rounded-3xl flex items-center justify-center text-emerald-600 mb-8 mx-auto">
-                <i className="fas fa-hand-holding-heart text-3xl"></i>
+            <div className="bg-white p-6 sm:p-10 md:p-12 rounded-2xl sm:rounded-[3rem] shadow-xl shadow-emerald-100/30 border border-emerald-50/50 text-center">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-emerald-100 rounded-2xl sm:rounded-3xl flex items-center justify-center text-emerald-600 mb-6 sm:mb-8 mx-auto">
+                <i className="fas fa-hand-holding-heart text-2xl sm:text-3xl"></i>
               </div>
-              <p className="text-slate-600 text-lg md:text-xl leading-relaxed font-medium italic">
+              <p className="text-slate-600 text-base sm:text-lg md:text-xl leading-relaxed font-medium italic">
                 "{data.about || "Eradicating hunger and providing hope to the underprivileged since 2023. Join our journey to make Bettiah hunger-free."}"
               </p>
-              <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#donation" className="inline-flex items-center gap-3 px-10 py-4 bg-emerald-600 text-white rounded-full font-bold shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition-all active:scale-95 donate-btn-shimmer">
+              <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                <a href="#donation" className="inline-flex items-center justify-center gap-3 px-6 sm:px-10 py-3.5 sm:py-4 bg-emerald-600 text-white rounded-full font-bold shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition-all active:scale-95 donate-btn-shimmer w-full sm:w-auto text-sm sm:text-base">
                   Support Our Mission <i className="fas fa-arrow-right text-xs"></i>
                 </a>
-                <a href="#achievements" className="inline-flex items-center gap-3 px-10 py-4 bg-white text-slate-700 rounded-full font-bold border-2 border-slate-200 hover:border-emerald-300 hover:text-emerald-700 transition-all">
+                <a href="#achievements" className="inline-flex items-center justify-center gap-3 px-6 sm:px-10 py-3.5 sm:py-4 bg-white text-slate-700 rounded-full font-bold border-2 border-slate-200 hover:border-emerald-300 hover:text-emerald-700 transition-all w-full sm:w-auto text-sm sm:text-base">
                   Our Achievements <i className="fas fa-trophy text-xs text-emerald-500"></i>
                 </a>
               </div>
@@ -414,16 +414,16 @@ const App: React.FC = () => {
 
         {/* Why Donate Section */}
         <ScrollReveal3D effect="slideDepth">
-        <section className="py-24 bg-white overflow-hidden">
-          <div className="container mx-auto px-6 max-w-5xl">
-            <div className="text-center mb-16">
+        <section className="py-16 sm:py-24 bg-white overflow-hidden">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+            <div className="text-center mb-10 sm:mb-16">
               <span className="inline-block px-5 py-2 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
                 <i className="fas fa-lightbulb mr-2"></i>Why It Matters
               </span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 section-title tracking-tight uppercase">Why Donate?</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 section-title tracking-tight uppercase">Why Donate?</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {[
                 {
                   icon: 'fa-bowl-food',
@@ -445,12 +445,12 @@ const App: React.FC = () => {
                 },
               ].map((item, i) => (
                 <Tilt3DCard key={i} className="group" maxTilt={10}>
-                  <div className="bg-slate-50 p-8 md:p-10 rounded-[2.5rem] border border-slate-100 card-hover text-center glow-card-emerald h-full">
-                    <div className={`w-16 h-16 bg-${item.color}-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all`}>
-                      <i className={`fas ${item.icon} text-${item.color}-600 text-2xl`}></i>
+                  <div className="bg-slate-50 p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-[2.5rem] border border-slate-100 card-hover text-center glow-card-emerald h-full">
+                    <div className={`w-14 h-14 sm:w-16 sm:h-16 bg-${item.color}-100 rounded-2xl flex items-center justify-center mx-auto mb-5 sm:mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all`}>
+                      <i className={`fas ${item.icon} text-${item.color}-600 text-xl sm:text-2xl`}></i>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
-                    <p className="text-slate-500 leading-relaxed text-sm">{item.desc}</p>
+                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3">{item.title}</h3>
+                    <p className="text-slate-500 leading-relaxed text-xs sm:text-sm">{item.desc}</p>
                   </div>
                 </Tilt3DCard>
               ))}
@@ -461,25 +461,25 @@ const App: React.FC = () => {
 
         {/* Location Section */}
         <ScrollReveal3D effect="zoomRotate">
-        <section id="location" className="py-24 bg-slate-50 scroll-mt-24">
-          <div className="container mx-auto px-6 text-center">
+        <section id="location" className="py-16 sm:py-24 bg-slate-50 scroll-mt-24">
+          <div className="container mx-auto px-4 sm:px-6 text-center">
             <span className="inline-block px-5 py-2 bg-red-50 text-red-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
               <i className="fas fa-map-pin mr-2"></i>Visit Us
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-12 section-title tracking-tight uppercase">Our Location</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-8 sm:mb-12 section-title tracking-tight uppercase">Our Location</h2>
             <Tilt3DCard className="max-w-3xl mx-auto group" maxTilt={8}>
-            <div className="flex flex-col items-center bg-white p-10 md:p-12 rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-100/50">
-              <div className="relative mb-8">
+            <div className="flex flex-col items-center bg-white p-6 sm:p-10 md:p-12 rounded-2xl sm:rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-100/50">
+              <div className="relative mb-6 sm:mb-8">
                 <div className="absolute inset-0 bg-red-500/20 rounded-full blur-xl animate-pulse"></div>
-                <svg className="map-pin w-20 h-20 text-red-500 relative z-10" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="map-pin w-16 h-16 sm:w-20 sm:h-20 text-red-500 relative z-10" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.056 4.944A7.447 7.447 0 0110 2.5c4.142 0 7.5 3.358 7.5 7.5a7.447 7.447 0 01-2.444 5.056L10 20l-5.056-5.056A7.447 7.447 0 012.5 10c0-4.142 3.358-7.5 7.5-7.5zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                 </svg>
               </div>
-              <p className="text-2xl font-bold text-slate-800 mb-4 leading-tight">Visit Our Center</p>
-              <p className="text-slate-500 mb-10 max-w-lg leading-relaxed">
+              <p className="text-xl sm:text-2xl font-bold text-slate-800 mb-3 sm:mb-4 leading-tight">Visit Our Center</p>
+              <p className="text-slate-500 mb-8 sm:mb-10 max-w-lg leading-relaxed text-sm sm:text-base">
                 Kalibag Chowk, Bettiah, West Champaran, Bihar, 845438. Open daily for food distribution and aid.
               </p>
-              <a href="https://maps.app.goo.gl/iUDm3AZMNMM91PDN6?g_st=aw" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 px-10 py-4 bg-white border-2 border-slate-200 text-slate-800 rounded-full font-bold hover:border-emerald-600 hover:text-emerald-600 transition-all shadow-sm">
+              <a href="https://maps.app.goo.gl/iUDm3AZMNMM91PDN6?g_st=aw" target="_blank" rel="noopener noreferrer" className="group flex items-center justify-center gap-3 px-6 sm:px-10 py-3.5 sm:py-4 bg-white border-2 border-slate-200 text-slate-800 rounded-full font-bold hover:border-emerald-600 hover:text-emerald-600 transition-all shadow-sm w-full sm:w-auto text-sm sm:text-base">
                 <i className="fas fa-map-marked-alt text-emerald-500 group-hover:scale-110 transition-transform"></i>
                 Open in Google Maps
               </a>
@@ -491,39 +491,39 @@ const App: React.FC = () => {
 
         {/* Achievements Section */}
         <ScrollReveal3D effect="tiltUp">
-        <section id="achievements" className="py-24 bg-slate-900 text-white relative scroll-mt-24">
+        <section id="achievements" className="py-16 sm:py-24 bg-slate-900 text-white relative scroll-mt-24">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-          <div className="container mx-auto px-6 relative z-10">
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
             <span className="block text-center mb-6">
               <span className="inline-block px-5 py-2 bg-white/10 text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
                 <i className="fas fa-medal mr-2"></i>Milestones
               </span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-16 section-title tracking-tight uppercase">Our Achievements</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-10 sm:mb-16 section-title tracking-tight uppercase">Our Achievements</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-10">
               {data.achievements.map((ach) => (
                 <Tilt3DCard key={ach.id} className="group" maxTilt={8}>
-                <article className="bg-white/5 backdrop-blur-md p-10 rounded-[3rem] border border-white/10 hover:bg-white/10 transition-all h-full">
+                <article className="bg-white/5 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-[3rem] border border-white/10 hover:bg-white/10 transition-all h-full">
                   {ach.imageUrl && (
-                    <div className="w-full h-[250px] sm:h-[300px] md:h-[350px] overflow-hidden rounded-[2.5rem] mb-8 shadow-2xl border-4 border-white/10 bg-slate-950/5 flex items-center justify-center">
+                    <div className="w-full h-[220px] sm:h-[280px] md:h-[350px] overflow-hidden rounded-2xl sm:rounded-[2.5rem] mb-6 sm:mb-8 shadow-2xl border-4 border-white/10 bg-slate-950/5 flex items-center justify-center">
                       <img 
                         src={ach.imageUrl} 
                         className="max-w-full max-h-full w-auto h-auto object-contain group-hover:scale-105 transition-transform duration-700 block" 
-                        alt={ach.description || 'Achievement image'}
+                        alt={ach.description || 'Achievement image'} 
                         loading="lazy"
                       />
                     </div>
                   )}
-                  <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 mb-6 group-hover:rotate-12 transition-transform">
-                    <i className={`fas ${ach.icon} text-2xl`}></i>
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 mb-5 sm:mb-6 group-hover:rotate-12 transition-transform">
+                    <i className={`fas ${ach.icon} text-xl sm:text-2xl`}></i>
                   </div>
                   {ach.count ? (
-                    <h3 className="text-4xl font-black mb-2 tracking-tighter">{ach.count}</h3>
+                    <h3 className="text-3xl sm:text-4xl font-black mb-2 tracking-tighter">{ach.count}</h3>
                   ) : (
                     <h3 className="sr-only">Achievement Metric</h3>
                   )}
-                  <p className="text-emerald-400 font-bold uppercase tracking-widest text-xs mb-4">{ach.description}</p>
-                  {ach.caption && <p className="text-slate-400 text-sm leading-relaxed">{ach.caption}</p>}
+                  <p className="text-emerald-400 font-bold uppercase tracking-widest text-xs mb-3 sm:mb-4">{ach.description}</p>
+                  {ach.caption && <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">{ach.caption}</p>}
                 </article>
                 </Tilt3DCard>
               ))}
@@ -534,19 +534,19 @@ const App: React.FC = () => {
 
         {/* Our Branches Section */}
         <ScrollReveal3D effect="tiltRight">
-        <section id="branches" className="py-24 bg-white scroll-mt-24">
-          <div className="container mx-auto px-6">
+        <section id="branches" className="py-16 sm:py-24 bg-white scroll-mt-24">
+          <div className="container mx-auto px-4 sm:px-6">
             <span className="block text-center mb-6">
               <span className="inline-block px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
                 <i className="fas fa-map-location-dot mr-2"></i>Nationwide Network
               </span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-16 section-title tracking-tight uppercase">Our Branches</h2>
-            <div className="flex flex-wrap justify-center gap-10">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-10 sm:mb-16 section-title tracking-tight uppercase">Our Branches</h2>
+            <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
               {data.branches.map((br) => (
                 <Tilt3DCard key={br.id} className="w-full max-w-sm group" maxTilt={10}>
-                <article className="bg-slate-50 p-10 rounded-[3rem] border border-slate-100 card-hover h-full">
-                  <div className="mb-6 overflow-hidden rounded-[2rem] bg-slate-950/5 flex items-center justify-center h-48 w-full">
+                <article className="bg-slate-50 p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-[3rem] border border-slate-100 card-hover h-full">
+                  <div className="mb-5 sm:mb-6 overflow-hidden rounded-xl sm:rounded-[2rem] bg-slate-950/5 flex items-center justify-center h-44 sm:h-48 w-full">
                     {br.imageUrl ? (
                       <img 
                         src={br.imageUrl} 
@@ -556,12 +556,12 @@ const App: React.FC = () => {
                       />
                     ) : (
                       <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400">
-                        <i className="fas fa-building text-4xl"></i>
+                        <i className="fas fa-building text-3xl sm:text-4xl"></i>
                       </div>
                     )}
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">{br.name}</h3>
-                  <p className="text-slate-500 font-medium mb-6 uppercase tracking-widest text-xs">{br.location}</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-1 sm:mb-2">{br.name}</h3>
+                  <p className="text-slate-500 font-medium mb-4 sm:mb-6 uppercase tracking-widest text-xs">{br.location}</p>
                   <div className="flex gap-2">
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
                     <span className="w-1.5 h-1.5 bg-emerald-500/50 rounded-full"></span>
@@ -577,34 +577,34 @@ const App: React.FC = () => {
 
         {/* Internship Section */}
         <ScrollReveal3D effect="tiltLeft">
-        <section id="internship" className="py-24 bg-emerald-900 text-white scroll-mt-24">
-          <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center max-w-6xl mx-auto">
+        <section id="internship" className="py-16 sm:py-24 bg-emerald-900 text-white scroll-mt-24">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center max-w-6xl mx-auto">
               <div>
                 <span className="inline-block px-5 py-2 bg-white/10 text-emerald-300 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
                   <i className="fas fa-user-graduate mr-2"></i>Join Us
                 </span>
-                <h2 className="text-3xl md:text-5xl font-extrabold mb-8 tracking-tight">Internship <span className="text-emerald-400">& Volunteering</span></h2>
-                <p className="text-emerald-100 text-lg mb-10 leading-relaxed">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold mb-6 sm:mb-8 tracking-tight">Internship <span className="text-emerald-400">& Volunteering</span></h2>
+                <p className="text-emerald-100 text-base sm:text-lg mb-8 sm:mb-10 leading-relaxed">
                   Join our mission as a volunteer or student intern. Gain real-world social impact experience and help us bridge the gap between food waste and hunger.
                 </p>
-                <div className="space-y-6 mb-12">
+                <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
                   {data.internship.map((item) => (
-                    <div key={item.id} className="flex gap-5 items-start">
-                      <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0 text-emerald-400">
-                        <i className="fas fa-check-circle"></i>
+                    <div key={item.id} className="flex gap-4 sm:gap-5 items-start">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0 text-emerald-400 mt-0.5">
+                        <i className="fas fa-check-circle text-xs sm:text-base"></i>
                       </div>
-                      {item.type === 'criteria' && <p className="text-white/90 font-medium">{item.content}</p>}
-                      {item.type === 'certificate' && <p className="text-white/90 font-medium">Earn recognized certifications for your contribution.</p>}
+                      {item.type === 'criteria' && <p className="text-white/90 font-medium text-sm sm:text-base">{item.content}</p>}
+                      {item.type === 'certificate' && <p className="text-white/90 font-medium text-sm sm:text-base">Earn recognized certifications for your contribution.</p>}
                     </div>
                   ))}
                 </div>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
                   <a 
                     href="https://docs.google.com/forms/d/e/1FAIpQLSfzN4WcusmcUmAKrpnpf4J8128O37tf7MpuJ_P96uKmX-sKsg/viewform?usp=dialog" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="px-8 py-3.5 bg-white text-emerald-950 rounded-xl font-bold uppercase tracking-wider text-xs hover:bg-emerald-50 transition-all active:scale-95 shadow-lg text-center flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3.5 bg-white text-emerald-950 rounded-xl font-bold uppercase tracking-wider text-xs hover:bg-emerald-50 transition-all active:scale-95 shadow-lg text-center flex items-center justify-center gap-2"
                   >
                     <i className="fas fa-hands-helping text-emerald-700"></i>
                     Join as Volunteer
@@ -614,7 +614,7 @@ const App: React.FC = () => {
                     href="https://docs.google.com/forms/d/e/1FAIpQLScXUtdd9WqgGERF8iDaZrDslw10lidmvpyhyY8EtFQwIvdgBQ/viewform?usp=dialog" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="px-8 py-3.5 bg-emerald-800 text-white border border-emerald-700 rounded-xl font-bold uppercase tracking-wider text-xs hover:bg-emerald-700 transition-all active:scale-95 text-center flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3.5 bg-emerald-800 text-white border border-emerald-700 rounded-xl font-bold uppercase tracking-wider text-xs hover:bg-emerald-700 transition-all active:scale-95 text-center flex items-center justify-center gap-2"
                   >
                     <i className="fas fa-graduation-cap"></i>
                     Apply as Intern
@@ -628,7 +628,7 @@ const App: React.FC = () => {
                 {data.internship.find(i => i.type === 'certificate')?.url && (
                   <img 
                     src={data.internship.find(i => i.type === 'certificate')?.url} 
-                    className="relative z-10 w-full rounded-[2.5rem] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500" 
+                    className="relative z-10 w-full rounded-2xl sm:rounded-[2.5rem] shadow-2xl rotate-1 sm:rotate-2 hover:rotate-0 transition-transform duration-500" 
                     alt="Roti Bank Bettiah Internship Certificate Sample" 
                     loading="lazy"
                   />
@@ -641,19 +641,19 @@ const App: React.FC = () => {
 
         {/* Activities Section */}
         <ScrollReveal3D effect="floatUp">
-        <section id="activities" className="py-24 bg-white scroll-mt-24">
-          <div className="container mx-auto px-6 max-w-5xl">
+        <section id="activities" className="py-16 sm:py-24 bg-white scroll-mt-24">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
             <span className="block text-center mb-6">
               <span className="inline-block px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
                 <i className="fas fa-calendar-check mr-2"></i>Field Work
               </span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-16 section-title tracking-tight uppercase">Recent Activities</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-10 sm:mb-16 section-title tracking-tight uppercase">Recent Activities</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10">
               {data.activities.map((act) => (
                 <Tilt3DCard key={act.id} className="group" maxTilt={6}>
-                <article className="bg-slate-50 rounded-[3rem] overflow-hidden border border-slate-100 card-hover h-full">
-                  <div className="overflow-hidden bg-slate-950/5 flex items-center justify-center h-56 w-full">
+                <article className="bg-slate-50 rounded-2xl sm:rounded-[3rem] overflow-hidden border border-slate-100 card-hover h-full">
+                  <div className="overflow-hidden bg-slate-950/5 flex items-center justify-center h-48 sm:h-56 w-full">
                     <img 
                       src={act.imageUrl} 
                       className="max-w-full max-h-full w-auto h-auto object-contain group-hover:scale-105 transition-transform duration-500 block" 
@@ -661,12 +661,12 @@ const App: React.FC = () => {
                       loading="lazy" 
                     />
                   </div>
-                  <div className="p-8 md:p-10">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-xl md:text-2xl font-bold text-slate-900 leading-tight">{act.title}</h3>
-                      {act.caption && <span className="text-[10px] bg-emerald-600 text-white px-3 py-1 rounded-full font-bold uppercase tracking-widest flex-shrink-0 ml-3">{act.caption}</span>}
+                  <div className="p-5 sm:p-8 md:p-10">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-4">
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 leading-tight">{act.title}</h3>
+                      {act.caption && <span className="text-[10px] bg-emerald-600 text-white px-3 py-1 rounded-full font-bold uppercase tracking-widest self-start flex-shrink-0">{act.caption}</span>}
                     </div>
-                    <p className="text-slate-500 leading-relaxed text-sm">{act.content}</p>
+                    <p className="text-slate-500 leading-relaxed text-xs sm:text-sm">{act.content}</p>
                   </div>
                 </article>
                 </Tilt3DCard>
@@ -683,24 +683,24 @@ const App: React.FC = () => {
 
         {/* Notice & News Split Section */}
         <ScrollReveal3D effect="tiltUp">
-        <section className="py-24 bg-slate-50">
-          <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <section className="py-16 sm:py-24 bg-slate-50">
+          <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
             <div id="notices" className="scroll-mt-32">
-              <div className="flex items-center gap-4 mb-12">
-                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+              <div className="flex items-center gap-3 sm:gap-4 mb-8 sm:mb-12">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
                   <i className="fas fa-bullhorn text-emerald-600"></i>
                 </div>
-                <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Notice Board</h2>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Notice Board</h2>
               </div>
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {data.notices.map((nt) => (
-                  <article key={nt.id} className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200/50 hover:border-emerald-300 hover:shadow-lg transition-all flex gap-6">
-                    <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <article key={nt.id} className="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-[2rem] shadow-sm border border-slate-200/50 hover:border-emerald-300 hover:shadow-lg transition-all flex flex-col sm:flex-row gap-4 sm:gap-6">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
                       <i className="fas fa-info-circle text-slate-400"></i>
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-slate-900 mb-2">{nt.title}</h3>
-                      <p className="text-slate-500 text-sm leading-relaxed">{nt.content}</p>
+                      <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-1 sm:mb-2">{nt.title}</h3>
+                      <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">{nt.content}</p>
                     </div>
                   </article>
                 ))}
@@ -708,30 +708,30 @@ const App: React.FC = () => {
             </div>
             
             <div id="news" className="scroll-mt-32">
-              <div className="flex items-center gap-4 mb-12">
-                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+              <div className="flex items-center gap-3 sm:gap-4 mb-8 sm:mb-12">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
                   <i className="fas fa-newspaper text-emerald-600"></i>
                 </div>
-                <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Latest News</h2>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Latest News</h2>
               </div>
-              <div className="space-y-8">
+              <div className="space-y-6 sm:space-y-8">
                 {data.news.filter(item => !item.is_headline).map((item) => (
-                  <article key={item.id} className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-200/50 group overflow-hidden hover:shadow-xl transition-all duration-300">
-                    <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mb-4 block">{new Date(item.created_at).toLocaleDateString('en-IN', { dateStyle: 'long' })}</span>
+                  <article key={item.id} className="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-[2.5rem] shadow-sm border border-slate-200/50 group overflow-hidden hover:shadow-xl transition-all duration-300">
+                    <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mb-3 sm:mb-4 block">{new Date(item.created_at).toLocaleDateString('en-IN', { dateStyle: 'long' })}</span>
                     
                     {item.imageUrl && (
-                      <div className="rounded-[1.5rem] overflow-hidden mb-6 bg-slate-950/5 flex items-center justify-center border border-slate-200 h-[250px] md:h-[300px] w-full">
+                      <div className="rounded-xl sm:rounded-[1.5rem] overflow-hidden mb-5 sm:mb-6 bg-slate-950/5 flex items-center justify-center border border-slate-200 h-[200px] sm:h-[250px] md:h-[300px] w-full">
                         <img 
                           src={item.imageUrl} 
                           className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-500 hover:scale-102 block" 
-                          alt={item.title || 'News image'}
-                          loading="lazy"
+                          alt={item.title || 'News image'} 
+                          loading="lazy" 
                         />
                       </div>
                     )}
                     
-                    <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-emerald-700 transition-colors leading-tight">{item.title}</h3>
-                    <p className="text-slate-500 text-sm leading-relaxed">{item.content}</p>
+                    <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4 group-hover:text-emerald-700 transition-colors leading-tight">{item.title}</h3>
+                    <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">{item.content}</p>
                   </article>
                 ))}
               </div>
@@ -747,30 +747,30 @@ const App: React.FC = () => {
 
         {/* Causes Section */}
         <ScrollReveal3D effect="slideDepth">
-        <section id="causes" className="py-24 bg-white scroll-mt-24">
-          <div className="container mx-auto px-6 max-w-4xl">
+        <section id="causes" className="py-16 sm:py-24 bg-white scroll-mt-24">
+          <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
             <span className="block text-center mb-6">
               <span className="inline-block px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
                 <i className="fas fa-bullseye mr-2"></i>Progress Tracker
               </span>
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-16 section-title tracking-tight uppercase">Ongoing Goals</h2>
-            <div className="space-y-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center text-slate-900 mb-10 sm:mb-16 section-title tracking-tight uppercase">Ongoing Goals</h2>
+            <div className="space-y-10 sm:space-y-16">
               {data.causes.map((cause) => {
                 const progress = Math.min((cause.completed / cause.target) * 100, 100);
                 return (
-                  <div key={cause.id} className="space-y-5">
-                    <div className="flex justify-between items-end">
+                  <div key={cause.id} className="space-y-4 sm:space-y-5">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2">
                       <div className="space-y-1">
-                        <h3 className="text-2xl font-bold text-slate-900">{cause.name}</h3>
+                        <h3 className="text-xl sm:text-2xl font-bold text-slate-900">{cause.name}</h3>
                         <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Target Impact Progress</p>
                       </div>
-                      <div className="text-right">
-                        <span className="text-2xl font-black text-emerald-600">{Math.round(progress)}%</span>
+                      <div className="text-left sm:text-right">
+                        <span className="text-xl sm:text-2xl font-black text-emerald-600">{Math.round(progress)}%</span>
                         <p className="text-slate-400 text-[10px] font-bold uppercase">{cause.completed.toLocaleString('en-IN')} / {cause.target.toLocaleString('en-IN')}</p>
                       </div>
                     </div>
-                    <div className="w-full bg-slate-100 rounded-full h-5 shadow-inner overflow-hidden border border-slate-200">
+                    <div className="w-full bg-slate-100 rounded-full h-4 sm:h-5 shadow-inner overflow-hidden border border-slate-200">
                       <div className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-full rounded-full transition-all duration-1000 relative" style={{ width: `${progress}%` }}>
                         <div className="absolute top-0 right-0 w-2 h-full bg-white/30 animate-pulse"></div>
                       </div>
@@ -789,7 +789,7 @@ const App: React.FC = () => {
       </main>
 
       {/* Premium Footer */}
-      <footer className="bg-slate-950 text-white pt-24 pb-12 relative overflow-hidden">
+      <footer className="bg-slate-950 text-white pt-16 sm:pt-24 pb-12 relative overflow-hidden">
         {/* Decorative gradient blobs */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-[150px] pointer-events-none"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/3 rounded-full blur-[150px] pointer-events-none"></div>
@@ -797,20 +797,20 @@ const App: React.FC = () => {
         {/* Top gradient border */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 text-center md:text-left border-b border-white/5 pb-16 mb-12">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 lg:gap-16 text-center md:text-left border-b border-white/5 pb-12 sm:pb-16 mb-8 sm:mb-12">
             <div>
-              <div className="flex items-center gap-3 justify-center md:justify-start mb-8">
+              <div className="flex items-center gap-3 justify-center md:justify-start mb-6 sm:mb-8">
                 <div className="relative">
                   <img src={logoImg} width={40} height={40} className="h-10 rounded-full shadow-lg shadow-emerald-500/20" alt="Roti Bank Bettiah logo" />
                   <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-slate-950"></div>
                 </div>
-                <span className="font-black text-2xl tracking-tighter">Roti Bank Bettiah Trust</span>
+                <span className="font-black text-xl sm:text-2xl tracking-tight">Roti Bank Bettiah Trust</span>
               </div>
-              <p className="text-slate-400 leading-relaxed mb-8 text-sm">
+              <p className="text-slate-400 leading-relaxed mb-6 sm:mb-8 text-sm">
                 Roti Bank Bettiah Trust is a registered non-profit NGO and charitable trust. Eradicating hunger and providing hope to the underprivileged since 2023. Join our journey to make Bettiah hunger-free.
               </p>
-              <div className="flex justify-center md:justify-start gap-3">
+              <div className="flex flex-wrap justify-center md:justify-start gap-2.5 sm:gap-3">
                 {[
                   { href: 'https://www.facebook.com/ROTIBANKBETTIAH', icon: 'fab fa-facebook', label: 'Facebook', hoverBg: 'hover:bg-blue-600/20 hover:text-blue-400 hover:border-blue-500/30' },
                   { href: 'https://twitter.com/Rotibankbettiah', icon: 'fab fa-twitter', label: 'Twitter', hoverBg: 'hover:bg-sky-500/20 hover:text-sky-400 hover:border-sky-500/30' },

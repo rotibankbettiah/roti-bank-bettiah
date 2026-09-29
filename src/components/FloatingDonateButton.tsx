@@ -52,7 +52,7 @@ const FloatingDonateButton: React.FC<FloatingDonateButtonProps> = ({ onDonateCli
             <i className="fas fa-heart text-lg relative z-10 group-hover:scale-110 transition-transform"></i>
             
             {/* Label on hover */}
-            <div className="absolute right-full mr-3 bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-xl pointer-events-none text-left">
+            <div className="hidden sm:block absolute right-full mr-3 bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-xl pointer-events-none text-left">
               <span>Donate Now</span>
               <span className="text-[9px] text-emerald-400 block font-normal">50,000+ meals served</span>
               <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-slate-900 rotate-45"></div>
