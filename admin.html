@@ -721,11 +721,51 @@
                     <h2 class="text-2xl font-bold">Newsletter Subscribers</h2>
                     <p class="text-gray-500 text-sm mt-1">Manage users who subscribed to updates</p>
                 </div>
-                <button id="copy-emails-btn" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-bold px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                    Copy All Emails
-                </button>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button id="toggle-broadcast-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        Send Broadcast Email
+                    </button>
+                    <button id="copy-emails-btn" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-bold px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        Copy All Emails
+                    </button>
+                </div>
             </div>
+
+            <!-- Broadcast Email Form Panel (Collapsible) -->
+            <div id="broadcast-panel" class="hidden my-4 p-5 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-emerald-900 text-base">Broadcast Update to All Subscribers</h3>
+                        <p class="text-xs text-emerald-700 mt-0.5">Send a direct newsletter or important website update to all registered subscriber emails via Resend.</p>
+                    </div>
+                    <button type="button" id="close-broadcast-btn" class="text-gray-400 hover:text-gray-600 text-xl font-bold p-1">&times;</button>
+                </div>
+                <form id="broadcast-form" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Subject / Headline *</label>
+                        <input type="text" id="broadcast-title" class="form-input w-full text-sm" placeholder="e.g. Special Food Drive Announcement or Recent Changes" required />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Message Body *</label>
+                        <textarea id="broadcast-content" rows="4" class="form-textarea w-full text-sm" placeholder="Write the update details that should be emailed to subscribers..." required></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Optional Photo / Banner URL</label>
+                        <input type="url" id="broadcast-image" class="form-input w-full text-sm" placeholder="https://..." />
+                    </div>
+                    <div class="flex items-center justify-between pt-1">
+                        <span id="subscriber-count-badge" class="text-xs text-gray-500 font-medium">Loading subscriber count...</span>
+                        <button type="submit" id="broadcast-submit-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2 rounded-lg text-sm transition-all flex items-center gap-2 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                            <span>Send Email to Subscribers Now</span>
+                        </button>
+                    </div>
+                    <div id="broadcast-message-box" class="message-box hidden"></div>
+                </form>
+            </div>
+
             <div id="subscribers-list" class="mt-4 space-y-3 max-h-96 overflow-y-auto pr-2"></div>
         </div>
     </div>
@@ -1538,6 +1578,27 @@
             });
         }
 
+        // Helper function to notify all subscribers via Resend & Cloudflare worker
+        async function notifySubscribers(table, record) {
+            try {
+                const apiUrl = 'https://roti-bank-api-worker.rotibankbettiaah.workers.dev/api/webhook/notify-subscribers';
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'INSERT',
+                        table: table,
+                        record: record
+                    })
+                });
+                const resData = await response.json();
+                console.log(`[Notification] ${table} update sent to subscribers:`, resData);
+                return resData;
+            } catch (err) {
+                console.error("Failed to notify subscribers:", err);
+            }
+        }
+
         // Activities form
         document.getElementById('activities-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1550,7 +1611,8 @@
                     .insert({ title, content });
 
                 if (error) throw error;
-                showMessage(messageBox, "Activity added successfully!", "success");
+                showMessage(messageBox, "Activity added successfully! Subscribers notified via email.", "success");
+                notifySubscribers('activities', { title, content });
                 document.getElementById('activities-form').reset();
                 loadAllData();
             } catch (e) {
@@ -1571,7 +1633,8 @@
                     .insert({ title, content });
                 
                 if (error) throw error;
-                showMessage(messageBox, "Notice added successfully!", "success");
+                showMessage(messageBox, "Notice added successfully! Subscribers notified via email.", "success");
+                notifySubscribers('notices', { title, content });
                 document.getElementById('notices-form').reset();
                 loadAllData();
             } catch (e) {
@@ -1593,7 +1656,11 @@
                     .upsert({ id: name, name, completed, target });
 
                 if (error) throw error;
-                showMessage(messageBox, "Cause updated successfully!", "success");
+                showMessage(messageBox, "Cause updated successfully! Subscribers notified via email.", "success");
+                notifySubscribers('causes', { 
+                    title: name, 
+                    content: `Goal Target: ₹${target.toLocaleString('en-IN')} | Raised So Far: ₹${completed.toLocaleString('en-IN')}. Thank you for supporting our mission!` 
+                });
                 loadAllData();
             } catch (e) {
                 console.error("Error updating cause: ", e);
@@ -1619,7 +1686,8 @@
                     });
                 
                 if (error) throw error;
-                showMessage(messageBox, "Headline added successfully!", "success");
+                showMessage(messageBox, "Headline added successfully! Subscribers notified via email.", "success");
+                notifySubscribers('news', { title, content: title, link });
                 document.getElementById('headlines-form').reset();
                 loadAllData();
             } catch (e) {
@@ -1661,7 +1729,8 @@
                     });
                 
                 if (error) throw error;
-                showMessage(messageBox, "News added successfully!", "success");
+                showMessage(messageBox, "News added successfully! Subscribers notified via email.", "success");
+                notifySubscribers('news', { title, content, link, imageUrl });
                 document.getElementById('news-form').reset();
                 loadAllData();
             } catch (e) {
@@ -1689,7 +1758,8 @@
                     });
                 
                 if (error) throw error;
-                showMessage(messageBox, "Blog added successfully!", "success");
+                showMessage(messageBox, "Blog added successfully! Subscribers notified via email.", "success");
+                notifySubscribers('blogs', { title, content });
                 document.getElementById('blog-form').reset();
                 loadAllData();
             } catch (e) {
@@ -1715,7 +1785,8 @@
                     .insert({ imageUrl, caption });
                     
                 if (error) throw error;
-                showMessage(messageBox, "Gallery image added successfully!", "success");
+                showMessage(messageBox, "Gallery image added successfully! Subscribers notified via email.", "success");
+                notifySubscribers('gallery', { title: caption || "New Photo Added to Gallery", content: caption, imageUrl });
                 document.getElementById('gallery-form').reset();
                 loadAllData();
             } catch (e) {
@@ -1774,6 +1845,7 @@
                 
                 if (error) throw error;
                 showMessage(messageBox, "Media added successfully!", "success");
+                notifySubscribers('activities', { title, content: `Check out our new ${type} update on Roti Bank Bettiah: ${url}` });
                 document.getElementById('media-form').reset();
                 loadAllData();
             } catch (err) {
@@ -1787,6 +1859,10 @@
             const { data, error } = await supabase.from('subscribers').select('*').order('created_at', { ascending: false });
             if (error) throw error;
             const list = document.getElementById('subscribers-list');
+            const badge = document.getElementById('subscriber-count-badge');
+            if (badge) {
+                badge.textContent = `${data ? data.length : 0} active subscriber(s) registered`;
+            }
             if (!list) return;
             list.innerHTML = '';
             if (data && data.length > 0) {
@@ -1812,6 +1888,70 @@
                 list.innerHTML = `<p class="text-gray-400 text-center py-6">No subscribers found.</p>`;
             }
         }
+
+        // Toggle Broadcast Panel
+        document.getElementById('toggle-broadcast-btn')?.addEventListener('click', () => {
+            const panel = document.getElementById('broadcast-panel');
+            if (panel) {
+                panel.classList.toggle('hidden');
+                if (!panel.classList.contains('hidden')) {
+                    document.getElementById('broadcast-title')?.focus();
+                }
+            }
+        });
+
+        document.getElementById('close-broadcast-btn')?.addEventListener('click', () => {
+            document.getElementById('broadcast-panel')?.classList.add('hidden');
+        });
+
+        // Direct Email Broadcast to All Subscribers
+        document.getElementById('broadcast-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('broadcast-title').value.trim();
+            const content = document.getElementById('broadcast-content').value.trim();
+            const imageUrl = document.getElementById('broadcast-image')?.value.trim() || '';
+            const messageBox = document.getElementById('broadcast-message-box');
+            const submitBtn = document.getElementById('broadcast-submit-btn');
+
+            if (!title || !content) {
+                showMessage(messageBox, "Please provide both a headline and message body.", "error");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span>Sending Broadcast...</span>
+            `;
+
+            try {
+                const result = await notifySubscribers('broadcast', {
+                    title,
+                    content,
+                    imageUrl,
+                    subject: `Roti Bank Bettiah Update: ${title}`
+                });
+
+                if (result && result.success) {
+                    showMessage(messageBox, `Email broadcast delivered successfully! (${result.message || ''})`, "success");
+                    document.getElementById('broadcast-form').reset();
+                    setTimeout(() => {
+                        document.getElementById('broadcast-panel')?.classList.add('hidden');
+                    }, 4000);
+                } else {
+                    showMessage(messageBox, result?.error || "Broadcast could not be sent. Please check console.", "error");
+                }
+            } catch (err) {
+                console.error("Error sending broadcast:", err);
+                showMessage(messageBox, "Error broadcasting email: " + err.message, "error");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                    <span>Send Email to Subscribers Now</span>
+                `;
+            }
+        });
 
         // Copy all emails
         document.getElementById('copy-emails-btn').addEventListener('click', async () => {
