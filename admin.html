@@ -2016,6 +2016,43 @@
             editModal.classList.remove('hidden');
         }
 
+        // ─── Direct Admin CRUD Dispatchers (Routed via active Cloudflare Worker with service role key) ───
+        const ADMIN_API_BASE = 'https://roti-bank-api-worker.dhruvkamar2005.workers.dev';
+
+        async function updateRecord(table, id, updates) {
+            try {
+                const res = await fetch(`${ADMIN_API_BASE}/api/admin/update`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ table, id, updates })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) return { data: data.data, error: null };
+                }
+            } catch (err) {
+                console.warn("Worker update request failed, falling back to direct client:", err);
+            }
+            return await supabase.from(table).update(updates).eq('id', id);
+        }
+
+        async function deleteRecord(table, id) {
+            try {
+                const res = await fetch(`${ADMIN_API_BASE}/api/admin/delete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ table, id })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) return { data: data.data, error: null };
+                }
+            } catch (err) {
+                console.warn("Worker delete request failed, falling back to direct client:", err);
+            }
+            return await supabase.from(table).delete().eq('id', id);
+        }
+
         editModalForm?.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentEditId || !currentEditTable) return;
@@ -2038,7 +2075,7 @@
             submitBtn.disabled = true;
 
             try {
-                const { error } = await supabase.from(currentEditTable).update(updates).eq('id', currentEditId);
+                const { error } = await updateRecord(currentEditTable, currentEditId, updates);
                 if (error) throw error;
                 showToast("Item updated successfully!", "success");
                 closeEditModal();
@@ -2063,7 +2100,7 @@
             if (btn.classList.contains('delete-btn')) {
                 if (!confirm(`Are you sure you want to delete this item?`)) return;
                 try {
-                    const { error } = await supabase.from(table).delete().eq('id', id);
+                    const { error } = await deleteRecord(table, id);
                     if (error) throw error;
                     showToast("Item deleted successfully", "success");
                     loadAllData();
@@ -2100,7 +2137,7 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Sending Broadcast...';
 
             try {
-                const apiUrl = 'https://roti-bank-api-worker.rotibankbettiaah.workers.dev/api/webhook/notify-subscribers';
+                const apiUrl = 'https://roti-bank-api-worker.dhruvkamar2005.workers.dev/api/webhook/notify-subscribers';
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

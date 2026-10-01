@@ -71,6 +71,83 @@ app.post('/api/chat', async (c) => {
 app.post('/api/payments/order', createOrder);
 app.post('/api/payments/verify', verifyPayment);
 
+// Admin CRUD Endpoints (Executed with service role privileges)
+app.post('/api/admin/update', async (c) => {
+  try {
+    const body = await c.req.json() as any;
+    const { table, id, updates } = body;
+    if (!table || id === undefined || !updates) {
+      return c.json({ error: 'Missing table, id, or updates' }, 400);
+    }
+
+    const supabaseUrl = c.env.SUPABASE_URL;
+    const serviceRoleKey = c.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !serviceRoleKey) {
+      return c.json({ error: 'Server configuration error' }, 500);
+    }
+
+    const res = await fetch(`${supabaseUrl}/rest/v1/${table}?id=eq.${encodeURIComponent(id)}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': serviceRoleKey,
+        'Authorization': `Bearer ${serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(updates)
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      return c.json({ error: errText }, res.status as any);
+    }
+
+    const updated = await res.json();
+    return c.json({ success: true, data: updated });
+  } catch (err: any) {
+    console.error('Admin Update Error:', err);
+    return c.json({ error: err.message || 'Internal server error' }, 500);
+  }
+});
+
+app.post('/api/admin/delete', async (c) => {
+  try {
+    const body = await c.req.json() as any;
+    const { table, id } = body;
+    if (!table || id === undefined) {
+      return c.json({ error: 'Missing table or id' }, 400);
+    }
+
+    const supabaseUrl = c.env.SUPABASE_URL;
+    const serviceRoleKey = c.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !serviceRoleKey) {
+      return c.json({ error: 'Server configuration error' }, 500);
+    }
+
+    const res = await fetch(`${supabaseUrl}/rest/v1/${table}?id=eq.${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': serviceRoleKey,
+        'Authorization': `Bearer ${serviceRoleKey}`,
+        'Prefer': 'return=representation'
+      }
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      return c.json({ error: errText }, res.status as any);
+    }
+
+    const deleted = await res.json();
+    return c.json({ success: true, data: deleted });
+  } catch (err: any) {
+    console.error('Admin Delete Error:', err);
+    return c.json({ error: err.message || 'Internal server error' }, 500);
+  }
+});
+
 // Type definitions for Supabase Webhook Payload
 interface SupabaseWebhookPayload {
   type: 'INSERT' | 'UPDATE' | 'DELETE';
