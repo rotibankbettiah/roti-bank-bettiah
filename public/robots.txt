@@ -3,4 +3,10 @@ Allow: /
 Disallow: /admin.html
 Disallow: /api/
 
-Sitemap: https://rotibankbettiah.org/sitemap.xml
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-Favicon
+Allow: /
+
+Sitemap: https://rotibankbettaih.org/sitemap.xml

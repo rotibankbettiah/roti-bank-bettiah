@@ -55,7 +55,7 @@ const TermsAndConditions: React.FC<TermsProps> = ({ onBack }) => {
                 Acceptance of Terms
               </h2>
               <p>
-                By accessing, browsing, or donating through the official website of Roti Bank Bettiah Trust (<a href="https://rotibankbettiah.org/" className="text-emerald-600 underline">https://rotibankbettiah.org/</a>), you acknowledge that you have read, understood, and agree to be bound by these Terms &amp; Conditions. If you do not agree to these terms, please do not use our online services.
+                By accessing, browsing, or donating through the official website of Roti Bank Bettiah Trust (<a href="https://rotibankbettaih.org/" className="text-emerald-600 underline">https://rotibankbettaih.org/</a>), you acknowledge that you have read, understood, and agree to be bound by these Terms &amp; Conditions. If you do not agree to these terms, please do not use our online services.
               </p>
             </section>
           </MotionFadeIn>

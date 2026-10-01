@@ -55,7 +55,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onBack }) => {
                 Introduction and Commitment
               </h2>
               <p>
-                Roti Bank Bettiah Trust (&quot;we,&quot; &quot;our,&quot; or &quot;the Trust&quot;) is a registered non-profit charitable trust established under Indian law with Registration No. <strong>5071/2023</strong> in West Champaran, Bihar. We are committed to protecting the privacy, confidentiality, and security of our donors, volunteers, beneficiaries, and visitors who interact with our website (<a href="https://rotibankbettiah.org/" className="text-emerald-600 underline">https://rotibankbettiah.org/</a>).
+                Roti Bank Bettiah Trust (&quot;we,&quot; &quot;our,&quot; or &quot;the Trust&quot;) is a registered non-profit charitable trust established under Indian law with Registration No. <strong>5071/2023</strong> in West Champaran, Bihar. We are committed to protecting the privacy, confidentiality, and security of our donors, volunteers, beneficiaries, and visitors who interact with our website (<a href="https://rotibankbettaih.org/" className="text-emerald-600 underline">https://rotibankbettaih.org/</a>).
               </p>
               <p>
                 This Privacy Policy explains what information we collect, how it is used for our charitable activities, and how we safeguard your personal data in accordance with the Information Technology Act, 2000 and the Digital Personal Data Protection Act (DPDPA), 2023.
