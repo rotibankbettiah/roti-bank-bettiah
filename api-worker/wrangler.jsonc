@@ -8,5 +8,9 @@
   ],
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "SUPABASE_URL": "https://rvkgeoqrxkxjmvdjiyli.supabase.co",
+    "SENDER_EMAIL": "Roti Bank Bettiah <updates@rotibankbettaih.org>"
   }
 }

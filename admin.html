@@ -1413,16 +1413,36 @@
         // ─── Subscriber Email Notification Helper ───
         async function notifySubscribers(table, record) {
             try {
-                const apiUrl = 'https://roti-bank-api-worker.rotibankbettiaah.workers.dev/api/webhook/notify-subscribers';
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        type: 'INSERT',
-                        table: table,
-                        record: record
-                    })
-                });
+                const primaryUrl = 'https://roti-bank-api-worker.dhruvkamar2005.workers.dev/api/webhook/notify-subscribers';
+                const fallbackUrl = 'https://roti-bank-api-worker.rotibankbettiaah.workers.dev/api/webhook/notify-subscribers';
+                
+                let response;
+                try {
+                    response = await fetch(primaryUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            type: 'INSERT',
+                            table: table,
+                            record: record
+                        })
+                    });
+                } catch (primaryErr) {
+                    console.warn("Primary notification worker unreachable, trying fallback:", primaryErr);
+                }
+
+                if (!response || !response.ok) {
+                    response = await fetch(fallbackUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            type: 'INSERT',
+                            table: table,
+                            record: record
+                        })
+                    });
+                }
+
                 const resData = await response.json();
                 console.log(`[Notification] ${table} update sent to subscribers:`, resData);
                 return resData;
