@@ -1067,7 +1067,7 @@
     </div>
 
     <!-- Edit Modal Overlay (Shared for all tables) -->
-    <div id="edit-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div id="edit-modal" style="display:none" class="admin-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
             <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                 <div class="flex items-center gap-2 text-slate-900 font-bold text-base">
@@ -1094,7 +1094,7 @@
     </div>
 
     <!-- Delete Confirmation Modal (In-page custom modal that never gets blocked) -->
-    <div id="delete-confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden">
+    <div id="delete-confirm-modal" style="display:none" class="admin-modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-slate-100 text-center animate-in fade-in zoom-in-95 duration-200">
             <div class="w-14 h-14 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4 text-2xl border border-red-100 shadow-sm">
                 <i class="fas fa-trash-can"></i>
@@ -1974,9 +1974,9 @@
         let currentEditTable = null;
 
         function closeEditModal() {
-            editModal?.classList.add('hidden');
+            if (editModal) editModal.style.display = 'none';
             if (editModalFields) editModalFields.innerHTML = '';
-            if (editModalMessage) editModalMessage.classList.add('hidden');
+            if (editModalMessage) editModalMessage.style.display = 'none';
             currentEditId = null;
             currentEditTable = null;
         }
@@ -2022,7 +2022,7 @@
                 editModalFields.appendChild(group);
             });
 
-            editModal.classList.remove('hidden');
+            if (editModal) editModal.style.display = 'flex';
         }
 
         // ─── Direct Admin CRUD Dispatchers (Routed via active Cloudflare Worker with service role key) ───
@@ -2141,9 +2141,9 @@
         let pendingDelete = null;
 
         function closeDeleteModal() {
-            deleteModal?.classList.add('hidden');
+            if (deleteModal) deleteModal.style.display = 'none';
             if (deleteModalError) {
-                deleteModalError.classList.add('hidden');
+                deleteModalError.style.display = 'none';
                 deleteModalError.textContent = '';
             }
             if (pendingDelete?.btn) {
@@ -2163,17 +2163,17 @@
             pendingDelete = { table, id, btn, itemCard };
 
             if (deleteModalInfo) {
-                deleteModalInfo.innerHTML = `<div><strong>Table:</strong> <span class="text-emerald-700">${table}</span></div><div class="mt-1"><strong>ID:</strong> <span class="text-slate-500">${id}</span></div>`;
+                deleteModalInfo.innerHTML = `<div><strong>Table:</strong> <span style="color:#059669">${table}</span></div><div style="margin-top:4px"><strong>ID:</strong> <span style="color:#64748b">${id}</span></div>`;
             }
             if (deleteModalError) {
-                deleteModalError.classList.add('hidden');
+                deleteModalError.style.display = 'none';
                 deleteModalError.textContent = '';
             }
             if (deleteModalConfirmBtn) {
                 deleteModalConfirmBtn.disabled = false;
                 deleteModalConfirmBtn.innerHTML = '<i class="fas fa-trash"></i> Yes, Delete';
             }
-            deleteModal?.classList.remove('hidden');
+            if (deleteModal) deleteModal.style.display = 'flex';
         }
 
         deleteModalConfirmBtn?.addEventListener('click', async () => {
@@ -2189,7 +2189,7 @@
                 const { error } = await deleteRecord(table, id);
                 if (error) throw error;
                 
-                showToast("Item deleted successfully", "success");
+                showToast("Item deleted successfully!", "success");
                 closeDeleteModal();
                 if (itemCard) itemCard.remove();
                 await loadAllData();
@@ -2200,7 +2200,7 @@
                 deleteModalConfirmBtn.innerHTML = '<i class="fas fa-trash"></i> Yes, Delete';
                 if (deleteModalError) {
                     deleteModalError.textContent = "Failed to delete: " + (err.message || err);
-                    deleteModalError.classList.remove('hidden');
+                    deleteModalError.style.display = 'block';
                 }
                 showToast("Failed to delete item: " + (err.message || err), "error");
             }
