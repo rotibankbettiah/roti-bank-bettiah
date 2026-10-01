@@ -538,36 +538,15 @@
 
         <!-- Achievements Section -->
         <div class="card mb-6">
-            <h2 class="text-2xl font-bold mb-4">Add New Achievement</h2>
+            <h2 class="text-2xl font-bold mb-4">Add New Achievement / Award</h2>
             <form id="achievements-form">
                 <div class="form-group">
-                    <label for="achievement-icon" class="form-label">Icon Class (FontAwesome)</label>
-                    <select id="achievement-icon" class="form-input">
-                        <option value="fa-utensils">Utensils (Food)</option>
-                        <option value="fa-certificate">Certificate</option>
-                        <option value="fa-hands-helping">Helping Hands</option>
-                        <option value="fa-users">Users</option>
-                        <option value="fa-building">Building</option>
-                        <option value="fa-award">Award</option>
-                        <option value="fa-heart">Heart</option>
-                        <option value="fa-calendar-alt">Calendar</option>
-                    </select>
+                    <label for="achievement-caption" class="form-label">Achievement Title / Caption</label>
+                    <input type="text" id="achievement-caption" class="form-input" placeholder="e.g., 500,000+ Daily Meals Served or District Honor Award" required>
                 </div>
                 <div class="form-group">
-                    <label for="achievement-count" class="form-label">Count / Number</label>
-                    <input type="text" id="achievement-count" class="form-input" placeholder="e.g., 500,000+ or 15+" required>
-                </div>
-                <div class="form-group">
-                    <label for="achievement-description" class="form-label">Short Description</label>
-                    <input type="text" id="achievement-description" class="form-input" placeholder="e.g., Meals Served or Volunteers" required>
-                </div>
-                <div class="form-group">
-                    <label for="achievement-caption" class="form-label">Caption / Long Description (Optional)</label>
-                    <textarea id="achievement-caption" class="form-input" rows="2" placeholder="e.g., NUTRIENT DAILY COOKED MEALS"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="achievement-image-file" class="form-label">Upload Image (Optional)</label>
-                    <input type="file" id="achievement-image-file" class="form-input">
+                    <label for="achievement-image-file" class="form-label">Upload Certificate / Trophy Photo</label>
+                    <input type="file" id="achievement-image-file" class="form-input" accept="image/*">
                 </div>
                 <button type="submit" class="btn-primary">Add Achievement</button>
             </form>
@@ -580,15 +559,11 @@
             <form id="branches-form">
                 <div class="form-group">
                     <label for="branch-name" class="form-label">Branch Name</label>
-                    <input type="text" id="branch-name" class="form-input" placeholder="e.g., Bettiah Center" required>
+                    <input type="text" id="branch-name" class="form-input" placeholder="e.g., Roti Bank Bettiah Main" required>
                 </div>
                 <div class="form-group">
-                    <label for="branch-location" class="form-label">Location Address</label>
-                    <input type="text" id="branch-location" class="form-input" placeholder="e.g., Bettiah, Bihar" required>
-                </div>
-                <div class="form-group">
-                    <label for="branch-image-file" class="form-label">Upload Branch Image (Optional)</label>
-                    <input type="file" id="branch-image-file" class="form-input">
+                    <label for="branch-location" class="form-label">Branch Location / Address</label>
+                    <input type="text" id="branch-location" class="form-input" placeholder="e.g., Kalibag Chowk, Bettiah, Bihar - 845438" required>
                 </div>
                 <button type="submit" class="btn-primary">Add Branch</button>
             </form>
@@ -1301,16 +1276,12 @@
                 { key: 'target_keywords', label: 'Target Keywords', type: 'text' }
             ],
             achievements: [
-                { key: 'icon', label: 'Icon Class (FontAwesome)', type: 'text' },
-                { key: 'count', label: 'Count / Number', type: 'text' },
-                { key: 'description', label: 'Description', type: 'text' },
-                { key: 'caption', label: 'Caption (Optional)', type: 'textarea' },
-                { key: 'imageUrl', label: 'Image URL (Optional)', type: 'url' }
+                { key: 'caption', label: 'Achievement Title / Caption', type: 'text' },
+                { key: 'imageUrl', label: 'Certificate / Trophy Image URL', type: 'url' }
             ],
             branches: [
                 { key: 'name', label: 'Branch Name', type: 'text' },
-                { key: 'location', label: 'Location Address', type: 'text' },
-                { key: 'imageUrl', label: 'Image URL (Optional)', type: 'url' }
+                { key: 'address', label: 'Branch Location / Address', type: 'text' }
             ]
         };
 
@@ -1981,15 +1952,18 @@
             if (data && data.length > 0) {
                 data.forEach(item => {
                     const el = document.createElement('div');
-                    el.className = 'flex justify-between items-center bg-gray-100 p-3 rounded border border-gray-200';
+                    el.className = 'flex justify-between items-center bg-gray-100 p-3 rounded-lg border border-gray-200';
+                    const displayTitle = (item.caption && item.caption.trim()) ? item.caption.trim() : 'Milestone Achievement / Award';
                     el.innerHTML = `
-                        <div>
-                            <p class="font-bold">${item.count} - ${item.description}</p>
-                            ${item.caption ? `<p class="text-xs text-gray-400">${item.caption}</p>` : ''}
+                        <div class="flex items-center gap-3">
+                            ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-12 h-12 object-cover rounded shadow-sm border border-gray-300" alt="Achievement" />` : '<div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded flex items-center justify-center font-bold text-lg"><i class="fas fa-trophy"></i></div>'}
+                            <div>
+                                <p class="font-bold text-gray-800">${displayTitle}</p>
+                            </div>
                         </div>
                         <div>
-                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="achievements">Edit</button>
-                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="achievements">Delete</button>
+                            <button class="edit-btn text-blue-500 hover:text-blue-700 mr-2 font-medium" data-id="${item.id}" data-table="achievements">Edit</button>
+                            <button class="delete-btn text-red-500 hover:text-red-700 font-medium" data-id="${item.id}" data-table="achievements">Delete</button>
                         </div>
                     `;
                     list.appendChild(el);
@@ -2012,15 +1986,16 @@
             if (data && data.length > 0) {
                 data.forEach(item => {
                     const el = document.createElement('div');
-                    el.className = 'flex justify-between items-center bg-gray-100 p-3 rounded border border-gray-200 w-full';
+                    el.className = 'flex justify-between items-center bg-gray-100 p-3 rounded-lg border border-gray-200 w-full';
+                    const displayAddress = (item.address && item.address.trim()) ? item.address.trim() : (item.location || 'Location on record');
                     el.innerHTML = `
                         <div>
-                            <p class="font-bold">${item.name}</p>
-                            <p class="text-xs text-gray-400">${item.location}</p>
+                            <p class="font-bold text-gray-800">${item.name}</p>
+                            <p class="text-xs text-gray-500">${displayAddress}</p>
                         </div>
                         <div>
-                            <button class="edit-btn text-blue-500 mr-2" data-id="${item.id}" data-table="branches">Edit</button>
-                            <button class="delete-btn text-red-500" data-id="${item.id}" data-table="branches">Delete</button>
+                            <button class="edit-btn text-blue-500 hover:text-blue-700 mr-2 font-medium" data-id="${item.id}" data-table="branches">Edit</button>
+                            <button class="delete-btn text-red-500 hover:text-red-700 font-medium" data-id="${item.id}" data-table="branches">Delete</button>
                         </div>
                     `;
                     list.appendChild(el);
@@ -2033,16 +2008,20 @@
         // Achievements form submission
         document.getElementById('achievements-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const icon = document.getElementById('achievement-icon').value;
-            const count = document.getElementById('achievement-count').value;
-            const description = document.getElementById('achievement-description').value;
-            const caption = document.getElementById('achievement-caption').value || null;
-            const file = document.getElementById('achievement-image-file').files[0];
+            const captionInput = document.getElementById('achievement-caption');
+            const caption = captionInput ? captionInput.value.trim() : '';
+            const fileInput = document.getElementById('achievement-image-file');
+            const file = fileInput ? fileInput.files[0] : null;
             
             let messageBox = document.getElementById('achievements-form').querySelector('.message-box');
             if (!messageBox) {
                 messageBox = document.createElement('div');
                 document.getElementById('achievements-form').appendChild(messageBox);
+            }
+
+            if (!caption && !file) {
+                showMessage(messageBox, "Please provide a title or select an image.", "error");
+                return;
             }
             
             let imageUrl = null;
@@ -2050,32 +2029,37 @@
                 try {
                     imageUrl = await uploadImage(file, 'achievements');
                 } catch (err) {
-                    console.error(err);
-                    showMessage(messageBox, "Error uploading achievement image.", "error");
+                    console.error("Error uploading achievement image:", err);
+                    showMessage(messageBox, "Error uploading achievement image: " + (err.message || err), "error");
                     return;
                 }
             }
             
             try {
+                // Table 'achievements' schema in Supabase: id, imageUrl, caption
+                const insertPayload = { caption: caption || 'Milestone Achievement' };
+                if (imageUrl) {
+                    insertPayload.imageUrl = imageUrl;
+                }
                 const { data, error } = await supabase
                     .from('achievements')
-                    .insert({ icon, count, description, caption, imageUrl });
+                    .insert(insertPayload);
                 if (error) throw error;
-                showMessage(messageBox, "Achievement added successfully!", "success");
+                showMessage(messageBox, "Achievement added successfully! Subscribers notified via email.", "success");
+                notifySubscribers('achievements', { title: caption || 'New Achievement', content: caption || 'New Achievement Milestone', imageUrl });
                 document.getElementById('achievements-form').reset();
                 loadAllData();
             } catch (err) {
-                console.error(err);
-                showMessage(messageBox, "Error adding achievement.", "error");
+                console.error("Error adding achievement:", err);
+                showMessage(messageBox, "Error adding achievement: " + (err.message || err), "error");
             }
         });
 
         // Branches form submission
         document.getElementById('branches-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('branch-name').value;
-            const location = document.getElementById('branch-location').value;
-            const file = document.getElementById('branch-image-file').files[0];
+            const name = document.getElementById('branch-name').value.trim();
+            const address = document.getElementById('branch-location').value.trim();
             
             let messageBox = document.getElementById('branches-form').querySelector('.message-box');
             if (!messageBox) {
@@ -2083,28 +2067,19 @@
                 document.getElementById('branches-form').appendChild(messageBox);
             }
             
-            let imageUrl = null;
-            if (file) {
-                try {
-                    imageUrl = await uploadImage(file, 'branches');
-                } catch (err) {
-                    console.error(err);
-                    showMessage(messageBox, "Error uploading branch image.", "error");
-                    return;
-                }
-            }
-            
             try {
+                // Table 'branches' schema in Supabase: id, name, address
                 const { data, error } = await supabase
                     .from('branches')
-                    .insert({ name, location, imageUrl });
+                    .insert({ name, address });
                 if (error) throw error;
-                showMessage(messageBox, "Branch added successfully!", "success");
+                showMessage(messageBox, "Branch added successfully! Subscribers notified via email.", "success");
+                notifySubscribers('branches', { title: name, content: address });
                 document.getElementById('branches-form').reset();
                 loadAllData();
             } catch (err) {
-                console.error(err);
-                showMessage(messageBox, "Error adding branch.", "error");
+                console.error("Error adding branch:", err);
+                showMessage(messageBox, "Error adding branch: " + (err.message || err), "error");
             }
         });
 

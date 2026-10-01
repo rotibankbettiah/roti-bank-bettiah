@@ -522,7 +522,7 @@ const App: React.FC = () => {
                     </div>
                   )}
                   <div className="w-14 h-14 sm:w-16 sm:h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 mb-5 sm:mb-6 group-hover:rotate-12 transition-transform">
-                    <i className={`fas ${ach.icon} text-xl sm:text-2xl`}></i>
+                    <i className={`fas ${ach.icon || 'fa-trophy'} text-xl sm:text-2xl`}></i>
                   </div>
                   {ach.count ? (
                     <h3 className="text-3xl sm:text-4xl font-black mb-2 tracking-tighter">{ach.count}</h3>
@@ -530,7 +530,7 @@ const App: React.FC = () => {
                     <h3 className="sr-only">Achievement Metric</h3>
                   )}
                   <p className="text-emerald-400 font-bold uppercase tracking-widest text-xs mb-3 sm:mb-4">{ach.description}</p>
-                  {ach.caption && <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">{ach.caption}</p>}
+                  {ach.caption && ach.caption !== ach.description && <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">{ach.caption}</p>}
                 </article>
                 </Tilt3DCard>
               ))}

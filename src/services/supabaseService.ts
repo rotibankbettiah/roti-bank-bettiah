@@ -38,13 +38,21 @@ export const supabaseService = {
   async getAchievements(): Promise<Achievement[]> {
     const { data, error } = await supabase.from('achievements').select('*');
     if (error) throw error;
-    return data || [];
+    return (data || []).map((a: any) => ({
+      ...a,
+      icon: a.icon || 'fa-trophy',
+      count: a.count || '',
+      description: a.description || a.caption || 'Milestone Achievement'
+    }));
   },
 
   async getBranches(): Promise<Branch[]> {
     const { data, error } = await supabase.from('branches').select('*');
     if (error) throw error;
-    return data || [];
+    return (data || []).map((b: any) => ({
+      ...b,
+      location: b.location || b.address || ''
+    }));
   },
 
   async getActivities(): Promise<Activity[]> {

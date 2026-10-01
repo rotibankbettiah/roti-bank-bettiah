@@ -128,6 +128,14 @@ app.post('/api/webhook/notify-subscribers', async (c) => {
       subject = `New Daily Activity: ${title}`;
       category = "Daily Activity";
       sectionAnchor = "#activities";
+    } else if (table === 'achievements') {
+      subject = `New Milestone Achievement: ${title}`;
+      category = "Achievement";
+      sectionAnchor = "#achievements";
+    } else if (table === 'branches') {
+      subject = `New Branch Location: ${title}`;
+      category = "Branch";
+      sectionAnchor = "#branches";
     } else if (table === 'broadcast' || table === 'announcement') {
       subject = record.subject || `Important Announcement: ${title}`;
       category = "Announcement";
