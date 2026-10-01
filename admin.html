@@ -1456,9 +1456,12 @@
 
         // ─── Cache-Busting Supabase Fetch Helper ───
         async function fetchSupabase(endpoint) {
-            const separator = endpoint.includes('?') ? '&' : '?';
-            return await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}${separator}_ts=${Date.now()}`, {
-                headers: { 'apikey': SUPABASE_ANON_KEY },
+            return await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Cache-Control': 'no-cache, no-store',
+                    'Pragma': 'no-cache'
+                },
                 cache: 'no-store'
             });
         }
