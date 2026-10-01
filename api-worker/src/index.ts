@@ -148,6 +148,49 @@ app.post('/api/admin/delete', async (c) => {
   }
 });
 
+app.post('/api/admin/insert', async (c) => {
+  try {
+    const body = await c.req.json() as any;
+    const { table, record, upsert } = body;
+    if (!table || !record) {
+      return c.json({ error: 'Missing table or record' }, 400);
+    }
+
+    const supabaseUrl = c.env.SUPABASE_URL;
+    const serviceRoleKey = c.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !serviceRoleKey) {
+      return c.json({ error: 'Server configuration error' }, 500);
+    }
+
+    const preferHeader = upsert
+      ? 'resolution=merge-duplicates,return=representation'
+      : 'return=representation';
+
+    const res = await fetch(`${supabaseUrl}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: {
+        'apikey': serviceRoleKey,
+        'Authorization': `Bearer ${serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': preferHeader
+      },
+      body: JSON.stringify(record)
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      return c.json({ error: errText }, res.status as any);
+    }
+
+    const inserted = await res.json();
+    return c.json({ success: true, data: inserted });
+  } catch (err: any) {
+    console.error('Admin Insert Error:', err);
+    return c.json({ error: err.message || 'Internal server error' }, 500);
+  }
+});
+
 // Type definitions for Supabase Webhook Payload
 interface SupabaseWebhookPayload {
   type: 'INSERT' | 'UPDATE' | 'DELETE';

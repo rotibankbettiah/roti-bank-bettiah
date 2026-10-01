@@ -1459,6 +1459,7 @@
             return await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
                 headers: {
                     'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
                     'Cache-Control': 'no-cache, no-store',
                     'Pragma': 'no-cache'
                 },
@@ -2008,6 +2009,24 @@
         // ─── Direct Admin CRUD Dispatchers (Routed via active Cloudflare Worker with service role key) ───
         const ADMIN_API_BASE = 'https://roti-bank-api-worker.dhruvkamar2005.workers.dev';
 
+        async function insertRecord(table, record, upsert = false) {
+            try {
+                const res = await fetch(`${ADMIN_API_BASE}/api/admin/insert`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ table, record, upsert })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) return { data: data.data, error: null };
+                    if (data.error) throw new Error(typeof data.error === 'object' ? JSON.stringify(data.error) : data.error);
+                }
+            } catch (err) {
+                console.warn("Worker insert request failed, falling back to direct client:", err);
+            }
+            return upsert ? await supabase.from(table).upsert(record) : await supabase.from(table).insert(record);
+        }
+
         async function updateRecord(table, id, updates) {
             try {
                 const res = await fetch(`${ADMIN_API_BASE}/api/admin/update`, {
@@ -2018,6 +2037,7 @@
                 if (res.ok) {
                     const data = await res.json();
                     if (data.success) return { data: data.data, error: null };
+                    if (data.error) throw new Error(typeof data.error === 'object' ? JSON.stringify(data.error) : data.error);
                 }
             } catch (err) {
                 console.warn("Worker update request failed, falling back to direct client:", err);
@@ -2035,6 +2055,7 @@
                 if (res.ok) {
                     const data = await res.json();
                     if (data.success) return { data: data.data, error: null };
+                    if (data.error) throw new Error(typeof data.error === 'object' ? JSON.stringify(data.error) : data.error);
                 }
             } catch (err) {
                 console.warn("Worker delete request failed, falling back to direct client:", err);
@@ -2207,7 +2228,7 @@
             const title = document.getElementById('activity-title').value.trim();
             const content = document.getElementById('activity-content').value.trim();
             try {
-                const { error } = await supabase.from('activities').insert({ title, content });
+                const { error } = await insertRecord('activities', { title, content });
                 if (error) throw error;
                 showToast("Activity added! Subscribers notified via email.", "success");
                 notifySubscribers('activities', { title, content });
@@ -2224,7 +2245,7 @@
             const title = document.getElementById('notice-title').value.trim();
             const content = document.getElementById('notice-content').value.trim();
             try {
-                const { error } = await supabase.from('notices').insert({ title, content });
+                const { error } = await insertRecord('notices', { title, content });
                 if (error) throw error;
                 showToast("Notice published! Subscribers notified via email.", "success");
                 notifySubscribers('notices', { title, content });
@@ -2242,7 +2263,7 @@
             const completed = parseInt(document.getElementById('cause-completed').value);
             const target = parseInt(document.getElementById('cause-target').value);
             try {
-                const { error } = await supabase.from('causes').upsert({ id: name, name, completed, target });
+                const { error } = await insertRecord('causes', { id: name, name, completed, target }, true);
                 if (error) throw error;
                 showToast("Cause updated! Subscribers notified via email.", "success");
                 notifySubscribers('causes', { 
@@ -2261,7 +2282,7 @@
             const title = document.getElementById('headline-title').value.trim();
             const link = document.getElementById('headline-link').value.trim() || null;
             try {
-                const { error } = await supabase.from('news').insert({
+                const { error } = await insertRecord('news', {
                     title,
                     link,
                     is_headline: true,
@@ -2297,7 +2318,7 @@
             }
 
             try {
-                const { error } = await supabase.from('news').insert({
+                const { error } = await insertRecord('news', {
                     title,
                     content,
                     link,
@@ -2323,7 +2344,7 @@
             const target_keywords = document.getElementById('blog-keywords').value.trim() || null;
 
             try {
-                const { error } = await supabase.from('blogs').insert({
+                const { error } = await insertRecord('blogs', {
                     title,
                     content,
                     target_keywords,
@@ -2352,7 +2373,7 @@
 
             try {
                 const imageUrl = await uploadImage(file, 'gallery');
-                const { error } = await supabase.from('gallery').insert({ imageUrl, caption });
+                const { error } = await insertRecord('gallery', { imageUrl, caption });
                 if (error) throw error;
                 showToast("Photo uploaded to gallery! Subscribers notified.", "success");
                 notifySubscribers('gallery', { title: caption || "New Gallery Photo", content: caption, imageUrl });
@@ -2372,7 +2393,7 @@
             const url = document.getElementById('media-url').value.trim();
 
             try {
-                const { error } = await supabase.from('media').insert({
+                const { error } = await insertRecord('media', {
                     type,
                     title,
                     url,
@@ -2407,7 +2428,7 @@
                 const insertPayload = { caption: caption || 'Milestone Achievement' };
                 if (imageUrl) insertPayload.imageUrl = imageUrl;
 
-                const { error } = await supabase.from('achievements').insert(insertPayload);
+                const { error } = await insertRecord('achievements', insertPayload);
                 if (error) throw error;
                 showToast("Achievement added! Subscribers notified via email.", "success");
                 notifySubscribers('achievements', { title: caption || 'New Achievement', content: caption, imageUrl });
@@ -2426,7 +2447,7 @@
             const address = document.getElementById('branch-location').value.trim();
 
             try {
-                const { error } = await supabase.from('branches').insert({ name, address });
+                const { error } = await insertRecord('branches', { name, address });
                 if (error) throw error;
                 showToast("Branch registered! Subscribers notified via email.", "success");
                 notifySubscribers('branches', { title: name, content: address });
@@ -2483,7 +2504,7 @@
             }
 
             try {
-                const { error } = await supabase.from('internship_corner').insert({ type: contentType, content, url });
+                const { error } = await insertRecord('internship_corner', { type: contentType, content, url });
                 if (error) throw error;
                 showToast("Internship content added!", "success");
                 document.getElementById('internship-content-form').reset();
@@ -2498,7 +2519,7 @@
             e.preventDefault();
             const url = document.getElementById('internship-form-url').value.trim();
             try {
-                const { error } = await supabase.from('internship_form').upsert({ id: 1, url });
+                const { error } = await insertRecord('internship_form', { id: 1, url }, true);
                 if (error) throw error;
                 showToast("Internship Google Form URL saved!", "success");
             } catch (err) {
